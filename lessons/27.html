@@ -1,0 +1,264 @@
+  <style>
+    .l27-sql{font-family:var(--f-mono);font-size:.8rem;line-height:1.55;background:var(--bg);border-radius:6px;padding:8px 10px;margin:0;white-space:pre-wrap;word-break:break-word}
+    .l27-sql b{color:var(--accent)}
+    .l27-steps{display:flex;flex-wrap:wrap;gap:6px}
+    .l27-steps button{font-family:var(--f-mono);font-size:.82rem}
+    .l27-ok{color:var(--good)} .l27-bad{color:var(--bad)}
+    #l27res th,#l27res td{padding:6px 5px;font-size:.84rem;white-space:nowrap}
+    #l27res td.l27-st{white-space:normal;min-width:6.5rem}
+    #l27res tr.l27-off td{color:var(--muted);text-decoration:line-through;opacity:.6}
+    .l27-conf td,.l27-conf th{font-size:.88rem;padding:6px}
+    .l27-hi{color:var(--good);font-weight:600} .l27-mid{color:var(--ink);font-weight:600} .l27-lo{color:var(--bad);font-weight:600}
+    .l27-cand{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+    .l27-cand li{font-size:.92rem;border-left:3px solid var(--line);padding:2px 0 2px 8px}
+    .l27-cand li.l27-pass{border-left-color:var(--good)}
+    .l27-cand li.l27-fail{color:var(--muted)}
+  </style>
+
+  <div class="stack"><span class="eyebrow">Модуль 7 · Урок 27 из 28 · 30 минут</span>
+    <h1>Анализ: от вопроса к ответу базы</h1>
+    <p class="lead">Как вопрос превращается в запрос, как прочитать этот запрос и проверить ответ, а из ответа сделать вывод с честной уверенностью и отобрать кандидатов для лаборатории.</p></div>
+
+  <div class="stack"><h2>Восемь строк и два разных вопроса</h2>
+    <p>Первый из пяти вопросов к базе (шаг 6): «какие ферменты сохраняют активность при 60–70&nbsp;°C?». Агент отвечает: восемь строк. Ловушку вы знаете по уроку 24: ферментов среди них четыре, ведь одна строка — одно измерение.</p>
+    <p>Но есть ловушка глубже. Вопрос можно перевести на язык базы как «оптимум не ниже 60&nbsp;°C», а можно как «активность измерена при 60–70&nbsp;°C». Ответы будут разные. Однажды 29 команд аналитиков получили одни данные и один вопрос — и 20 нашли эффект, а 9 не нашли: во многом потому, что перевели вопрос по-разному<sup class="fn" data-fn="1">1</sup>.</p>
+    <p class="pull">Перевод вопроса в запрос — тоже решение. Поэтому агент всегда показывает запрос.</p>
+    <div class="callout"><span class="lbl">Карточка: «Аналитик»</span><p><b>Роль</b> — переводит вопрос в запрос, показывает запрос и ответ. <b>Инструменты</b> — чтение базы, построение графика. <b>Память</b> — <span class="mono">TZ.md</span> и пять вопросов. <b>Права</b> — только чтение, ничего в базе не меняет (урок 18).</p></div>
+    <p>Как в уроке 24: агент пишет запрос, вы запускаете его в SQL Editor и возвращаете ответ агенту. Ключа к рабочей базе у агента нет (урок 25).</p>
+    <div class="callout warn"><span class="lbl">Перед запуском</span><p>SQL Editor работает с полными правами владельца. Запрос-вопрос начинается со <span class="mono">select</span>. Видите в нём <span class="mono">delete</span>, <span class="mono">update</span>, <span class="mono">drop</span> или <span class="mono">insert</span> — не запускайте, спросите агента, зачем.</p></div></div>
+
+  <div class="stack"><h2>Запрос по шагам</h2>
+    <p>Писать запросы не нужно, а прочитать в общих чертах — стоит. Части запроса:</p>
+    <div class="scroll"><table>
+      <tr><th>Часть</th><th>Что делает</th></tr>
+      <tr><td class="mono">from</td><td>из какой таблицы брать строки</td></tr>
+      <tr><td class="mono">where</td><td>какие строки оставить (фильтр)</td></tr>
+      <tr><td class="mono">join</td><td>подставить к строке данные из соседней таблицы по номеру</td></tr>
+      <tr><td class="mono">group by</td><td>собрать строки одного фермента в одну и посчитать</td></tr>
+      <tr><td class="mono">having</td><td>какие группы оставить</td></tr>
+    </table></div>
+    <p><span class="mono">join</span> нужен, потому что измерение хранит не название фермента, а номер его строки (урок 16). А <span class="mono">group by</span> лечит ошибку из начала урока: <span class="hl">после группировки одна строка ответа — один фермент</span>, рядом — сколько у него измерений и сколько разных источников. Агенты пишут запросы хорошо, но не безошибочно<sup class="fn" data-fn="2">2</sup>.</p></div>
+
+  <div class="stack"><h2>Проверить ответ</h2>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 384" width="340" height="384" role="img" aria-label="Путь анализа: вопрос, запрос, ответ, проверка ответа, вывод с уверенностью. Если проверка не пройдена — назад к запросу">
+      <defs><marker id="l27ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0 0L10 5L0 10Z"/></marker></defs>
+      <rect class="box" x="10" y="6" width="250" height="54" rx="6"/>
+      <text x="22" y="28" font-size="14" font-weight="600">1. Вопрос</text>
+      <text class="sm" x="22" y="47">«сохраняют активность при 60–70 °C?»</text>
+      <rect class="box" x="10" y="80" width="250" height="54" rx="6"/>
+      <text x="22" y="102" font-size="14" font-weight="600">2. Запрос</text>
+      <text class="sm" x="22" y="121">перевод виден: where value &gt;= 60</text>
+      <rect class="box" x="10" y="154" width="250" height="54" rx="6"/>
+      <text x="22" y="176" font-size="14" font-weight="600">3. Ответ</text>
+      <text class="sm" x="22" y="195">8 строк = 4 фермента</text>
+      <rect class="box" x="10" y="228" width="250" height="68" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+      <text x="22" y="250" font-size="14" font-weight="600">4. Проверка ответа</text>
+      <text class="sm" x="22" y="269">паспорт · контрольный вопрос</text>
+      <text class="sm" x="22" y="285">· 2–3 строки по источнику</text>
+      <rect x="10" y="316" width="250" height="54" rx="6" style="fill:var(--accent-soft);stroke:none"/>
+      <text x="22" y="338" font-size="14" font-weight="600">5. Вывод + уверенность</text>
+      <text class="sm" x="22" y="357">по правилу из таблицы ниже</text>
+      <path class="arr" d="M135 60V78" marker-end="url(#l27ah)"/>
+      <path class="arr" d="M135 134V152" marker-end="url(#l27ah)"/>
+      <path class="arr" d="M135 208V226" marker-end="url(#l27ah)"/>
+      <path class="arr" d="M135 296V314" marker-end="url(#l27ah)"/>
+      <path d="M260 262H300V107H262" style="fill:none;stroke:var(--signal);stroke-width:2;stroke-dasharray:5 4" marker-end="url(#l27ah)"/>
+      <text class="sm" x="306" y="172" transform="rotate(90 306 172)" text-anchor="middle" style="fill:var(--signal)">не сошлось — назад</text>
+    </svg></div>
+    <p>Ответ проверяют приёмами урока 17. <b>Паспорт ответа</b>: сколько строк, сколько ферментов, сколько строк «не проверено». <b>Контрольный вопрос</b>: фермент, который точно должен попасть в ответ, — попал? <b>Две-три строки</b> ответа сверить с источником. Не сошлось — назад к запросу, а не «поправь число».</p></div>
+
+  <div class="stack"><h2>Где источники спорят и насколько верить</h2>
+    <p>Две статьи дают одному ферменту 65 и 72&nbsp;°C. Спор или шум? Нужен <b>допуск</b> — разница, которую вы считаете несущественной. Отправная точка — 5&nbsp;°C: температуры в статьях часто перебирают с шагом 5–10&nbsp;°C, и разница в один шаг — в пределах точности опыта. Допуск выбираете вы, но <span class="hl">до анализа и с записью в журнал</span>, а не подбираете под удобный ответ.</p>
+    <p>Уверенность зависит от двух вещей: сколько независимых источников и согласны ли они. «Детали расходятся» — числа различаются больше допуска, но ответ на вопрос один (оба выше 60&nbsp;°C). «Противоречат» — ответы разные (одна статья: работает при 65&nbsp;°C, другая: теряет активность за час).</p>
+    <div class="scroll"><table class="l27-conf">
+      <tr><th>Источников</th><th>сходятся</th><th>детали расходятся</th><th>противоречат</th></tr>
+      <tr><td>1</td><td class="l27-lo">низкая</td><td class="l27-lo">низкая</td><td class="l27-lo">низкая</td></tr>
+      <tr><td>2–3</td><td class="l27-mid">средняя</td><td class="l27-mid">средняя</td><td class="l27-lo">низкая</td></tr>
+      <tr><td>4 и больше</td><td class="l27-hi">высокая</td><td class="l27-mid">средняя</td><td class="l27-lo">низкая</td></tr>
+    </table></div>
+    <p><span class="hl">Высокая — только когда источников много и они сходятся.</span> Пороги можно сдвинуть под свою тему, но записать до анализа; этим правилом пользуется отчёт в уроке 28.</p></div>
+
+  <div class="stack"><h2>Не рейтинг, а отбор</h2>
+    <p>Хочется отсортировать ферменты по одному числу. Но сравнимы только числа, полученные в одинаковых условиях: та же форма ПЭТ, тот же метод — в чужих статьях это редкость. Поэтому вместо рейтинга — <b>отбор по критериям</b>, записанным заранее:</p>
+    <ul>
+      <li>есть измерение при 60&nbsp;°C и выше — на настоящем ПЭТ (плёнка, порошок), а не на модельном веществе-заменителе;</li>
+      <li>не меньше двух независимых источников;</li>
+      <li>хотя бы одно из этих измерений подтверждено (критиком или человеком).</li>
+    </ul>
+    <p>Из прошедших — <b>до трёх кандидатов</b> для лаборатории, у каждого строка «почему этот». Прошло больше — добавьте критерий. Прошло ноль — тоже вывод: данных не хватает.</p>
+    <div class="callout warn"><span class="lbl">График</span><p>Агент построит точечный график «фермент × температура». Непроверенные строки на нём убраны или отмечены другим цветом<sup class="fn" data-fn="3">3</sup> — иначе картинка делает непроверенное число таким же убедительным.</p></div>
+    <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+      <li data-fn="1">Опыт Silberzahn и др. (2018): вопрос был «чаще ли судьи дают красные карточки темнокожим футболистам». Более поздний разбор показал, что команды во многом отвечали на немного разные вопросы. Пересказ: <a href="https://www.psychologicalscience.org/publications/observer/obsonline/how-researchers-can-find-different-results-using-the-same-data.html" target="_blank" rel="noopener">APS: How Researchers Can Find Different Results Using the Same Data</a> (статья, англ., 10 мин).</li>
+      <li data-fn="2">На наборе вопросов BIRD лучшие системы на осень 2026 дают верный ответ примерно в 83 % вопросов (урок 24). На настоящих больших базах компаний задача труднее: в наборе Spider 2.0 в конце 2024 года лучший агент решал около 21 % задач; к ноябрю 2026 на облегчённой версии лидеры решают около трёх четвертей. <a href="https://spider2-sql.github.io/" target="_blank" rel="noopener">Spider 2.0: таблица результатов</a> (сайт, англ., 5 мин).</li>
+      <li data-fn="3">Короткие правила честной картинки от учёного, который делает научную графику: что выделять, чем не украшать, как не обмануть шкалой. <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003833" target="_blank" rel="noopener">Rougier и др.: Ten Simple Rules for Better Figures</a> (PLOS Computational Biology, 2014; статья, англ., открытый доступ, 20 мин).</li>
+    </ol></div></div>
+
+  <div class="panel"><span class="eyebrow">Попробуйте сами</span>
+    <p>Мини-база из урока 24: 7 ферментов, 12 измерений, 10 источников. Добавляйте части запроса по одной — меняется и запрос, и ответ. Новая часть выделена.</p>
+    <div class="l27-steps" id="l27steps"></div>
+    <label class="row" style="align-items:center;gap:10px">Порог в where: <input type="range" id="l27thr" min="55" max="75" step="5" value="60" style="flex:1"> <b><span id="l27tv">60</span> °C</b></label>
+    <pre class="l27-sql" id="l27sql"></pre>
+    <div class="scroll"><table id="l27res"></table></div>
+    <p class="out" id="l27out"></p>
+    <p class="why" id="l27why"></p>
+    <h3>Отбор кандидатов</h3>
+    <p>Все ферменты с измерением при 60&nbsp;°C и выше. Включайте и выключайте критерии.</p>
+    <div class="checks" id="l27crit"></div>
+    <ul class="l27-cand" id="l27cand"></ul>
+    <p class="out" id="l27cout"></p>
+    <div class="row"><button type="button" id="l27reset">Сначала</button></div>
+    <p class="why">Данные условные: названия ферментов настоящие, значения близки к опубликованным по порядку величин, а форма ПЭТ и статусы придуманы для упражнения. «изм.» — измерений, «ист.» — разных источников. Номера: E1 IsPETase, E2 FAST-PETase, E3 HotPETase, E4 LCC-ICCG, E5 PHL7, E6 TfCut2, E7 ThermoPETase.</p></div>
+
+  <div class="two">
+    <div class="panel"><span class="eyebrow">Биотехнология</span><p>LCC-ICCG разложил не меньше 90 % ПЭТ за 10 часов при 72&nbsp;°C — на бутылочном ПЭТ, заранее переведённом в аморфный порошок (<a href="https://www.nature.com/articles/s41586-020-2149-4" target="_blank" rel="noopener">Tournier и др., 2020</a>). PHL7 полностью разложил аморфную плёнку и упаковку за сутки при 70&nbsp;°C (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9303343/" target="_blank" rel="noopener">Sonnendecker и др., 2022</a>). Оба числа верны, но «кто лучше» из них не следует: разные формы ПЭТ, загрузка фермента, время. Оба проходят отбор — а ранжирует их только опыт в одинаковых условиях. Такой опыт есть, о нём — урок 28.</p></div>
+    <div class="panel"><span class="eyebrow">Свои проекты</span><p>Расследование о фундациях: «сколько фундаций сдавали отчёты три года подряд?». Агент отвечает: 96. Но в таблице одна строка — один <i>отчёт</i>, а не фундация. Правильный запрос группирует по фундации и оставляет группы, где отчётов за три разных года (<span class="mono">having count(distinct year) = 3</span>). Получилось 21 (числа условные). Разница между 96 и 21 — это и есть перевод вопроса.</p></div>
+  </div>
+
+  <div class="panel"><span class="eyebrow">Словарик урока</span><div class="scroll"><table>
+    <tr><td><b>Аналитик</b></td><td>агент, который отвечает на вопросы к принятой базе; только чтение</td></tr>
+    <tr><td><b>join</b></td><td>часть запроса: подставить к строке данные из другой таблицы по номеру строки</td></tr>
+    <tr><td><b>group by</b></td><td>собрать строки с одинаковым значением (например, один фермент) в одну и посчитать</td></tr>
+    <tr><td><b>having</b></td><td>фильтр не строк, а групп после group by</td></tr>
+    <tr><td><b>Допуск</b></td><td>разница между значениями, которую вы заранее считаете несущественной</td></tr>
+    <tr><td><b>Отбор по критериям</b></td><td>вместо рейтинга: кто прошёл заранее записанные условия, и почему</td></tr>
+  </table></div></div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Вопрос → запрос → ответ → проверка → вывод. Агент показывает запрос: перевод вопроса — тоже решение.</li>
+    <li>Одна строка — одно измерение. «Сколько ферментов» отвечает group by, а не число строк.</li>
+    <li>Допуск и пороги уверенности записывают до анализа. Один источник или противоречие — уверенность низкая.</li>
+    <li>Ранжировать можно только сравнимое. Остальное — отбор по критериям: до трёх кандидатов, у каждого «почему этот».</li></ul></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Попросите агента в папке проекта: «Ответь на вопрос 1 из пяти по нашей базе. Покажи запрос, ответ и паспорт ответа: сколько строк, сколько ферментов, сколько строк „не проверено“». Если база уже в Supabase — запустите запрос сами в SQL Editor (сначала проверьте, что он начинается с <span class="mono">select</span>).</p>
+    <p>Найдите в запросе <span class="mono">where</span> и запишите своими словами, что он отбирает. Совпадает ли это с тем, что вы имели в виду, задавая вопрос?</p></div>
+  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 27</span>
+    <p>Сначала запись «решение» в <span class="mono">journal.md</span>: допуск (например, 5&nbsp;°C), пороги уверенности и критерии отбора кандидатов — до того, как вы увидите ответы.</p>
+    <p>Затем файл <span class="mono">analysis.md</span>: на каждый из пяти вопросов — запрос, ответ, паспорт ответа и уверенность по таблице урока; график «фермент × температура» с отмеченными статусами; до трёх кандидатов для лаборатории, у каждого — «почему этот» и известные расхождения. Это сырьё для отчёта в уроке 28.</p></div>
+
+  <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
+    <p>По желанию; одного материала достаточно. Путь — от «читаю запрос агента в общих чертах» к уверенному чтению запросов и честной картинке из данных.</p>
+    <h3>Понять лучше</h3>
+    <ul class="links">
+      <li><a href="https://sqlbolt.com/" target="_blank" rel="noopener">SQLBolt: Learn SQL</a><span class="meta">интерактивные уроки · англ. · 10 мин на урок</span><p>Если откроете одно — это. Короткие уроки с упражнениями прямо в браузере, ничего ставить не надо. Для этого урока хватит уроков 1–6 (select, where, join) и 10–11 (группировка).</p></li>
+      <li><a href="https://habr.com/ru/articles/448072/" target="_blank" rel="noopener">Хабр: Понимание джойнов сломано. Это точно не пересечение кругов, честно</a><span class="meta">статья · рус. · 2019 · 15 мин</span><p>Почему join — это не пересечение кругов, а «перебрать пары строк и оставить подходящие». На маленьких таблицах видно, откуда в ответе берутся повторы — та же ловушка «строк больше, чем ферментов».</p></li>
+    </ul>
+    <h3>Копнуть глубже</h3>
+    <ul class="links">
+      <li><a href="https://mystery.knightlab.com/" target="_blank" rel="noopener">Knight Lab: The SQL Murder Mystery</a><span class="meta">игра · англ. · 30–60 мин</span><p>Детектив, где улики добывают запросами к базе города. Есть режим с подсказками для тех, кто SQL не знает. Хорошо закрепляет where и join на живом сюжете.</p></li>
+      <li><a href="https://postgrespro.ru/docs/postgresql/17/tutorial-agg" target="_blank" rel="noopener">Документация PostgreSQL: Агрегатные функции</a><span class="meta">учебник · рус. · 15 мин</span><p>Официальное введение на русском: count, max, group by и having на одном примере с погодой в городах. Соседняя глава — о соединении таблиц.</p></li>
+      <li><a href="https://clauswilke.com/dataviz/" target="_blank" rel="noopener">Claus Wilke: Fundamentals of Data Visualization</a><span class="meta">книга · англ. · бесплатно онлайн · по главе за вечер</span><p>Как выбрать вид графика и не обмануть им. Для проекта полезны главы о точечных графиках и о том, как показывать неопределённость.</p></li>
+    </ul>
+    <h3>Куда движется область</h3>
+    <ul class="links">
+      <li><a href="https://arxiv.org/abs/2411.07763" target="_blank" rel="noopener">Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows</a><span class="meta">научная статья · англ. · ICLR 2025 · 20 мин на введение</span><p>Набор задач на настоящих больших базах: сотни столбцов, разные диалекты SQL. В 2024 году лучший агент решал около 21 %, на простых наборах — 73–91 %. Хорошо показывает, где кончается «пишет запросы почти всегда верно». Уже в продуктах: агенты пишут запросы в панелях баз, включая Supabase.</p></li>
+      <li><a href="https://arxiv.org/abs/2408.09667" target="_blank" rel="noopener">BLADE: Benchmarking Language Model Agents for Data-Driven Science</a><span class="meta">научная статья · англ. · EMNLP 2024, обновлена в ноябре 2025 · 20 мин</span><p>Проверка агентов на 12 настоящих научных вопросах с данными: какие решения при анализе они принимают в сравнении со специалистами. Вывод авторов: модели знают много, но склонны к самому простому анализу. Исследование, а не готовый инструмент — довод за то, чтобы перевод вопроса оставался за вами.</p></li>
+    </ul></div>
+
+<script>
+(function(){
+var $=AI.$, el=AI.el;
+var E={E1:'IsPETase',E2:'FAST-PETase',E3:'HotPETase',E4:'LCC-ICCG',E5:'PHL7',E6:'TfCut2',E7:'ThermoPETase'};
+// id, фермент, °C, источник, статус, форма ПЭТ (условные)
+var M=[['M1','E1',30,'S1','подтверждено критиком','плёнка'],['M2','E1',40,'S2','не проверено','порошок'],['M3','E2',50,'S3','подтверждено критиком','плёнка'],['M4','E7',40,'S4','не проверено','плёнка'],
+ ['M5','E3',60,'S5','подтверждено человеком','плёнка'],['M6','E3',65,'S6','не проверено','модельное'],['M7','E4',72,'S7','подтверждено критиком','плёнка'],['M8','E4',65,'S8','расхождение','порошок'],
+ ['M9','E5',70,'S9','подтверждено критиком','плёнка'],['M10','E6',60,'S2','не проверено','модельное'],['M11','E6',70,'S10','подтверждено человеком','модельное'],['M12','E5',68,'S6','не проверено','плёнка']];
+var STEPS=['1 · from','2 · where','3 · join','4 · group by','5 · having'];
+var cur=0;
+function sqlLines(s,t){
+  var sel = s<2 ? 'select *' : (s<3 ? 'select e.name, m.value, m.source_id, m.status' : 'select e.name, count(*), count(distinct m.source_id),\n       min(m.value), max(m.value)');
+  var L=[[sel, s===0||s===2||s===3],['from measurements m', s===0]];
+  if(s>=2) L.push(['join enzymes e on e.id = m.enzyme_id', s===2]);
+  if(s>=1) L.push(["where m.parameter = 't_opt' and m.value >= "+t, s===1]);
+  if(s>=3) L.push(['group by e.name', s===3]);
+  if(s>=4) L.push(['having count(distinct m.source_id) >= 2', s===4]);
+  return L;
+}
+function cell(tr,txt,cls){var td=el('td',cls||null,String(txt)); tr.appendChild(td); return td;}
+function stCls(s){return /подтверждено/.test(s)?'l27-st l27-ok':(s==='расхождение'?'l27-st l27-bad':'l27-st');}
+function draw(){
+  var t=parseInt($('l27thr').value,10); $('l27tv').textContent=String(t);
+  var pre=$('l27sql'); pre.textContent='';
+  sqlLines(cur,t).forEach(function(l,i){ if(i) pre.appendChild(document.createTextNode('\n')); if(l[1]) pre.appendChild(el('b',null,l[0])); else pre.appendChild(document.createTextNode(l[0])); });
+  pre.appendChild(document.createTextNode(';'));
+  var tb=$('l27res'); tb.textContent='';
+  function head(a){var tr=el('tr'); a.forEach(function(c){tr.appendChild(el('th',null,c));}); tb.appendChild(tr);}
+  var on=M.filter(function(m){return m[2]>=t;});
+  var g={}, order=[];
+  on.forEach(function(m){ if(!g[m[1]]){g[m[1]]={n:0,src:{},min:999,max:-999}; order.push(m[1]);} var x=g[m[1]]; x.n++; x.src[m[3]]=1; x.min=Math.min(x.min,m[2]); x.max=Math.max(x.max,m[2]); });
+  order.sort();
+  var nE=order.length, out='', why='';
+  if(cur===0){
+    head(['id','enzyme_id','value','source_id','status']);
+    M.forEach(function(m){var tr=el('tr'); cell(tr,m[0]); cell(tr,m[1]); cell(tr,m[2]); cell(tr,m[3]); cell(tr,m[4],stCls(m[4])); tb.appendChild(tr);});
+    out='Строк в ответе: 12 — вся таблица измерений.';
+    why='Пока это просто «покажи таблицу». Вместо названий ферментов — номера: названия лежат в таблице enzymes. Нажмите «2 · where».';
+  } else if(cur===1){
+    head(['id','enzyme_id','value','source_id','status']);
+    M.forEach(function(m){var tr=el('tr', m[2]>=t?null:'l27-off'); cell(tr,m[0]); cell(tr,m[1]); cell(tr,m[2]); cell(tr,m[3]); cell(tr,m[4],stCls(m[4])); tb.appendChild(tr);});
+    out='Строк в ответе: '+on.length+' · разных ферментов среди них: '+nE+'.';
+    why= on.length>nE ? 'Фильтр оставил строки-измерения, а не ферменты: строк '+on.length+', ферментов '+nE+'. Зачёркнутое для запроса просто не существует.' : 'Двигайте порог: строки, не прошедшие условие, зачёркиваются.';
+  } else if(cur===2){
+    head(['name','value','source_id','status']);
+    on.slice().sort(function(a,b){return a[1]<b[1]?-1:a[1]>b[1]?1:0;}).forEach(function(m){var tr=el('tr'); cell(tr,E[m[1]]); cell(tr,m[2]); cell(tr,m[3]); cell(tr,m[4],stCls(m[4])); tb.appendChild(tr);});
+    out='Строк в ответе: '+on.length+' — те же, но с названиями.';
+    why='join подставил название по номеру фермента. m и e — короткие прозвища таблиц: m.value — «значение из measurements», e.name — «название из enzymes». Строк столько же: одна строка — по-прежнему одно измерение.';
+  } else {
+    head(['фермент','изм.','ист.','от °C','до °C']);
+    var kept=0;
+    order.forEach(function(k){
+      var x=g[k], ns=Object.keys(x.src).length, pass=(cur<4||ns>=2);
+      var tr=el('tr', pass?null:'l27-off'); cell(tr,E[k]); cell(tr,x.n); cell(tr,ns); cell(tr,x.min); cell(tr,x.max); tb.appendChild(tr); if(pass) kept++;
+    });
+    if(cur===3){
+      out='Строк в ответе: '+nE+' — теперь одна строка = один фермент.';
+      why='group by собрал измерения каждого фермента в одну строку; count(*) — сколько измерений, count(distinct …) — сколько разных источников. Вот ответ на «сколько ферментов».';
+    } else {
+      out='Групп осталось: '+kept+' из '+nE+'.';
+      why= kept===nE ? 'При пороге '+t+' °C у каждого фермента по два источника — having никого не отсеял. Поставьте порог 65 °C: у двоих останется один источник.' : 'having отсеял ферменты, у которых при '+t+' °C и выше только один источник: where фильтрует строки, having — группы.';
+    }
+  }
+  if(!on.length && cur>0){ out='Строк в ответе: 0 — ни одно измерение не дотягивает до '+t+' °C.'; why='Опустите порог.'; }
+  $('l27out').textContent=out; $('l27why').textContent=why;
+  Array.prototype.forEach.call($('l27steps').children,function(b,i){b.classList.toggle('primary',i===cur);});
+}
+var CR=[['real','на настоящем ПЭТ (плёнка, порошок), не на модельном веществе'],['two','не меньше двух независимых источников'],['ok','хотя бы одно из этих измерений подтверждено']];
+var crit={real:true,two:true,ok:true};
+function drawCand(){
+  var ul=$('l27cand'); ul.textContent=''; var pass=[];
+  ['E3','E4','E5','E6'].forEach(function(k){
+    var rows=M.filter(function(m){return m[1]===k && m[2]>=60 && (!crit.real || m[5]!=='модельное');});
+    var src={}; rows.forEach(function(m){src[m[3]]=1;}); var ns=Object.keys(src).length;
+    var conf=rows.some(function(m){return /подтверждено/.test(m[4]);});
+    var fails=[];
+    if(!rows.length) fails.push('при 60 °C и выше мерили только на модельном веществе');
+    else { if(crit.two && ns<2) fails.push('источник всего один'); if(crit.ok && !conf) fails.push('ни одно измерение не подтверждено'); }
+    var li=el('li', fails.length?'l27-fail':'l27-pass');
+    li.appendChild(el('b',null,E[k]+' — '));
+    if(fails.length){ li.appendChild(document.createTextNode('не прошёл: '+fails.join('; ')+'.')); }
+    else {
+      var vals=rows.map(function(m){return m[2];}), mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
+      var txt='прошёл: '+rows.length+' изм. при '+mn+(mx>mn?'–'+mx:'')+' °C, источников '+ns+(conf?', есть подтверждённое':'')+'.';
+      if(mx-mn>5) txt+=' Значения расходятся на '+(mx-mn)+' °C — больше допуска 5 °C: в отчёт.';
+      if(rows.some(function(m){return m[5]==='модельное';})) txt+=' Часть измерений — на модельном веществе.';
+      li.appendChild(document.createTextNode(txt)); pass.push(E[k]);
+    }
+    ul.appendChild(li);
+  });
+  var n=pass.length;
+  $('l27cout').textContent = n===0 ? 'Не прошёл никто — это тоже вывод: данных для выбора не хватает.' : (n<=3 ? 'Кандидатов: '+n+' ('+pass.join(', ')+'). Это не рейтинг: кто из них лучше, покажет опыт в одинаковых условиях.' : 'Прошли '+n+' — больше трёх. Добавьте критерий или выберите трёх сами, записав основание.');
+}
+function buildCrit(){
+  var box=$('l27crit'); box.textContent='';
+  CR.forEach(function(c){
+    var lab=el('label'), cb=el('input'); cb.type='checkbox'; cb.checked=crit[c[0]];
+    cb.addEventListener('change',function(){crit[c[0]]=cb.checked; drawCand();});
+    lab.appendChild(cb); lab.appendChild(el('span',null,c[1])); box.appendChild(lab);
+  });
+}
+STEPS.forEach(function(s,i){var b=el('button',null,s); b.type='button'; b.addEventListener('click',function(){cur=i; draw();}); $('l27steps').appendChild(b);});
+$('l27thr').addEventListener('input',draw);
+$('l27reset').addEventListener('click',function(){cur=0; $('l27thr').value=60; crit={real:true,two:true,ok:true}; buildCrit(); draw(); drawCand();});
+buildCrit(); draw(); drawCand();
+})();
+</script>

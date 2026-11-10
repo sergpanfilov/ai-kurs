@@ -1,183 +1,212 @@
-  <div class="stack"><span class="eyebrow">Модуль 4 · Урок 13 из 25 · 25 минут</span>
-    <h1>ТЗ на базу данных</h1>
-    <p class="lead">Как превратить «хочу базу ферментов» в документ, по которому агент построит базу, а вы сможете проверить, что получилось.</p></div>
+  <style>
+    .l13-files{display:flex;flex-direction:column;gap:6px}
+    .l13-files label{display:flex;gap:8px;align-items:baseline;font-size:.92rem}
+    .l13-files .mono{font-size:.85rem}
+    .l13-modes{display:flex;flex-wrap:wrap;gap:6px}
+    .l13-res{display:grid;grid-template-columns:7.5rem 1fr;gap:6px 12px;font-size:.92rem}
+    .l13-res .k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);padding-top:2px}
+    .l13-bad{color:var(--bad)} .l13-ok{color:var(--good)}
+    .l13-log{font-family:var(--f-mono);font-size:.84rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;margin:0}
+  </style>
+  <div class="stack"><span class="eyebrow">Модуль 3 · Урок 13 из 28 · 30 минут</span>
+    <h1>Рабочее место: папка проекта и агент</h1>
+    <p class="lead">Где физически живёт ваш проект, как открыть агента для кода в своей папке, какие настройки включить в первый же день и куда записывать решения.</p></div>
 
-  <div class="stack"><h2>Начинать с вопросов, а не с таблиц</h2>
-    <p><b>Техническое задание</b> (ТЗ)<sup class="fn" data-fn="1">1</sup> — документ, по которому исполнитель делает работу, а заказчик её принимает. Хорошее ТЗ <span class="hl">превращает пожелание в проверяемый результат</span><sup class="fn" data-fn="2">2</sup>. «Хочу базу ферментов для ПЭТ» — пожелание. «База отвечает на пять вопросов, у каждой цифры есть источник, единица и статус» — уже можно проверить.</p>
-    <p>Если попросить модель «спроектируй базу ферментов», она предложит типичную: два десятка полей, половина из которых вам не понадобится. Поэтому начинать стоит не с таблиц, а с вопросов, на которые база должна отвечать. Их вы записали в уроке 5 (шаг проекта 5).</p>
-    <p>Дальше простое правило: <span class="hl">каждое поле отвечает хотя бы на один вопрос</span>. Вопрос «Какие ферменты работают при 60–70 °C?» требует полей «температура опыта» и «значение». Вопрос «Насколько можно доверять цифре?» — полей «источник» и «статус проверки». Поле, которое ни на что не отвечает, — лишняя работа агента и лишнее место для ошибок.</p>
+  <div class="stack"><h2>Проект живёт в файлах</h2>
+    <p>Модель ничего не помнит между разговорами (урок 3), а окно конечно (урок 5). Всё, что агент «знает» о проекте в начале новой сессии, обвязка кладёт в окно из <b>файлов</b>. Поэтому у проекта должно быть постоянное место — <span class="hl">папка, где лежат правила, журнал, таблицы и статьи</span>. Её читаете и вы, и агент.</p>
+    <div class="callout fact"><span class="lbl">Рабочая среда курса</span><p>С этого урока — <b>Claude Code в папке проекта</b>, через приложение Claude для компьютера. Нужен платный план (Pro — $20 в месяц, актуально на ноябрь 2026). Без него есть запасной путь — он ниже, в разделе «Открыть агента», с честным списком того, что получится, а что нет.</p></div></div>
+
+  <div class="stack"><h2>Файл, папка, формат</h2>
+    <p><b>Файл</b> — именованный кусок данных на диске. <b>Папка</b> — место, где лежат файлы и другие папки. Что внутри файла, подсказывает окончание имени — <b>формат</b>:</p>
+    <ul class="plain">
+      <li><span class="mono">.txt</span> и <span class="mono">.md</span> — просто текст. <b>Markdown</b> (.md) — текст с простой разметкой: <span class="mono">#</span> в начале строки — заголовок, <span class="mono">-</span> — пункт списка<sup class="fn" data-fn="1">1</sup>. Его одинаково легко читают человек и агент.</li>
+      <li><span class="mono">.csv</span> — таблица текстом: одна строка — одна запись, значения через запятую. Открывается в Excel и Google Таблицах.</li>
+      <li><span class="mono">.json</span> — данные вида «имя поля: значение» в фигурных скобках: <span class="mono">{"name": "LCC", "t_opt": 72}</span>. Так одна строка таблицы выглядит для программ.</li>
+      <li><span class="mono">.pdf</span> — свёрстанный документ, например статья.</li>
+    </ul>
+    <p><b>Путь</b> — адрес файла: <span class="mono">~/Projects/pet-enzymes/journal.md</span> читается как «в домашней папке (<span class="mono">~</span>) → папка Projects → папка проекта → файл журнала».</p></div>
+
+  <div class="stack"><h2>Папка проекта</h2>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Папка проекта pet-enzymes. CLAUDE.md — правила, агент читает в начале каждой сессии. journal.md — журнал, по просьбе. TZ.md — техническое задание, по просьбе. data — таблицы CSV, агент читает и меняет. articles — статьи PDF, по просьбе, тяжёлые. notes — заметки. .env — секреты, чтение запретить. Внизу: окно в начале сессии — инструкции обвязки, CLAUDE.md и ваше задание; остальное попадает в окно, только когда агент вызовет чтение файла.">
+      <g>
+        <text x="6" y="22" font-size="14" font-weight="600">pet-enzymes/</text>
+        <path class="arr" d="M14 30V318"/>
+        <path class="arr" d="M14 52H30M14 94H30M14 136H30M14 178H30M14 220H30M14 262H30M14 304H30"/>
+        <rect class="box" x="34" y="34" width="300" height="36" rx="5" style="stroke:var(--accent);stroke-width:2"/>
+        <text class="sm" x="44" y="50" style="fill:var(--accent)">CLAUDE.md — правила (урок 15)</text>
+        <text class="sm" x="44" y="64">агент читает в начале каждой сессии</text>
+        <rect class="box" x="34" y="76" width="300" height="36" rx="5"/>
+        <text class="sm" x="44" y="92">journal.md — журнал решений</text>
+        <text class="sm" x="44" y="106" style="fill:var(--muted)">агент читает, когда вы попросите</text>
+        <rect class="box" x="34" y="118" width="300" height="36" rx="5"/>
+        <text class="sm" x="44" y="134">TZ.md — задание на базу (урок 16)</text>
+        <text class="sm" x="44" y="148" style="fill:var(--muted)">по просьбе</text>
+        <rect class="box" x="34" y="160" width="300" height="36" rx="5"/>
+        <text class="sm" x="44" y="176">data/ — таблицы .csv</text>
+        <text class="sm" x="44" y="190" style="fill:var(--muted)">агент читает и меняет — с вашего «да»</text>
+        <rect class="box" x="34" y="202" width="300" height="36" rx="5"/>
+        <text class="sm" x="44" y="218">articles/ — статьи .pdf</text>
+        <text class="sm" x="44" y="232" style="fill:var(--muted)">по просьбе; одна статья — тысячи токенов</text>
+        <rect class="box" x="34" y="244" width="300" height="36" rx="5"/>
+        <text class="sm" x="44" y="260">notes/ — ваши заметки</text>
+        <text class="sm" x="44" y="274" style="fill:var(--muted)">по просьбе</text>
+        <rect class="box" x="34" y="286" width="300" height="36" rx="5" style="stroke:var(--signal);stroke-width:2"/>
+        <text class="sm" x="44" y="302" style="fill:var(--signal)">.env — секреты, ключи (урок 25)</text>
+        <text class="sm" x="44" y="316">чтение запретить заранее</text>
+        <rect class="box" x="6" y="348" width="328" height="96" rx="8" style="stroke:var(--accent);stroke-width:2"/>
+        <text x="18" y="372" font-size="14" font-weight="600">Окно в начале сессии</text>
+        <text class="sm" x="18" y="394">инструкции обвязки + CLAUDE.md</text>
+        <text class="sm" x="18" y="412">+ ваше задание. Остальные файлы — только</text>
+        <text class="sm" x="18" y="430">когда агент вызовет чтение (урок 11)</text>
+      </g>
+    </svg></div>
+    <p>Правила (<span class="mono">CLAUDE.md</span>) короткие и ложатся в окно каждый раз — как инструкция на стене лаборатории. Всё остальное агент открывает по делу. Так окно не забивается, а знание о проекте не теряется между сессиями<sup class="fn" data-fn="2">2</sup>.</p></div>
+
+  <div class="stack"><h2>Открыть агента в своей папке</h2>
+    <p><b>Через приложение (без терминала).</b> Установите приложение Claude для компьютера и войдите. Слева вверху — вкладка <b>Code</b>. Под полем ввода выберите среду <b>Local</b> (ваш компьютер), затем <b>Open folder…</b> и папку проекта<sup class="fn" data-fn="3">3</sup>.</p>
+    <p><b>Через терминал.</b> Перейдите в папку проекта и наберите <span class="mono">claude</span>. Установка — одна команда со страницы документации.</p>
+    <p>Дальше — разговор, как в чате. Разница в том, что агент <b>действует на вашем компьютере</b>: перед правкой он показывает, что именно изменит, и ждёт кнопки «да» или «нет». Команды с косой чертой набирают прямо в поле ввода: <span class="mono">/</span> покажет их список.</p>
+    <div class="callout"><span class="lbl">Запасной путь без Claude Code</span><p>В приложении Claude для компьютера можно дать обычному Claude доступ к папке: он читает и создаёт в ней файлы, пока приложение открыто. Так получатся уроки 14–17: пилотный сбор, ТЗ, приёмка. Не получатся или будут неудобны уроки 18–26: подчинённые агенты, тонкие правила доступа, история изменений, база в Supabase.</p></div></div>
+
+  <div class="stack"><h2>Первые настройки безопасности</h2>
+    <p>Сколько агент делает без спроса, задаёт <b>режим разрешений</b>. Он виден под полем ввода; в терминале переключается клавишами Shift+Tab<sup class="fn" data-fn="4">4</sup>.</p>
+    <div class="scroll"><table>
+      <tr><th>Режим</th><th>Без спроса</th><th>Спрашивает</th></tr>
+      <tr><td><b>Manual</b> (вручную)</td><td>только чтение файлов в папке</td><td>каждую правку и команду</td></tr>
+      <tr><td><b>Accept edits</b></td><td>чтение и правка файлов в папке</td><td>команды</td></tr>
+      <tr><td><b>Plan</b></td><td>чтение; пишет план, ничего не меняет</td><td>одобрить план</td></tr>
+      <tr><td><b>Auto</b></td><td>почти всё; рискованное останавливает отдельная модель-проверяльщик</td><td>редко (урок 22)</td></tr>
+    </table></div>
+    <div class="callout warn"><span class="lbl">Правило курса</span><p>До урока 18 работайте в режиме <b>Manual</b>. В терминале на ноябрь 2026 агент по умолчанию стартует в Auto — переключите. И помните: <span class="hl">читать файлы в своей папке агент может без спроса в любом режиме</span>. Поэтому секреты закрывают отдельным запретом: команда <span class="mono">/permissions</span> → правило запрета <span class="mono">Read(./.env)</span>. Это запрет для встроенного чтения файлов; полная защита секретов — урок 25.</p></div></div>
+
+  <div class="stack"><h2>Инструменты и журнал</h2>
+    <p><b>Встроено:</b> чтение и правка файлов в папке, поиск и чтение страниц в интернете, запуск команд. <b>Подключается:</b> коннекторы по стандарту MCP (урок 12). Что есть на самом деле, смотрите командами: <span class="mono">/mcp</span> — подключённые сервисы, <span class="mono">/permissions</span> — правила. Не спрашивайте об этом модель: о себе она тоже может выдумать (урок 6).</p>
+    <p><b>Журнал</b> из шага 1 переезжает в файл <span class="mono">journal.md</span>. Одна запись — дата, тип (<b>решение</b>, <b>проверка</b>, <b>ошибка</b>, <b>сделано</b>), что, почему и что отвергли. Настоящая запись из журнала этого курса:</p>
+    <pre class="l13-log">## 2026-11-10 · решение
+Адрес курса — agent.belhome.cc.
+Почему: ai.belhome.cc уже занят другим сайтом.
+Отвергли: переносить тот сайт.</pre>
+    <p>Через полгода такая запись отвечает на вопрос «почему так», которого не помнит ни агент, ни вы. Читать папку с <span class="mono">.md</span> как записную книжку удобно в бесплатной программе Obsidian — по желанию<sup class="fn" data-fn="5">5</sup>.</p></div>
+
+  <div class="stack"><h2>Что увидит агент</h2>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
-      <p>Отметьте вопросы, на которые должна отвечать ваша база. Ниже — поля, которые для этого нужны. Модель вдобавок предложила пару полей «на всякий случай» — посмотрите, что с ними станет.</p>
-      <div class="checks" id="l13q"></div>
-      <div id="l13tables" class="stack" style="gap:10px"></div>
-      <p class="out" id="l13out"></p>
-      <p class="why">Набор полей условный, учебный: ваша структура может отличаться. Звёздочкой отмечены обязательные поля — они нужны при любых вопросах. Число после стрелки — номер вопроса, которому нужно поле.</p>
+      <p>Что увидит агент? Отметьте, какие файлы лежат в папке, выберите режим — и посмотрите, что агент прочитает в начале сессии, что изменит без спроса и о чём спросит.</p>
+      <div class="l13-files" id="l13files"></div>
+      <div class="l13-modes" id="l13modes"></div>
+      <label style="display:flex;gap:8px;align-items:baseline;font-size:.92rem"><input type="checkbox" id="l13deny"> запрет <span class="mono">Read(./.env)</span> через /permissions</label>
+      <div class="l13-res" id="l13res"></div>
+      <div class="row"><button id="l13reset" type="button">Сначала</button></div>
+      <p class="why">Объёмы в токенах условные, порядок величин. Поведение режимов — по документации Claude Code, актуально на ноябрь 2026. Упрощение: на деле в режиме Plan агент может выполнять и безопасные команды для чтения.</p>
     </div></div>
 
-  <div class="stack"><h2>Таблица, строка, связь</h2>
-    <p>Три слова, без которых в ТЗ на базу не обойтись.</p>
-    <ul class="plain">
-      <li><b>Таблица</b> — список однотипных объектов: ферменты, статьи, измерения.</li>
-      <li><b>Строка</b> — один объект. Столбцы строки — его <b>поля</b>: название, организм, номер в UniProt. У каждой строки есть <b>ключ</b> — короткий номер, который больше нигде не повторяется.</li>
-      <li><b>Связь</b> — поле, где записан ключ строки из другой таблицы. В измерении не пишут название статьи целиком, а пишут «источник: S2».</li>
-    </ul>
-    <p>Зачем три таблицы, а не одна большая? У одного фермента десятки измерений из разных статей. В одной статье — измерения нескольких ферментов. В общей таблице название статьи повторилось бы в сотне строк, а через месяц в половине из них оно было бы написано по-разному<sup class="fn" data-fn="3">3</sup>.</p>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 492" width="340" height="492" role="img" aria-label="Три таблицы: ферменты, измерения, источники. Строка измерения M1 ссылается на фермент E3 и на источник S2; фермент E3 — вариант фермента E2">
-      <g>
-        <rect class="box" x="4" y="6" width="332" height="116" rx="6"/>
-        <text x="14" y="30" font-size="14" font-weight="600">enzymes — ферменты</text>
-        <text class="sm" x="14" y="52">id · название · организм · UniProt</text>
-        <text class="sm" x="14" y="72">E1 · IsPETase · I. sakaiensis · A0A0K8P6T7</text>
-        <text class="sm" x="14" y="92">E2 · LCC · компост · G9BY57</text>
-        <text class="sm" x="14" y="112" style="fill:var(--accent)">E3 · LCC-ICCG · вариант E2 · —</text>
-        <rect class="box" x="4" y="188" width="332" height="118" rx="6" style="stroke:var(--accent);stroke-width:2"/>
-        <text x="14" y="212" font-size="14" font-weight="600">measurements — измерения</text>
-        <text class="sm" x="14" y="234">id · фермент · источник · параметр ·</text>
-        <text class="sm" x="14" y="250">значение · единица · условия · статус</text>
-        <text class="sm" x="14" y="276" style="fill:var(--accent)">M1 · E3 · S2 · деполимеризация ПЭТ ·</text>
-        <text class="sm" x="14" y="292" style="fill:var(--accent)">≥ 90 · % · за 10 ч · подтверждено</text>
-        <rect class="box" x="4" y="372" width="332" height="96" rx="6"/>
-        <text x="14" y="396" font-size="14" font-weight="600">sources — источники</text>
-        <text class="sm" x="14" y="418">id · авторы, год · DOI</text>
-        <text class="sm" x="14" y="438">S1 · Yoshida 2016 · 10.1126/science.aad6359</text>
-        <text class="sm" x="14" y="458" style="fill:var(--accent)">S2 · Tournier 2020 · 10.1038/s41586-020-2149-4</text>
-      </g>
-      <g>
-        <path class="arr" d="M60 188V130"/><path class="head" d="M60 122l-5 9h10z"/>
-        <text class="sm" x="70" y="152">фермент = E3</text>
-        <text class="sm" x="70" y="168">у фермента много измерений</text>
-        <path class="arr" d="M60 306V364"/><path class="head" d="M60 372l-5-9h10z"/>
-        <text class="sm" x="70" y="334">источник = S2</text>
-        <text class="sm" x="70" y="350">в статье много измерений</text>
-      </g>
-      <text class="sm" x="4" y="486">строки настоящие, проверены 10.11.2026</text>
-    </svg></div>
-    <p>Четвёртая таблица проекта, <b>journal</b> (журнал), ни с чем не связана: в ней дата, что сделано, какое решение принято и почему. Это память проекта между сессиями.</p></div>
-
-  <div class="stack"><h2>Обязательные поля</h2>
-    <p>Три поля нужны при любых вопросах. Без них база превращается в набор чисел, которым нельзя доверять.</p>
-    <ul class="plain">
-      <li><b>Источник.</b> Без него цифру невозможно проверить, а значит, невозможно ей верить.</li>
-      <li><b>Единица.</b> Одно и то же свойство в статьях записывают по-разному<sup class="fn" data-fn="4">4</sup>.</li>
-      <li><b>Статус проверки:</b> «не проверено», «подтверждено», «расхождение». Без него проверенная строка не отличается от записанной агентом наспех.</li>
-    </ul>
-    <div class="callout fact"><span class="lbl">Пример из статьи</span><span class="big">16,7 г/л/ч</span><p>Так авторы LCC-ICCG описали производительность: граммы терефталата на литр в час<sup class="fn" data-fn="5">5</sup>. В той же статье есть «не меньше 90 % деполимеризации за 10 часов». В других работах активность пишут в единицах на миллиграмм белка. Без поля «единица» эти числа в одном столбце сравнивать нельзя.</p></div>
-    <div class="callout warn"><span class="lbl">Ловушка</span><p>У LCC в UniProt два номера EC: 3.1.1.74 и 3.1.1.101<sup class="fn" data-fn="6">6</sup>. Если в ТЗ поле EC рассчитано на одно значение, агент выберет одно наугад. В ТЗ надо решить заранее: хранить все номера или только «ПЭТ-гидролаза».</p></div></div>
-
-  <div class="stack"><h2>Критерии готовности и чего в ТЗ быть не должно</h2>
-    <p>Критерий готовности — условие, которое проверяется «да или нет». Не «база должна быть качественной», а так:</p>
-    <ul class="plain">
-      <li>в базе не меньше 50 ферментов, без повторов по номеру UniProt;</li>
-      <li>у каждого измерения заполнены источник, единица и статус;</li>
-      <li>температура везде в °C;</li>
-      <li>в случайной выборке из 30 строк расхождений с источником не больше двух.</li>
-    </ul>
-    <p>Как проводить такую приёмку, разберём в уроке 14.</p>
-    <p>Чего в ТЗ быть не должно:</p>
-    <ul class="plain">
-      <li><b>Размытых слов</b>: «удобно», «по возможности», «качественно». Их нельзя проверить.</li>
-      <li><b>Полей «на всякий случай»</b>, которые не отвечают ни на один вопрос.</li>
-      <li><b>Указаний, как писать программу</b>, если это не настоящее ограничение. Ваше дело — что и зачем; как — дело исполнителя.</li>
-      <li><b>Решений, которых вы не принимали.</b> Модель охотно предложит структуру. Но утверждаете её вы, и в ТЗ попадает только утверждённое.</li>
-    </ul>
+  <div class="stack"><h2>Примеры</h2>
     <div class="two">
-      <div class="panel"><span class="eyebrow">Биотехнология</span><p>План эксперимента начинают с вопроса, а не с закупки реактивов: что хотим узнать, что будем измерять, в каких единицах, сколько повторов. ТЗ на базу — тот же план, только для данных. Поля — это ваши измеряемые величины и условия опыта.</p></div>
-      <div class="panel"><span class="eyebrow">Свои проекты</span><p>Курс, который вы читаете, тоже сделан по ТЗ. В нём есть цель, аудитория, формат урока, правила текста и раздел «Критерии приёмки»: «в каждом уроке есть все десять частей», «страница читается на телефоне без горизонтальной прокрутки». Каждый пункт проверяется «да или нет» — в том числе программой.</p></div>
+      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Папка <span class="mono">pet-enzymes</span>: в <span class="mono">CLAUDE.md</span> три правила — «температуру писать в °C», «у каждого числа — источник и дословная фраза», «ничего не исправлять молча». В <span class="mono">articles/</span> — пять статей о LCC и IsPETase. Агент открывает их по одной, а итог пишет в <span class="mono">data/</span>.</p></div>
+      <div class="panel"><span class="eyebrow">Свои проекты</span><p>Этот курс — тоже папка на <span class="mono">ftm</span>: уроки лежат в <span class="mono">site/lessons/</span>, отчёты учебной команды — в <span class="mono">docs/review/</span>, а в <span class="mono">CHANGELOG.md</span> — журнал «что и когда менялось». Каждая новая сессия агента начинает с правил и паспорта проекта и продолжает с того места, где остановилась прошлая.</p></div>
     </div>
     <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
-      <li data-fn="1">Инженеру-экономисту слово знакомо по договорам и проектной документации — там ТЗ тоже «инструмент общения заказчика и исполнителя», который исключает двоякое толкование. Короткая справка о том, что обычно входит в ТЗ: <a href="https://ru.wikipedia.org/wiki/Техническое_задание" target="_blank" rel="noopener">Википедия: «Техническое задание»</a> (справка, рус., 5 мин). ТЗ для агента короче, но держится на той же идее объективных критериев приёмки.</li>
-      <li data-fn="2">У программистов с 2025 года для этого есть название — «разработка от спецификации» (spec-driven development): сначала текст «что и зачем», потом план, потом список мелких задач, и только затем код. GitHub выпустил для этого бесплатный набор шаблонов, он работает и с Claude Code: <a href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/" target="_blank" rel="noopener">GitHub Blog: Spec-driven development with AI</a> (статья, англ., сентябрь 2025, 10 мин). Читать ради логики этапов, команды можно пропустить.</li>
-      <li data-fn="3">Правило «каждый факт хранится в одном месте» в теории баз данных называют <b>нормализацией</b>, а ступени этой аккуратности — нормальными формами. Для базы ферментов достаточно понимать первые три: <a href="https://ru.wikipedia.org/wiki/Нормальная_форма" target="_blank" rel="noopener">Википедия: «Нормальная форма»</a> (справка, рус., 20 мин; примеры с таблицами понятны без программирования).</li>
-      <li data-fn="4">Биохимики договорились, что именно надо сообщать о каждом измерении активности фермента, — это рекомендации STRENDA: условия опыта (температура, pH, буфер, концентрации) и сами величины с единицами. Готовый список полей, который можно взять за основу ТЗ: <a href="https://beilstein-strenda-db.org/strenda/public/guidelines.xhtml" target="_blank" rel="noopener">STRENDA Guidelines</a> (стандарт, англ., 20 мин). Больше шестидесяти биохимических журналов советуют авторам сверяться с ними.</li>
-      <li data-fn="5">Tournier и соавт., «An engineered PET depolymerase to break down and recycle plastic bottles», Nature, 2020, DOI 10.1038/s41586-020-2149-4. Цифры взяты из аннотации статьи.</li>
-      <li data-fn="6">Запись UniProt G9BY57 (Leaf-branch compost cutinase), проверено 10.11.2026. Организм там указан как «неизвестный прокариот»: фермент нашли в метагеноме компоста, а не в выделенном штамме.</li>
+      <li data-fn="1">Вся разметка Markdown на одной странице с примерами «как написать → как выглядит». Хватит 10 минут, чтобы читать и писать журнал и правила: <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener">Markdown Guide: Basic Syntax</a> (справочник, англ., 10 мин).</li>
+      <li data-fn="2">Claude Code в начале каждой сессии загружает файлы CLAUDE.md (свой в папке проекта и общий для всех проектов) и короткие заметки, которые агент ведёт сам. Это подсказка, а не замок: запреты задаются разрешениями. <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code Docs: How Claude remembers your project</a> (документация, англ., 15 мин).</li>
+      <li data-fn="3">Пошаговая инструкция от установки до первой правки, с тем, что вы увидите на экране: <a href="https://code.claude.com/docs/en/desktop-quickstart" target="_blank" rel="noopener">Claude Code Docs: Get started with the desktop app</a> (инструкция, англ., 10 мин). Claude Code входит в планы Pro, Max, Ultra, Team и Enterprise; приложение есть для macOS, Windows и Linux (бета). Проверено 10.11.2026.</li>
+      <li data-fn="4">Таблица всех режимов и того, что в каждом проходит без спроса; там же — с какого режима агент стартует в терминале, в приложении и в редакторе кода: <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Claude Code Docs: Choose a permission mode</a> (документация, англ., 15 мин). Если терминал никогда не открывали — у той же документации есть <a href="https://code.claude.com/docs/en/terminal-guide" target="_blank" rel="noopener">Terminal guide for new users</a>.</li>
+      <li data-fn="5">Заметки Obsidian — обычные файлы .md в вашей папке: их читает любой редактор и любой агент, и они не пропадут вместе с сервисом. Глава Obsidian Стеф Анго назвал это «файл важнее программы»: <a href="https://stephango.com/file-over-app" target="_blank" rel="noopener">Steph Ango: File over app</a> (эссе, англ., 3 мин). Программа бесплатна; платные только синхронизация и публикация (актуально на ноябрь 2026).</li>
     </ol></div></div>
 
   <div class="panel"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
-      <tr><td><b>ТЗ</b></td><td>техническое задание: что сделать, зачем и по каким признакам принять</td></tr>
-      <tr><td><b>Таблица</b></td><td>список однотипных объектов, по строке на объект</td></tr>
-      <tr><td><b>Поле</b></td><td>одно свойство объекта, столбец таблицы</td></tr>
-      <tr><td><b>Ключ</b></td><td>короткий номер строки, который не повторяется: E2, S2, M1</td></tr>
-      <tr><td><b>Связь</b></td><td>поле, где записан ключ строки из другой таблицы</td></tr>
+      <tr><td><b>Файл, папка, путь</b></td><td>именованный кусок данных; место для файлов; адрес файла вида <span class="mono">~/Projects/…</span></td></tr>
+      <tr><td><b>Markdown (.md)</b></td><td>текст с простой разметкой: <span class="mono">#</span> заголовок, <span class="mono">-</span> список</td></tr>
+      <tr><td><b>CSV / JSON</b></td><td>таблица текстом через запятые / запись «поле: значение» для программ</td></tr>
+      <tr><td><b>CLAUDE.md</b></td><td>файл правил проекта; агент читает его в начале каждой сессии</td></tr>
+      <tr><td><b>Режим разрешений</b></td><td>что агент делает без спроса: Manual, Accept edits, Plan, Auto</td></tr>
+      <tr><td><b>Команда с косой чертой</b></td><td>служебная команда обвязке: <span class="mono">/permissions</span>, <span class="mono">/mcp</span></td></tr>
     </table></div></div>
 
   <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
-    <li>ТЗ превращает пожелание в проверяемый результат.</li>
-    <li>Структура базы выводится из вопросов к ней: каждое поле отвечает хотя бы на один вопрос.</li>
-    <li>Ферменты, источники и измерения — отдельные таблицы, связанные ключами. У каждого измерения обязательны источник, единица и статус.</li>
-    <li>Критерии готовности проверяются «да или нет». Размытых слов и полей «на всякий случай» в ТЗ нет.</li></ul></div>
+    <li>Память проекта — файлы в одной папке: правила, журнал, ТЗ, таблицы, статьи.</li>
+    <li>В начале сессии в окно попадают только инструкции обвязки, CLAUDE.md и задание; остальное агент открывает по делу.</li>
+    <li>Claude Code открывают вкладкой Code в приложении или командой <span class="mono">claude</span> в терминале; до урока 18 — режим Manual и запрет на чтение секретов.</li>
+    <li>Что умеет агент, проверяют командами <span class="mono">/mcp</span> и <span class="mono">/permissions</span>, а не вопросом к модели.</li></ul></div>
 
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Откройте проект Claude из урока 12 и напишите: «Вот пять вопросов к моей базе. Задавай мне уточняющие вопросы по одному, пока не сможешь предложить структуру таблиц. Для каждого поля укажи, на какой из пяти вопросов оно отвечает».</p>
-    <p>Ответьте на вопросы модели. В полученной структуре вычеркните поля, которые не отвечают ни на один вопрос. Запишите, сколько полей было предложено и сколько осталось.</p></div>
+    <p>Создайте пустую папку и откройте в ней Claude Code (или запасной путь). Включите режим Manual. Попросите: «Создай файл hello.md: заголовок — название моего проекта и три пункта списка о том, что он будет делать». Посмотрите, как агент спрашивает разрешения, и ответьте «да».</p>
+    <p>Откройте файл в обычном блокноте. Запишите: что спросил агент перед созданием файла, как выглядят <span class="mono">#</span> и <span class="mono">-</span> в тексте и что показала команда <span class="mono">/permissions</span>.</p></div>
   <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 13</span>
-    <p>Напишите ТЗ на базу на одну-две страницы. Разделы: цель и пять вопросов; таблицы и поля (для каждого поля — какой вопрос оно обслуживает); обязательные поля и допустимые значения статуса; единицы измерения; критерии готовности; что не входит в работу.</p>
-    <p>Утвердите структуру: перечитайте на следующий день и запишите в журнал проекта «структура утверждена, дата, что изменено по сравнению с черновиком».</p></div>
+    <p>Создайте папку проекта по схеме: <span class="mono">CLAUDE.md</span>, <span class="mono">journal.md</span>, <span class="mono">data/</span>, <span class="mono">articles/</span>, <span class="mono">notes/</span>. Перенесите журнал из шагов 1–12 в <span class="mono">journal.md</span>, туда же — пять вопросов к базе (шаг 6) и словарь терминов (шаг 2). Запрет на чтение <span class="mono">.env</span> поставьте сразу, даже если файла ещё нет. Первая запись в новом файле — <b>решение</b>: какую рабочую среду выбрали и почему.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
-    <p>Путь от «таблицы, строки, связи» к настоящему проектированию данных и к тому, как модели уже сегодня собирают базы ферментов из статей.</p>
+    <p>По желанию; одного материала достаточно. Этот путь — от первой сессии в своей папке до привычки держать проект в файлах, понятных и вам, и агенту.</p>
     <h3>Понять лучше</h3>
     <ul class="links">
-      <li><a href="https://habr.com/ru/articles/856576/" target="_blank" rel="noopener">Хабр: «Базы данных: общие понятия. SA для самых маленьких»</a><span class="meta">статья · рус. · 7 мин</span><p>Таблицы, ключи, связи «один ко многим» и «многие ко многим» в картинках. Сравнение с NoSQL можно пропустить.</p></li>
-      <li><a href="https://ru.wikipedia.org/wiki/Внешний_ключ" target="_blank" rel="noopener">Википедия: «Внешний ключ»</a><span class="meta">справка · рус. · 10 мин</span><p>Строгое определение связи между таблицами и что база делает, если связанную строку удалить.</p></li>
-      <li><a href="https://kbroman.org/dataorg/" target="_blank" rel="noopener">Karl Broman: Data organization in spreadsheets</a><span class="meta">урок · англ. · 30 мин</span><p>Короткие правила для учёных, которые хранят данные в таблицах: одно значение в ячейке, единые названия, словарь данных. По мотивам статьи Broman и Woo (2018). Пригодится, даже если база так и останется таблицей.</p></li>
+      <li><a href="https://code.claude.com/docs/en/desktop-quickstart" target="_blank" rel="noopener">Claude Code Docs: Get started with the desktop app</a><span class="meta">инструкция · англ. · 10 мин · если откроете одно — это</span><p>Установка, вкладка Code, выбор папки, первая правка и кнопки «да / нет». Ровно то, что нужно для задания урока.</p></li>
+      <li><a href="https://www.markdownguide.org/getting-started/" target="_blank" rel="noopener">Markdown Guide: Getting Started</a><span class="meta">статья · англ. · 10 мин</span><p>Что такое Markdown, почему его файлы переживут любую программу и где его читают — от блокнота до Obsidian.</p></li>
     </ul>
     <h3>Копнуть глубже</h3>
     <ul class="links">
-      <li><a href="https://code.claude.com/docs/ru/best-practices" target="_blank" rel="noopener">Claude Code: «Лучшие практики»</a><span class="meta">документация · рус. · 10 мин на раздел</span><p>Раздел «Сначала проведите мозговой штурм с Claude»: как попросить модель расспросить вас и записать ТЗ в файл, а строить уже в новой сессии.</p></li>
-      <li><a href="https://supabase.com/docs/guides/database/tables" target="_blank" rel="noopener">Supabase: Tables and data</a><span class="meta">документация · англ. · 15 мин</span><p>Как таблицы, ключи и связи выглядят в Supabase, куда база переедет в модуле 6. Примеры кода можно пропускать.</p></li>
-      <li><a href="https://ru.wikipedia.org/wiki/Реляционная_модель_данных" target="_blank" rel="noopener">Википедия: «Реляционная модель данных»</a><span class="meta">справка · рус. · 20 мин</span><p>Теория, на которой стоят почти все базы данных с 1970-х: отношения, ключи, целостность. Для инженера, которому хочется увидеть строгую основу, а не только практические правила.</p></li>
+      <li><a href="https://academy.claude.com/courses/claude-code-101" target="_blank" rel="noopener">Claude Academy: Claude Code 101</a><span class="meta">курс · англ. · 1–2 часа</span><p>Бесплатный курс Anthropic по Claude Code в своём темпе: сессии, правила проекта, разрешения. Код можно не писать — смотрите, как устроена работа.</p></li>
+      <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Claude Code Docs: Best practices</a><span class="meta">документация · англ. · 25 мин</span><p>Как ставить агенту задачи, когда просить план, как держать файл правил коротким. Подготовка к модулю 4.</p></li>
     </ul>
     <h3>Куда движется область</h3>
     <ul class="links">
-      <li><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Birgitta Böckeler: Understanding Spec-Driven-Development</a><span class="meta">статья · англ. · октябрь 2025 · 25 мин</span><p>Трезвый разбор трёх инструментов «разработки от спецификации». Вывод: писать спецификацию до работы агента полезно, но инструменты пока порождают много текста, который тяжело проверять, а агенты не всегда ему следуют. Зрелость: подход в моде, устоявшихся практик ещё нет.</p></li>
-      <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12355964/" target="_blank" rel="noopener">Finding the dark matter: LLM-based enzyme kinetic data extractor (EnzyExtract)</a><span class="meta">статья · англ. · Protein Science, 2025 · 30 мин на введение и рисунки</span><p>Ровно наш сквозной проект, только в промышленном масштабе: модели прочитали около 138 тысяч статей и собрали больше 200 тысяч записей о кинетике ферментов, многих из которых нет в BRENDA. Посмотрите, какие поля и какие проверки понадобились авторам. Зрелость: работающий научный инструмент с открытым кодом.</p></li>
-      <li><a href="https://www.biorxiv.org/content/10.1101/2025.03.03.641178v1" target="_blank" rel="noopener">Enzyme Co-Scientist: LLMs for Enzyme Kinetic Data Extraction</a><span class="meta">препринт · англ. · bioRxiv, март 2025 · 20 мин</span><p>Другая группа, та же задача: агентный конвейер извлёк больше 90 тысяч записей о кинетике из примерно 3,5 тысячи статей, и на выборке, размеченной экспертами, совпадение с ними высокое. Полезно сравнить с EnzyExtract — как по-разному можно разбить работу на шаги и где модели ошибаются. Зрелость: препринт, без рецензии.</p></li>
+      <li><a href="https://agents.md/" target="_blank" rel="noopener">AGENTS.md — открытый формат файла правил</a><span class="meta">сайт · англ. · 5 мин</span><p>Попытка договориться об одном файле правил для всех агентов для кода: им пользуются десятки тысяч открытых проектов, его читают Codex, Jules и другие; Claude Code умеет читать его вместо CLAUDE.md. Уже в продуктах, но стандарт молодой.</p></li>
+      <li><a href="https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude" target="_blank" rel="noopener">Справочный центр Claude: Cowork and chat are one Claude</a><span class="meta">справка · англ. · 7 мин</span><p>Обычный Claude тоже получил доступ к папкам на компьютере. Граница между агентом для документов и агентом для кода стирается — следите, что из запасного пути станет основным.</p></li>
     </ul></div>
 
 
 <script>
 (function(){
-var $=AI.$, el=AI.el;
-var Q=['Какие ферменты работают при 60–70 °C?','Из каких организмов самые термостабильные ферменты?','Насколько можно доверять каждой цифре?','Какие варианты получены из IsPETase и чем они лучше?','На каком ПЭТ мерили: плёнка, порошок, бутылки?'];
-// [таблица, поле, вопросы (номера с 1), обязательное?, предложено моделью «на всякий случай»?]
+var $=AI.$, el=AI.el, SYS=15000;
 var F=[
- ['enzymes','id',[],1],['enzymes','название',[],1],['enzymes','UniProt',[],1],['enzymes','организм',[2]],
- ['enzymes','исходный фермент',[4]],['enzymes','мутации',[4]],['enzymes','молекулярная масса',[],0,1],
- ['sources','id',[],1],['sources','DOI',[],1],['sources','авторы, год',[],1],['sources','тип: статья или база',[3]],
- ['measurements','id',[],1],['measurements','фермент → E…',[],1],['measurements','источник → S…',[],1],['measurements','параметр',[],1],
- ['measurements','значение',[],1],['measurements','единица',[],1],['measurements','статус',[],1],
- ['measurements','температура опыта',[1,2]],['measurements','форма ПЭТ',[5]],['measurements','кристалличность ПЭТ',[5]],
- ['measurements','кем извлечено',[3]],['measurements','кем проверено',[3]],['measurements','год открытия фермента',[],0,1]
+ {id:'claude', name:'CLAUDE.md', what:'правила', tok:800, start:true, on:true},
+ {id:'journal', name:'journal.md', what:'журнал', tok:1500, on:true},
+ {id:'tz', name:'TZ.md', what:'задание на базу', tok:1200, on:false},
+ {id:'data', name:'data/pilot.csv', what:'таблица (урок 14)', tok:1500, on:true},
+ {id:'art', name:'articles/ (5 статей)', what:'статьи PDF', tok:60000, on:true},
+ {id:'env', name:'.env', what:'секретный ключ', tok:50, secret:true, on:false}
 ];
-var on=[false,false,false,false,false];
-Q.forEach(function(q,i){
-  var lab=el('label'), cb=el('input'); cb.type='checkbox'; cb.id='l13c'+i;
-  cb.addEventListener('change',function(){on[i]=cb.checked; draw();});
-  lab.appendChild(cb); lab.appendChild(el('span',null,(i+1)+'. '+q)); lab.appendChild(el('span','num','')); $('l13q').appendChild(lab);
-});
-function draw(){
-  var box=$('l13tables'); box.textContent='';
-  var total=0, extra=[];
-  ['enzymes','sources','measurements'].forEach(function(t){
-    var d=el('div','stack'); d.style.gap='4px';
-    d.appendChild(el('span','eyebrow',t));
-    var p=el('p'); var n=0;
-    F.forEach(function(f){
-      if(f[0]!==t) return;
-      var need=f[2].filter(function(k){return on[k-1];});
-      if(f[4]){ var s=el('span','tok',f[1]); s.style.textDecoration='line-through'; s.style.opacity='.55'; s.title='ни на один вопрос не отвечает'; p.appendChild(s); extra.push(f[1]); return; }
-      if(!f[3] && !need.length) return;
-      var tk=el('span','tok',f[1]+(f[3]?' ★':' ← '+need.join(','))); p.appendChild(tk); n++; total++;
-    });
-    d.appendChild(p); box.appendChild(d);
+var M=[
+ ['manual','Manual','ничего: каждую правку и команду покажет и спросит','каждую правку файла и каждую команду'],
+ ['edits','Accept edits','правит файлы в папке, в том числе data/ и journal.md','команды компьютеру'],
+ ['plan','Plan','ничего: пишет план, правки — только после вашего одобрения','одобрить план'],
+ ['auto','Auto','почти всё; рискованное останавливает модель-проверяльщик','редко — до урока 18 не включайте']
+], mode='manual', deny=false;
+function build(){
+  var fb=$('l13files'); fb.textContent='';
+  F.forEach(function(f){
+    var lab=el('label'); var c=el('input'); c.type='checkbox'; c.checked=f.on;
+    c.addEventListener('change',function(){f.on=c.checked; draw();});
+    lab.appendChild(c); lab.appendChild(el('span','mono',f.name)); lab.appendChild(el('span','why',f.what+(f.tok>=1000?' · ~'+f.tok.toLocaleString('ru-RU')+' токенов':'')));
+    fb.appendChild(lab);
   });
-  var k=on.filter(Boolean).length;
-  $('l13out').textContent='Вопросов: '+k+' · полей: '+total+' (обязательных 13). Зачёркнуто: «'+extra.join('», «')+'» — ни на один вопрос не отвечают.';
+  var mb=$('l13modes'); mb.textContent='';
+  M.forEach(function(m){
+    var b=el('button',m[0]===mode?'primary':null,m[1]); b.type='button';
+    b.addEventListener('click',function(){mode=m[0]; build(); draw();});
+    mb.appendChild(b);
+  });
+  $('l13deny').checked=deny;
 }
-draw();
+function row(k,v,cls){ var r=$('l13res'); r.appendChild(el('span','k',k)); r.appendChild(el('span',cls||null,v)); }
+function draw(){
+  $('l13res').textContent='';
+  var cm=F[0].on, start=SYS+(cm?F[0].tok:0)+60;
+  row('в начале', 'инструкции обвязки (~'+SYS.toLocaleString('ru-RU')+')'+(cm?' + CLAUDE.md':' — CLAUDE.md нет, правил агент не знает')+' + задание ≈ '+start.toLocaleString('ru-RU')+' токенов', cm?null:'l13-bad');
+  var lazy=F.filter(function(f){return f.on&&!f.start&&!f.secret;});
+  var big=F[4].on ? ' Все пять статей разом — ещё ~60 000: просите по одной.' : '';
+  row('по просьбе', lazy.length ? lazy.map(function(f){return f.name;}).join(', ')+' — в окно, только когда агент их откроет.'+big : 'других файлов нет');
+  var m=M.filter(function(x){return x[0]===mode;})[0];
+  row('без спроса', 'читает файлы в папке; меняет: '+m[2], mode==='auto'?'l13-bad':null);
+  row('спросит', m[3]);
+  var env=F[5];
+  if(env.on){
+    if(deny) row('.env', 'прочитать встроенными инструментами не сможет — запрет действует в любом режиме.', 'l13-ok');
+    else row('.env', 'может прочитать без спроса, даже в Manual: чтение в своей папке разрешено. Ключ попадёт в окно — и к провайдеру. Поставьте запрет.', 'l13-bad');
+  } else row('.env', deny ? 'файла нет, запрет уже стоит — хорошо.' : 'файла пока нет; запрет лучше поставить заранее.');
+}
+$('l13deny').addEventListener('change',function(){deny=this.checked; draw();});
+$('l13reset').addEventListener('click',function(){F.forEach(function(f,i){f.on=[true,true,false,true,true,false][i];}); mode='manual'; deny=false; build(); draw();});
+build(); draw();
 })();
 </script>

@@ -1,169 +1,186 @@
-  <div class="stack"><span class="eyebrow">Модуль 3 · Урок 9 из 25 · 25 минут</span>
-    <h1>Цикл агента</h1>
-    <p class="lead">Чем агент отличается от чата: модели дали инструменты и разрешили ходить по кругу «подумал, сделал, посмотрел». И почему каждый круг занимает место в окне.</p></div>
+  <style>
+    .l09-scale{position:relative;height:30px;border-radius:6px;overflow:hidden;display:flex}
+    .l09-scale i{display:block;height:100%}
+    .l09-mark{position:absolute;top:-4px;width:4px;height:38px;margin-left:-2px;background:var(--ink);border-radius:2px}
+    .l09-ticks{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+    .l09-wrap{position:relative;padding-top:4px}
+  </style>
 
-  <div class="stack"><h2>Чат отвечает, агент делает</h2>
-    <p>В чате всё просто: вы спросили, модель написала ответ, конец. Если ответ требует свежих данных, модель их не достанет — у неё есть только окно (урок 4) и знания из обучения.</p>
-    <p><b>Агент</b> — это та же модель плюс две вещи. Первая — <b>инструменты</b>: поиск по базе, чтение файла, запуск команды, открытие страницы. Вторая — разрешение повторять круг: <span class="hl">подумал, сделал, посмотрел на результат — и снова подумал</span><sup class="fn" data-fn="1">1</sup>. Круги идут, пока задача не решена.</p>
-    <div class="callout fact"><span class="lbl">Определение одной фразой</span><p>«Агент — это модель, которая вызывает инструменты в цикле, чтобы достичь цели». Так сформулировал Саймон Уиллисон<sup class="fn" data-fn="2">2</sup>, и с этим согласны большинство разработчиков.</p></div></div>
+  <div class="stack"><span class="eyebrow">Модуль 2 · Урок 9 из 28 · 25 минут</span>
+    <h1>Скорость: чтение и письмо</h1>
+    <p class="lead">Почему модель читает быстро, а пишет медленно, как по двум числам предсказать скорость письма на любом компьютере и как проверить расчёт замером.</p></div>
 
-  <div class="stack"><h2>Вызов инструмента — тоже текст</h2>
-    <p>В уроке 1 мы выяснили: модель умеет только одно — дописывать текст токен за токеном. Ходить в интернет, открывать файлы, нажимать кнопки она не может. Как же тогда агент «ищет в базе»?</p>
-    <div class="callout story"><span class="lbl">Образ</span><p>Представьте консультанта в комнате без дверей. Наружу он может только передавать записки через окошко. За стеной сидит исполнитель. Получив записку «найди в UniProt: LCC», он идёт, ищет, приносит распечатку и кладёт её в окошко. Консультант читает и пишет следующую записку.</p></div>
-    <p>Консультант — это модель. Исполнитель — <b>обвязка</b>: обычная программа вокруг модели (Claude Code, приложение Claude или ChatGPT). Записка — <b>вызов инструмента</b>: <span class="hl">текст особого вида, который обвязка узнаёт и выполняет</span>. Выглядит он примерно так:</p>
-    <p class="mono">uniprot_search(query="leaf-branch compost cutinase")</p>
-    <p>Откуда модель знает, какие записки можно писать? Описания инструментов лежат в скрытых инструкциях — в том самом окне, о котором шла речь в уроке 4: название, что делает, какие параметры принимает<sup class="fn" data-fn="3">3</sup>. Модель научена при обучении писать вызов в нужном формате, когда это полезно для задачи<sup class="fn" data-fn="4">4</sup>.</p>
-    <div class="callout warn"><span class="lbl">Важно</span><p>Решает, <b>можно ли</b> выполнить записку, обвязка, а не модель. Именно в обвязке настраивают права: что агент делает сам, а что — только после вашего «да». Подробно — в уроке 16.</p></div></div>
-
-  <div class="stack"><h2>Кольцо: подумал, сделал, посмотрел</h2>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 528" width="340" height="528" role="img" aria-label="Цикл агента: окно, модель пишет текст; если в тексте есть вызов инструмента, обвязка его выполняет и дописывает результат в окно, и модель снова читает окно; если вызова нет — это готовый ответ">
-      <g>
-        <rect class="box" x="34" y="6" width="262" height="58" rx="6"/>
-        <text x="46" y="29" font-size="14" font-weight="600">1. Окно</text>
-        <text class="sm" x="46" y="50">инструкции · задание · прошлые круги</text>
-        <rect class="box" x="34" y="94" width="262" height="58" rx="6" style="stroke:var(--accent);stroke-width:2"/>
-        <text x="46" y="117" font-size="14" font-weight="600">2. Модель читает и пишет</text>
-        <text class="sm" x="46" y="138">рассуждение и, может быть, вызов</text>
-        <rect class="box" x="34" y="182" width="262" height="58" rx="6"/>
-        <text x="46" y="205" font-size="14" font-weight="600">3. В тексте есть вызов?</text>
-        <text class="sm" x="46" y="226">это проверяет обвязка</text>
-        <rect class="box" x="34" y="280" width="262" height="58" rx="6"/>
-        <text x="46" y="303" font-size="14" font-weight="600">4. Обвязка выполняет</text>
-        <text class="sm" x="46" y="324">поиск, файл, команда, страница</text>
-        <rect class="box" x="34" y="368" width="262" height="58" rx="6"/>
-        <text x="46" y="391" font-size="14" font-weight="600">5. Результат → в окно</text>
-        <text class="sm" x="46" y="412">дописывается в конец, окно растёт</text>
-        <rect class="box" x="34" y="462" width="262" height="58" rx="6" style="stroke:var(--signal);stroke-width:2"/>
-        <text x="46" y="485" font-size="14" font-weight="600">Готовый ответ</text>
-        <text class="sm" x="46" y="506">вызова нет — круг окончен</text>
-      </g>
-      <g>
-        <path class="arr" d="M165 64V86"/><path class="head" d="M165 94l-5-9h10z"/>
-        <path class="arr" d="M165 152V174"/><path class="head" d="M165 182l-5-9h10z"/>
-        <path class="arr" d="M165 240V272"/><path class="head" d="M165 280l-5-9h10z"/>
-        <text class="sm" x="174" y="262">да</text>
-        <path class="arr" d="M165 338V360"/><path class="head" d="M165 368l-5-9h10z"/>
-        <path class="arr" d="M296 397H324V35H306"/><path class="head" d="M296 35l9-5v10z"/>
-        <text class="sm" x="310" y="220" transform="rotate(90 310 220)" text-anchor="middle">следующий круг</text>
-        <path class="arr" style="stroke:var(--signal)" d="M34 211H14V491H26"/><path class="head" style="fill:var(--signal)" d="M34 491l-9-5v10z"/>
-        <text class="sm" x="11" y="204" style="fill:var(--signal)">нет</text>
-      </g>
-    </svg></div>
-    <p>Круг повторяется, пока не случится одно из четырёх:</p>
+  <div class="stack"><h2>Две скорости</h2>
+    <div class="callout story"><span class="lbl">Почти семь минут</span><p>Столько <span class="mono">ftm</span> (урок 7) тратит на одну страницу рукописного дневника. Облачная модель справилась бы за секунды. Дело не в «уме» модели: скорость задаёт одно число из паспорта компьютера. К концу урока вы посчитаете его для своего.</p></div>
+    <p>Скорость модели меряют в <b>токенах в секунду</b>. И скоростей у неё две<sup class="fn" data-fn="1">1</sup>.</p>
     <ul class="plain">
-      <li><b>Готово.</b> Модель пишет ответ без вызова — обвязка понимает, что работа закончена.</li>
-      <li><b>Лимит.</b> Обвязка остановила цикл: исчерпано число шагов, время или бюджет.</li>
-      <li><b>Нужен человек.</b> Действие требует подтверждения, и агент ждёт вашего ответа<sup class="fn" data-fn="5">5</sup>.</li>
-      <li><b>Тупик.</b> Инструмент раз за разом возвращает ошибку, и агент сдаётся или просит помощи.</li>
-    </ul></div>
+      <li><b>Чтение</b> — модель обрабатывает ваш запрос. Все его токены известны сразу, поэтому их можно прогнать через слои <span class="hl">разом, пачкой</span>.</li>
+      <li><b>Письмо</b> — модель выдаёт ответ. Каждый следующий токен зависит от предыдущего (урок 1), поэтому ответ пишется строго по одному. И <span class="hl">на каждый токен заново читаются из памяти все веса</span> (урок 8).</li>
+    </ul>
+    <p>Почему письмо упирается именно в память, а не в вычисления? Посчитаем для модели 8B в 4 битах (≈ 5 ГБ). На один токен нужно около 16 миллиардов умножений и сложений — у видеокарты на это уходят доли миллисекунды. А прочитать 5 ГБ при 300 ГБ/с — около 17 миллисекунд. Вычислители большую часть времени ждут данные. Решает <b>пропускная способность памяти</b> — сколько гигабайт в секунду она успевает отдать.</p>
+    <p class="pull">Потолок скорости письма ≈ пропускная способность ÷ размер модели.</p>
+    <p>Две поправки. У смеси экспертов (урок 8) делить надо на размер <i>активной</i> части. А при длинном окне на каждый токен читается ещё и KV-кэш — письмо медленнее.</p></div>
 
-  <div class="stack"><h2>Каждый круг ложится в окно</h2>
-    <p>Результат инструмента не исчезает после прочтения. Он дописывается в окно и остаётся там до конца работы. Карточка одного белка в UniProt — это несколько тысяч токенов, аннотация статьи — сотни, страница сайта — десятки тысяч.</p>
-    <p>Кроме того, при каждом новом круге модель <span class="hl">перечитывает окно целиком</span> (урок 4). Поэтому общий объём прочитанного растёт быстрее, чем само окно: десятый круг читает всё, что накопили девять предыдущих.</p>
-    <div class="panel">
-      <span class="eyebrow">Попробуйте сами</span>
-      <p>Задание агенту: <b>«Найди оптимум температуры фермента LCC и укажи источник»</b>. Нажимайте «Следующий шаг» и смотрите, что лежит в окне.</p>
-      <div class="row"><button id="l09next" class="primary" type="button">Следующий шаг</button><button id="l09reset" type="button">Сначала</button><span class="mono" id="l09stepn"></span></div>
-      <p class="out" id="l09who"></p>
-      <div id="l09win" class="stack" style="gap:6px"></div>
-      <span class="eyebrow">Сейчас в окне</span>
-      <div class="meter" id="l09meter"><i style="width:0"></i></div>
-      <p class="out" id="l09tok"></p>
-      <p class="why">Числа токенов условные, порядок величин. Сведения о ферменте настоящие: запись UniProt G9BY57 и статья Sulaiman и соавторов, 2012. Шкала — 20&nbsp;000 токенов.</p>
-    </div>
-    <div class="callout fact"><span class="lbl">Масштаб</span><span class="big">× 50</span><p>Для одного фермента хватило четырёх кругов и ~11 тысяч токенов в окне. Для пятидесяти ферментов в одном окне получится больше полумиллиона — столько не помещается. Поэтому большую работу делят: одна запись — одна короткая сессия, а итог пишется в файл<sup class="fn" data-fn="6">6</sup>.</p></div></div>
+  <div class="stack"><h2>Проверка на ftm: расчёт → предсказание → замер</h2>
+    <p>Наш пример железа — <span class="mono">ftm</span>: процессор 2015 года, 16 ГБ, видеокарты нет. Его память по паспорту отдаёт до <b>34 ГБ/с</b><sup class="fn" data-fn="2">2</sup>. Делим на размер файла в Q4_K_M:</p>
+    <div class="scroll"><table>
+      <tr><th>Модель</th><th>Файл</th><th>Потолок письма</th><th>Предсказание</th><th>Замер</th></tr>
+      <tr><td>1,7 млрд</td><td>1,4 ГБ</td><td>24 ток/с</td><td>≈ 10</td><td>7–10</td></tr>
+      <tr><td>8 млрд</td><td>5,2–6,2 ГБ</td><td>6 ток/с</td><td>2–4</td><td>2–3</td></tr>
+      <tr><td>14 млрд</td><td>9,3 ГБ</td><td>4 ток/с</td><td>1–2</td><td>—</td></tr>
+    </table></div>
+    <p class="why">Замер 10.11.2026, Ollama, модели qwen3:1.7b и qwen3-vl:8b, запрос ≈ 1100 токенов, по два прогона.</p>
+    <p>Предсказание — вдвое ниже потолка: память не отдаёт паспортную скорость полностью. Замер его подтвердил. А <b>чтение</b> на ftm оказалось лишь в 4–6 раз быстрее письма: ≈ 45 ток/с у малой модели и ≈ 10 у 8B. На Mac с мощной графикой разница бывает в 25 раз. Почему? У ftm всего два ядра процессора: <span class="hl">даже чтение пачкой упирается в вычисления</span>, а их мало. У видеокарты вычислителей тысячи, и чтение у неё летит.</p>
+    <div class="callout warn"><span class="lbl">Ловушка</span><p>В обзорах пишут только скорость письма. Но в нашем проекте модель в основном <b>читает</b>: статья — около 16 тысяч токенов, ответ — строка таблицы на несколько сотен. На слабом компьютере чтение статьи может занять в десять раз больше времени, чем ответ (расчёт — в примере «Биотехнология»).</p></div></div>
 
-  <div class="stack"><h2>Агент на ваших задачах</h2>
-    <div class="two">
-      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Вопрос «какой оптимум у LCC?» в чате даст число по памяти — без гарантий. Агент с доступом к UniProt откроет запись и заметит: 50&nbsp;°C — это на модельном субстрате, а на ПЭТ оптимум выше 70&nbsp;°C. Разница в одном круге, но это разница между догадкой и ссылкой.</p></div>
-      <div class="panel"><span class="eyebrow">Свои проекты</span><p>Когда вы просите Claude Code на <span class="mono">ftm</span> «проверь, почему не открывается сайт», он делает те же круги: смотрит статус службы, читает журнал, проверяет порт. Каждый вывод команды ложится в окно. Длинная отладка поэтому и «тяжелеет» к концу.</p></div>
-    </div>
-    <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
-      <li data-fn="1">Круг «мысль → действие → наблюдение» получил имя ReAct (от reasoning + acting) в работе Яо и соавторов (Принстон и Google, 2022). Сама статья техническая, но аннотации и рисунка 1 хватает, чтобы увидеть, как модель чередует рассуждение и вызовы поиска: <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al.: ReAct — Synergizing Reasoning and Acting in Language Models</a> (статья, англ., 10 мин на аннотацию и рисунок).</li>
-      <li data-fn="2">Simon Willison, «I think “agent” may finally have a widely enough agreed upon definition», сентябрь 2025: «An LLM agent runs tools in a loop to achieve a goal».</li>
-      <li data-fn="3">Описание инструмента — это текст для модели, и от того, как он написан, зависит, правильно ли агент будет им пользоваться. Как инженеры Anthropic пишут и проверяют такие описания, с примерами удачных и неудачных: <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener">Anthropic: Writing effective tools for AI agents</a> (статья, англ., 2025, 20 мин; код можно пропускать).</li>
-      <li data-fn="4">В документации Anthropic этот обмен называется tool use: модель возвращает блок «вызов инструмента» с названием и параметрами, программа выполняет его и возвращает блок «результат». Модель сама ничего не запускает.</li>
-      <li data-fn="5">Как часто агенты на деле останавливаются и спрашивают человека — по данным о работе Claude Code: самые длинные непрерывные отрезки за три месяца выросли примерно с 25 до 45 минут, а опытные пользователи одобряют действия автоматически чаще, но и прерывают агента чаще. <a href="https://www.anthropic.com/research/measuring-agent-autonomy" target="_blank" rel="noopener">Anthropic: Measuring AI agent autonomy in practice</a> (исследование, англ., февраль 2026, 20 мин). Данные собрала сама компания, независимой проверки нет.</li>
-      <li data-fn="6">Что ещё делают, когда круги переполняют окно: сжимают старые круги в краткую выжимку, ведут заметки в файлах, поручают куски подчинённым агентам с собственным чистым окном. Обзор приёмов: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic: Effective context engineering for AI agents</a> (статья, англ., 2025, 25 мин).</li>
-    </ol></div></div>
+  <div class="stack"><h2>Где кончается терпение</h2>
+    <p>Человек читает около 240 слов в минуту<sup class="fn" data-fn="3">3</sup> — для русского текста это примерно 5–8 токенов в секунду. Если модель пишет медленнее, вы ждёте её; если быстрее — она ждёт вас.</p>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 460" width="340" height="460" role="img" aria-label="Шкала токенов в секунду от 1 до 300: до 3 — нечитаемо, от 3 до 10 — терпимо, выше 10 — комфортно. Отметки: ftm с моделью 8B 2–3, ftm с моделью 1,7B 7–10, Mac на M4 24, Mac на M5 Max 120, облачная Claude Haiku 5.5 около 230">
+      <text class="sm" x="4" y="14">токенов в секунду, письмо; шкала логарифмическая</text>
+      <rect x="54" y="353" width="20" height="77" style="fill:var(--bad);opacity:.35"/>
+      <rect x="54" y="268.5" width="20" height="84.5" style="fill:var(--signal);opacity:.45"/>
+      <rect x="54" y="30" width="20" height="238.5" style="fill:var(--accent);opacity:.35"/>
+      <text font-size="11" transform="translate(68,420) rotate(-90)">нечитаемо</text>
+      <text font-size="11" transform="translate(68,340) rotate(-90)">терпимо</text>
+      <text font-size="11" transform="translate(68,220) rotate(-90)">комфортно</text>
+      <path class="ax" d="M54 30V430"/>
+      <g text-anchor="end">
+        <text class="sm" x="48" y="434">1</text><text class="sm" x="48" y="357">3</text><text class="sm" x="48" y="272">10</text>
+        <text class="sm" x="48" y="195">30</text><text class="sm" x="48" y="111">100</text><text class="sm" x="48" y="34">300</text>
+      </g>
+      <path class="ax" style="stroke-dasharray:4 3;stroke:var(--muted)" d="M54 304H336"/>
+      <text class="sm" x="196" y="300">чтение человека ≈ 6</text>
+      <g>
+        <circle class="pt" cx="74" cy="366" r="5"/><path class="arr" d="M80 366H88"/>
+        <text x="92" y="364" font-size="13" font-weight="600">ftm, модель 8B</text><text class="sm" x="92" y="378">2–3 · замер</text>
+        <circle class="pt" cx="74" cy="280" r="5"/><path class="arr" d="M80 280H88"/>
+        <text x="92" y="270" font-size="13" font-weight="600">ftm, модель 1,7B</text><text class="sm" x="92" y="284">7–10 · замер</text>
+        <circle class="pt" cx="74" cy="207" r="5"/><path class="arr" d="M80 207H88"/>
+        <text x="92" y="205" font-size="13" font-weight="600">Mac на M4, модель 7B</text><text class="sm" x="92" y="219">24 · замер</text>
+        <circle class="pt" cx="74" cy="94" r="5"/><path class="arr" d="M80 94H88"/>
+        <text x="92" y="92" font-size="13" font-weight="600">Mac на M5 Max, модель 7B</text><text class="sm" x="92" y="106">120 · замер</text>
+        <circle class="pt" cx="74" cy="49" r="5"/><path class="arr" d="M80 49H88"/>
+        <text x="92" y="47" font-size="13" font-weight="600">облако, Claude Haiku 5.5</text><text class="sm" x="92" y="61">≈ 230 · замер</text>
+      </g>
+      <text class="sm" x="4" y="454">замеры: ftm, llama.cpp, Artificial Analysis</text>
+    </svg></div>
+    <p>Границы зон условные, но порядок величин честный. Для пакетной работы, которую никто не читает глазами, «нечитаемо» — не приговор, а лишь долгая ночь.</p></div>
+
+  <div class="stack"><h2>Другие компьютеры</h2>
+    <p>Формула работает для любого устройства: нужны две цифры — объём памяти (влезет ли модель, урок 8) и её пропускная способность. Модель 7–8B в 4 битах (≈ 5 ГБ):</p>
+    <div class="scroll"><table>
+      <tr><th>Устройство</th><th>ГБ/с</th><th>Письмо, ток/с</th></tr>
+      <tr><td>ftm, без видеокарты</td><td>34</td><td>2–3 · замер</td></tr>
+      <tr><td>Ноутбук со встроенной графикой, 2025–2026</td><td>100–140</td><td>≈ 12–20 · оценка</td></tr>
+      <tr><td>MacBook Air на M5</td><td>153</td><td>≈ 25–30 · оценка</td></tr>
+      <tr><td>MacBook Pro на M5 Max</td><td>614</td><td>≈ 120 · замер</td></tr>
+      <tr><td>Видеокарта на 24 ГБ (RTX 4090)</td><td>1000</td><td>≈ 150–190 · замер</td></tr>
+    </table></div>
+    <p class="why">Пропускная способность — по паспортам Intel, Apple, NVIDIA; актуально на ноябрь 2026. Замеры — llama.cpp, модели 7B в 4 битах<sup class="fn" data-fn="4">4</sup>.</p>
+    <p><b>Встроенная графика</b> — видеокарта внутри процессора, без своей памяти: она берёт общую оперативную. Чтение она ускоряет (вычислителей больше), письмо упирается в ту же общую память. У ftm встроенная графика есть (Intel HD 530), но старая и слабая; Ollama такую по умолчанию не включает, и ftm считает на процессоре.</p></div>
+
+  <div class="panel">
+    <span class="eyebrow">Попробуйте сами</span>
+    <p>Предскажите скорость письма. Выберите устройство и модель — или подвиньте ползунки.</p>
+    <div class="row" id="l09dev"></div>
+    <label for="l09bw">Пропускная способность памяти: <span id="l09bwv" class="mono"></span></label>
+    <input type="range" id="l09bw" min="0" max="13" step="1" value="1">
+    <div class="row" id="l09mod"></div>
+    <label for="l09sz">Сколько гигабайт читается на токен: <span id="l09szv" class="mono"></span></label>
+    <input type="range" id="l09sz" min="0" max="12" step="1" value="6">
+    <p class="out" id="l09out"></p>
+    <div class="l09-wrap"><div class="l09-scale"><i style="width:19.3%;background:var(--bad);opacity:.35"></i><i style="width:21.1%;background:var(--signal);opacity:.45"></i><i style="flex:1;background:var(--accent);opacity:.35"></i></div><span class="l09-mark" id="l09mark"></span></div>
+    <div class="l09-ticks"><span>1</span><span>3</span><span>10</span><span>30</span><span>100</span><span>300</span></div>
+    <p class="why" id="l09why"></p>
+    <p class="why">Расчёт по формуле урока; «на деле» — условно 50–80 % потолка. Шкала логарифмическая, зоны как на схеме выше. Для смеси экспертов «читается на токен» — только активная часть.</p>
+  </div>
+
+  <div class="stack"><h2>Как измерить самому</h2>
+    <p>Оценки полезны, замер лучше<sup class="fn" data-fn="5">5</sup>.</p>
+    <ul class="plain">
+      <li><b>Проще всего — LM Studio</b>: бесплатная программа с окнами для Windows, Mac и Linux. Скачайте в ней малую модель, задайте вопрос — под ответом появятся токены в секунду и время до первого токена.</li>
+      <li><b>Для тех, кто готов к терминалу (урок 7)</b> — Ollama. Установите её с сайта <span class="mono">ollama.com</span> и откройте терминал: Windows — «Терминал» в меню Пуск; Mac — Программы → Утилиты → Терминал. Наберите <span class="mono">ollama run qwen3:1.7b --verbose</span> и задайте вопрос. После ответа нужны две строки: <span class="mono">prompt eval rate</span> — чтение, <span class="mono">eval rate</span> — письмо.</li>
+    </ul>
+    <p>Первый раз время включает загрузку модели в память — спросите дважды. Чтобы увидеть скорость чтения, вставьте длинный абзац.</p></div>
+
+  <div class="two">
+    <div class="panel"><span class="eyebrow">Биотехнология</span><p>Статья о ПЭТ-гидролазе — 16 тысяч токенов. На ftm модель 8B прочтёт её за 16 000 ÷ 10 ≈ 27 минут, а строку таблицы на 300 токенов напишет за 300 ÷ 2,5 ≈ 2 минуты. Скорость письма из обзоров тут почти ничего не говорит: решает чтение.</p></div>
+    <div class="panel"><span class="eyebrow">Свои проекты</span><p>Распознавание рукописных дневников (урок 7) на ftm: модель <span class="mono">qwen3-vl:8b</span> тратит на страницу в среднем 6,7 минуты. По расчёту: картинка — около 1450 токенов, ≈ 2,5 мин чтения; текст страницы — ≈ 200 токенов, ≈ 1,5 мин письма. Остальные ≈ 2,5 мин уходят на перевод картинки в токены — его делает отдельная часть модели<sup class="fn" data-fn="6">6</sup>.</p></div>
+  </div>
+
+  <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+    <li data-fn="1">В литературе фазы называют prefill (чтение) и decode (письмо). Короткий справочник объясняет обе и всё, что с ними связано, — от кэша начала запроса до работы с множеством пользователей сразу. <a href="https://handbook.modular.com/llm-inference-basics/how-does-llm-inference-work/" target="_blank" rel="noopener">LLM Inference Handbook: How does LLM inference work?</a> (справочник, англ., 10 мин).</li>
+    <li data-fn="2">Спецификация Intel для Core i3-6100T: 2 ядра (4 потока — каждое ядро ведёт две задачи поочерёдно, вычислителей от этого не прибавляется), память DDR4-2133 в два канала, максимум 34,1 ГБ/с.</li>
+    <li data-fn="3">M. Brysbaert, мета-анализ 190 исследований (Journal of Memory and Language, 2019): 238 слов в минуту для научно-популярного текста про себя, на английском. Русские слова режутся на токены мельче, отсюда 5–8 токенов в секунду. Как ощущаются 3, 10 и 50 токенов в секунду, можно увидеть своими глазами: <a href="https://habr.com/ru/articles/896204/" target="_blank" rel="noopener">Хабр: «Сравниваем скорость генерации LLM локально и по API»</a> (статья с интерактивом, рус., 4 мин).</li>
+    <li data-fn="4">Сводная таблица замеров llama.cpp на Apple Silicon (обсуждение 4167 на GitHub, LLaMA 7B, Q4_0): M4 — чтение ≈ 220, письмо 24; M5 Max — 3200 и 120. Apple: M5 Pro — 307 ГБ/с, M5 Max — 460 или 614 ГБ/с в зависимости от числа ядер графики. Видеокарта RTX 4090 — сводная таблица llama.cpp для CUDA (<a href="https://github.com/ggml-org/llama.cpp/discussions/15013" target="_blank" rel="noopener">обсуждение 15013</a>). Облако — Artificial Analysis, Claude Haiku 5.5, 10.11.2026. Строки «оценка» — расчёт по формуле урока.</li>
+    <li data-fn="5">Для точных замеров есть программа из llama.cpp — <span class="mono">llama-bench</span>: гоняет модель несколько раз и выдаёт скорость чтения (pp) и письма (tg) в одной таблице. Шаг для тех, кто втянется. <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/llama-bench/README.md" target="_blank" rel="noopener">llama.cpp: llama-bench</a> (документация, англ., 10 мин).</li>
+    <li data-fn="6">Источник — проба пяти моделей на шести страницах 09.11.2026 (журнал проекта распознавания дневников). Модель на 2 млрд — 2,9 мин на страницу. Разбивка — наш расчёт, по частям не замеряли: картинка 1050 × 1400 точек, у Qwen3-VL один токен на квадрат 32 × 32 точки; чтение ≈ 10 ток/с и письмо 2–3 ток/с — из таблицы замера выше. Перевод картинки в токены делает «визуальный кодировщик» — отдельная сеть внутри модели; на процессоре он тоже медленный.</li>
+  </ol></div>
 
   <div class="panel"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
-      <tr><td><b>Агент</b></td><td>модель, которая вызывает инструменты в цикле, пока не достигнет цели</td></tr>
-      <tr><td><b>Инструмент</b></td><td>действие, которое может выполнить обвязка: поиск, чтение файла, команда</td></tr>
-      <tr><td><b>Вызов инструмента</b></td><td>текст особого вида с названием инструмента и параметрами</td></tr>
-      <tr><td><b>Обвязка</b></td><td>программа вокруг модели: показывает ей окно, выполняет вызовы, следит за правами и лимитами</td></tr>
+      <tr><td><b>Токенов в секунду</b></td><td>мера скорости модели; отдельно для чтения и для письма</td></tr>
+      <tr><td><b>Чтение (prefill)</b></td><td>обработка запроса: все токены разом; упирается в вычисления</td></tr>
+      <tr><td><b>Письмо (decode)</b></td><td>выдача ответа по одному токену; упирается в память</td></tr>
+      <tr><td><b>Пропускная способность</b></td><td>сколько гигабайт в секунду отдаёт память; задаёт потолок письма</td></tr>
+      <tr><td><b>Встроенная графика</b></td><td>видеокарта внутри процессора, без своей памяти</td></tr>
+      <tr><td><b>LM Studio</b></td><td>бесплатная программа с окнами для запуска моделей; показывает скорость</td></tr>
     </table></div></div>
 
   <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
-    <li>Агент = модель + инструменты + разрешение повторять круг «подумал, сделал, посмотрел».</li>
-    <li>Модель только пишет текст. Вызов инструмента выполняет обвязка — она же решает, что разрешено.</li>
-    <li>Результат каждого вызова дописывается в окно; круг заканчивается ответом без вызова или остановкой.</li>
-    <li>Окно и цена растут с каждым кругом, поэтому большую работу режут на короткие сессии.</li></ul></div>
-
+    <li>Чтение идёт пачкой и упирается в вычисления; письмо — по токену, и каждый раз читаются все веса.</li>
+    <li>Потолок письма ≈ пропускная способность ÷ размер модели (у смеси экспертов — активной части); на деле — 50–80 % потолка, на старом ftm — около половины.</li>
+    <li>На ftm расчёт подтвердился замером: модель 8B пишет 2–3 токена в секунду, 1,7B — 7–10.</li>
+    <li>В проекте модель в основном читает: на слабом компьютере статья читается дольше, чем пишется ответ.</li></ul></div>
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Дайте агенту с поиском в интернете (Claude или ChatGPT в режиме, где видны шаги работы; актуально на ноябрь 2026) задание: «Найди оптимум температуры фермента IsPETase из Ideonella sakaiensis. Укажи ссылку на источник и условия измерения».</p>
-    <p>Пока он работает, разверните ход работы и посчитайте круги: сколько было вызовов, какие инструменты, что вернулось. Запишите число кругов и найденное значение. Сошлось ли оно с источником, если открыть ссылку самим?</p></div>
+    <p>Измерьте скорость. Основной путь — LM Studio: <a href="https://lmstudio.ai/download" target="_blank" rel="noopener">lmstudio.ai/download</a> → скачать программу LM Studio (не путать с Bionic — это отдельный агент той же компании) → в поиске моделей взять малую (например, Qwen3 1.7B) → задать два вопроса: короткий и с длинным абзацем из статьи. Запишите скорость письма и время до первого токена.</p>
+    <p>Если ставить программу не хотите — посчитайте: найдите пропускную способность памяти своего компьютера (в спецификации процессора, строка «Max Memory Bandwidth», или в характеристиках Mac на сайте Apple) и разделите на 1,4 ГБ и на 5 ГБ. Это потолки для моделей 1,7B и 8B.</p></div>
+
   <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 9</span>
-    <p>Опишите словами, какие инструменты нужны агенту-сборщику вашей базы. Для каждого: что он делает, откуда берёт данные, может ли что-то испортить. Например: «поиск в UniProt — только читает», «запись в таблицу — меняет файл». Список из 4–6 строк понадобится в уроке 11 и в карточке агента в уроке 16.</p></div>
+    <p>Вернитесь к таблице устройств из шага 8 и добавьте столбец «письмо, ток/с» — замер или расчёт. Посчитайте для лучшего своего устройства, сколько минут уйдёт на чтение одной статьи (16 тысяч токенов) и на ответ в 300 токенов. Запишите в журнал проекта запись типа <b>проверка</b>: оценка, замер и совпали ли они. В уроке 10 сравним это с облаком в деньгах.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
-    <p>Этот путь поможет увидеть цикл агента изнутри — от простого определения до того, как инженеры строят агентов, которые работают часами.</p>
+    <p>По желанию; одного материала достаточно. Этот путь научит мерить, а не гадать, и трезво читать рекламу «компьютеров для ИИ».</p>
     <h3>Понять лучше</h3>
     <ul class="links">
-      <li><a href="https://simonwillison.net/2025/Sep/18/agents/" target="_blank" rel="noopener">Simon Willison: определение агента</a><span class="meta">заметка · англ. · 5 мин</span><p>Короткий текст о том, почему «инструменты в цикле» — самое полезное определение агента. Хорошо прочитать первым.</p></li>
-      <li><a href="https://www.youtube.com/watch?v=D7_ipDqhtwk" target="_blank" rel="noopener">Barry Zhang (Anthropic): How We Build Effective Agents</a><span class="meta">видео · англ., есть субтитры · 15 мин</span><p>Доклад инженера Anthropic: когда агент нужен, а когда хватит одного запроса; как выглядит цикл изнутри.</p></li>
-      <li><a href="https://habr.com/ru/post/951428/" target="_blank" rel="noopener">Хабр: Что такое AI-агент и из каких основных частей он состоит</a><span class="meta">статья · рус. · 20 мин</span><p>Инженер red_mad_robot сравнивает определения агента (Anthropic, Hugging Face, Сбер) и разбирает части: модель, инструменты, память, планирование. Схемы и пояснения читаются без программирования, вставки кода на Python можно пропускать.</p></li>
-      <li><a href="https://huggingface.co/learn/agents-course/unit1/introduction" target="_blank" rel="noopener">Hugging Face Agents Course: Introduction to Agents</a><span class="meta">курс · англ. · 1 час</span><p>Первый раздел бесплатного курса: мысль, действие, наблюдение — тот же круг, что в уроке. Дальше начинается код, его можно пропустить.</p></li>
+      <li><a href="https://github.com/ggml-org/llama.cpp/discussions/4167" target="_blank" rel="noopener">llama.cpp: Performance on Apple Silicon M-series</a><span class="meta">таблица замеров · англ. · 10 мин</span><p>Если откроете одно — это. Скорость чтения и письма для всех чипов Apple от M1 до M5 рядом с пропускной способностью памяти: видно, как одно следует из другого.</p></li>
+      <li><a href="https://horace.io/brrr_intro.html" target="_blank" rel="noopener">Horace He: Making Deep Learning Go Brrrr From First Principles</a><span class="meta">статья · англ. · 25 мин</span><p>Во что упирается работа нейросети — в вычисления, в память или в накладные расходы. Образ «завод и склад» объясняет, почему вычислители простаивают.</p></li>
     </ul>
     <h3>Копнуть глубже</h3>
     <ul class="links">
-      <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic: Building effective agents</a><span class="meta">статья · англ. · 20 мин</span><p>Чем агент отличается от заранее прописанной цепочки шагов, со схемами пяти типовых устройств. Классика темы.</p></li>
-      <li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" target="_blank" rel="noopener">Документация Claude: Tool use</a><span class="meta">документация · англ. · 15 мин</span><p>Как на самом деле выглядят вызов инструмента и результат. Технично, но первые абзацы читаются без программирования — сверьте их со схемой кольца из урока.</p></li>
-      <li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">Lilian Weng: LLM Powered Autonomous Agents</a><span class="meta">обзор · англ. · 2023 · 45 мин</span><p>Самый цитируемый обзор устройства агента: планирование, память, инструменты, с рисунками и ссылками на ключевые работы. Примеры продуктов в нём устарели, а сама схема — нет. Для тех, кто хочет системную картину.</p></li>
+      <li><a href="https://zeux.io/2024/03/15/llm-inference-sol/" target="_blank" rel="noopener">Arseny Kapoulkine: LLM inference speed of light</a><span class="meta">статья · англ. · 20 мин</span><p>Формула урока, выведенная честно и с поправками: KV-кэш, накладные расходы, сколько процентов потолка реально достижимо.</p></li>
+      <li><a href="https://www.localscore.ai/" target="_blank" rel="noopener">LocalScore</a><span class="meta">открытый тест и таблица результатов · англ. · 15 мин</span><p>Программа меряет скорость чтения и письма на вашем компьютере, а сайт собирает результаты чужих машин — можно найти похожую на свою, прежде чем что-то покупать.</p></li>
     </ul>
     <h3>Куда движется область</h3>
     <ul class="links">
-      <li><a href="https://metr.org/blog/2026-1-29-time-horizon-1-1/" target="_blank" rel="noopener">METR: Time Horizon 1.1</a><span class="meta">исследование · англ. · январь 2026 · 20 мин</span><p>Независимая лаборатория измеряет, насколько длинные задачи (в часах работы специалиста) агент решает хотя бы в половине случаев. По их оценке, с 2023 года эта длина удваивается примерно каждые 4 месяца. Оговорки честные: задачи в основном программистские, а оценки выше 16 часов авторы сами считают ненадёжными.</p></li>
-      <li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">Anthropic: Effective harnesses for long-running agents</a><span class="meta">статья · англ. · ноябрь 2025 · 20 мин</span><p>Как заставить агента работать много сессий подряд, если каждое окно начинается с чистого листа: файл с прогрессом, список дел, проверка после каждого шага. Это ровно приём «одна запись — одна сессия, итог в файл», доведённый до инженерного решения. Уже используется в продуктах, но остаётся областью активных поисков.</p></li>
+      <li><a href="https://lmstudio.ai/blog/lmstudio-v0.3.10" target="_blank" rel="noopener">LM Studio 0.3.10: Speculative Decoding</a><span class="meta">блог · англ. · 10 мин · февраль 2025</span><p>Маленькая модель угадывает несколько токенов вперёд, большая проверяет их разом — как чтение, а не письмо. Качество то же, выигрыш — от 5 % до 2,4 раза в зависимости от текста. Зрелость: уже в LM Studio и llama.cpp.</p></li>
+      <li><a href="https://lmsys.org/blog/2025-10-13-nvidia-dgx-spark/" target="_blank" rel="noopener">LMSYS: NVIDIA DGX Spark In-Depth Review</a><span class="meta">обзор с замерами · англ. · 20 мин · октябрь 2025</span><p>«Настольный компьютер для ИИ»: 128 ГБ общей памяти при 273 ГБ/с. Большие модели помещаются, но пишут медленно — упор снова в память. Полезно, чтобы проверить формулу урока на чужой рекламе.</p></li>
     </ul></div>
-
 
 <script>
 (function(){
-var $=AI.$, el=AI.el, MAX=20000;
-var S=[
- {who:'Начало. Агент ещё ничего не сделал.', add:[['Инструкции обвязки и описания инструментов',3000,'скрыто'],['Задание: «Найди оптимум температуры LCC и укажи источник»',60,'вы']]},
- {who:'Модель думает и пишет вызов. Это просто текст.', read:true, add:[['Модель: «Сначала найду запись в UniProt» → uniprot_search("leaf-branch compost cutinase")',80,'модель']]},
- {who:'Обвязка выполнила поиск и дописала результат.', add:[['Результат: 5 найденных записей, первая — G9BY57, LC-cutinase',900,'обвязка']]},
- {who:'Модель читает окно целиком и просит карточку записи.', read:true, add:[['Модель: → uniprot_entry("G9BY57")',40,'модель']]},
- {who:'Обвязка принесла карточку белка. Это самый большой кусок.', add:[['Результат: карточка G9BY57. Среди прочего: «Optimum temperature is 50 °C with pNP-butanoate… using PET as substrate is superior to 70 °C»',6000,'обвязка']]},
- {who:'Модель замечает два разных числа и идёт к первоисточнику.', read:true, add:[['Модель: «50 и выше 70 — при разных субстратах. Проверю статью» → pubmed_abstract("22194294")',60,'модель']]},
- {who:'Обвязка принесла аннотацию статьи.', add:[['Результат: аннотация Sulaiman et al., 2012, Appl Environ Microbiol',700,'обвязка']]},
- {who:'Модель пишет ответ без вызова — круг окончен.', read:true, done:true, add:[['Ответ: «На ПЭТ оптимум выше 70 °C, на модельном субстрате pNP-бутирате — 50 °C. Источник: Sulaiman 2012; UniProt G9BY57»',150,'модель']]}
-], k=0;
-function sum(n){var s=0; for(var i=0;i<=n;i++) S[i].add.forEach(function(a){s+=a[1];}); return s;}
+var $=AI.$, el=AI.el;
+var BW=[20,34,50,68,100,120,136,153,200,273,307,460,614,1000];
+var SZ=[0.5,1,1.4,1.9,2.5,4,5.2,7,9.3,14,19,24,40];
+var DEV=[['ftm',1],['ноутбук',6],['Mac M5',7],['Mac M5 Max',12],['видеокарта',13]];
+var MOD=[['1,7B',2],['8B',6],['14B',8],['30B-A3B (MoE)',3]];
+function f(x){return (x<10?x.toFixed(1):Math.round(x).toString()).replace('.',',');}
+function mk(box,arr,id){arr.forEach(function(d){var b=el('button',null,d[0]); b.type='button'; b.addEventListener('click',function(){$(id).value=d[1]; draw();}); box.appendChild(b);});}
+mk($('l09dev'),DEV,'l09bw'); mk($('l09mod'),MOD,'l09sz');
+function lg(v){return Math.max(0,Math.min(100,Math.log(v)/Math.log(300)*100));}
 function draw(){
-  var box=$('l09win'); box.textContent='';
-  for(var i=0;i<=k;i++) S[i].add.forEach(function(a){
-    var r=el('div','bar-row'); r.style.gridTemplateColumns='4.6rem 1fr';
-    var tag=el('span',null,a[2]); tag.style.color= a[2]==='обвязка' ? 'var(--signal)' : (a[2]==='модель' ? 'var(--accent)' : 'var(--muted)');
-    r.appendChild(tag);
-    var t=el('span',null,a[0]+' · ~'+a[1].toLocaleString('ru-RU')); t.style.fontFamily='var(--f-body)'; t.style.fontSize='.9rem';
-    if(i===k){t.style.fontWeight='600';}
-    r.appendChild(t); box.appendChild(r);
-  });
-  var now=sum(k), readTot=0;
-  for(var j=0;j<=k;j++) if(S[j].read) readTot+=sum(j-1);
-  $('l09stepn').textContent='шаг '+k+' из '+(S.length-1);
-  $('l09who').textContent=S[k].who;
-  $('l09meter').firstChild.style.width=Math.min(100,now/MAX*100).toFixed(1)+'%';
-  $('l09tok').textContent='в окне ~'+now.toLocaleString('ru-RU')+' токенов · модель прочитала за все круги ~'+readTot.toLocaleString('ru-RU');
-  $('l09next').disabled=(k===S.length-1);
+  var bw=BW[+$('l09bw').value], sz=SZ[+$('l09sz').value];
+  $('l09bwv').textContent=bw+' ГБ/с'; $('l09szv').textContent=f(sz)+' ГБ';
+  Array.prototype.forEach.call($('l09dev').children,function(x,i){x.classList.toggle('primary',+$('l09bw').value===DEV[i][1]);});
+  Array.prototype.forEach.call($('l09mod').children,function(x,i){x.classList.toggle('primary',+$('l09sz').value===MOD[i][1]);});
+  var top=bw/sz, lo=top*0.5, hi=top*0.8, mid=top*0.65;
+  $('l09out').textContent='Потолок '+f(top)+' ток/с · на деле ≈ '+f(lo)+'–'+f(hi)+' ток/с';
+  $('l09mark').style.left=lg(mid).toFixed(1)+'%';
+  $('l09why').textContent= mid<3 ? 'Нечитаемо: годится только для работы на ночь.' : (mid<10 ? 'Терпимо: медленнее, чем вы читаете, но жить можно.' : 'Комфортно: модель пишет быстрее, чем вы читаете.');
 }
-$('l09next').addEventListener('click',function(){ if(k<S.length-1){k++; draw();} });
-$('l09reset').addEventListener('click',function(){k=0; draw();});
+$('l09bw').addEventListener('input',draw);
+$('l09sz').addEventListener('input',draw);
 draw();
 })();
 </script>

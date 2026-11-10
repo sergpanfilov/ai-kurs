@@ -1,0 +1,177 @@
+  <style>
+    .l26-route{display:flex;flex-direction:column;gap:6px;counter-reset:l26}
+    .l26-route div{border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:6px 10px;font-size:.93rem}
+    .l26-route div::before{counter-increment:l26;content:counter(l26) ". ";font-family:var(--f-mono);color:var(--accent)}
+    .l26-pool{display:flex;flex-wrap:wrap;gap:8px}
+    .l26-pool button{text-align:left;font-size:.88rem;padding:6px 10px}
+    .l26-log{font-family:var(--f-mono);font-size:.82rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;margin:0}
+  </style>
+
+  <div class="stack"><span class="eyebrow">Модуль 6 · Урок 26 из 28 · 25 минут</span>
+    <h1>Публикация: страница базы в интернете</h1>
+    <p class="lead">Как поручить агенту страницу поиска по вашей базе, выложить её в интернет и решить, кому она видна.</p></div>
+
+  <div class="stack"><h2>Страница поиска — тоже ТЗ</h2>
+    <div class="callout story"><span class="lbl">Письмо из соседней лаборатории</span><p>«Говорят, у вас есть сводка по ферментам для ПЭТ. Какие работают при 65 °C?» Послать три файла CSV? Дать доступ к панели Supabase, где можно случайно удалить таблицу? Лучший ответ — <b>ссылка</b>: коллега открывает страницу, вводит 65 и видит только проверенные строки с источниками.</p></div>
+    <p>База в Supabase есть (урок 24), но заглянуть в неё пока можно только из панели. Нужна <b>страница поиска</b>: открыл адрес — нашёл фермент. Это отдельная задача агенту, и ставится она так же, как задача на базу (урок 16): коротким ТЗ с приёмкой.</p>
+    <pre class="l26-log">ТЗ: страница поиска, папка site/
+1. Поле поиска по названию фермента.
+2. Фильтр «оптимум не ниже, °C».
+3. Таблица: фермент, значение, условия,
+   источник (ссылка на DOI), статус.
+4. Данные — из Supabase с публичным ключом.
+   Секретного ключа в site/ нет.
+5. Гость видит только подтверждённые строки.
+Приёмка: контрольные вопросы 1–5 дают
+те же ответы, что запрос в SQL Editor.</pre>
+    <p>Подтверждённые — со статусом «подтверждено критиком» или «подтверждено человеком» (урок 20). Пункт 5 — правило RLS (урок 24): агент пишет его в файл SQL, вы запускаете. Принимаете страницу как любую работу агента — контрольными вопросами (урок 17). А перед публикацией — <span class="hl">проверка в режиме инкогнито, без входа</span>: видно ровно то, что задумано, и ни строки «не проверено».</p></div>
+
+  <div class="stack"><h2>Адрес: от имени к компьютеру</h2>
+    <p>Каждый компьютер в интернете находится по числовому <b>IP-адресу</b>, например <span class="mono">185.199.108.153</span> — один из адресов GitHub Pages. Номера никто не помнит, поэтому есть <b>домен</b> — имя вроде <span class="mono">belhome.cc</span>. Домен покупают на год и продлевают.</p>
+    <p>Имена в адреса переводит <b>DNS</b> — справочная служба интернета, как телефонная книга. Браузер спрашивает: «где <span class="mono">agent.belhome.cc</span>?» Ответ бывает двух видов: сам номер или <span class="hl">переадресация «спросите у такого-то»</span> — запись <b>CNAME</b><sup class="fn" data-fn="1">1</sup>. У этого курса одна строка в DNS: <span class="mono">agent</span> → <span class="mono">sergpanfilov.github.io</span>. Имя слева от домена — <b>поддомен</b>.</p>
+    <p>Свой домен не обязателен. <b>GitHub Pages</b> — бесплатная публикация страниц прямо из репозитория — даёт адрес вида <span class="mono">имя.github.io/pet-enzymes</span>. Одно условие: на бесплатном GitHub публикуют только из <b>открытого</b> репозитория<sup class="fn" data-fn="2">2</sup>. Поэтому историю проекта держат закрытой, а для страницы заводят отдельный открытый репозиторий с одной папкой <span class="mono">site/</span>. Так устроен и этот курс. Публичный ключ в открытой папке — не утечка (урок 25).</p>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 540" width="340" height="540" role="img" aria-label="Путь страницы поиска: браузер, DNS, GitHub Pages отдаёт файлы, страница в браузере просит строки у Supabase с публичным ключом, правило RLS отдаёт гостю только подтверждённые строки; ответ возвращается в браузер">
+      <g>
+        <rect class="box" x="6" y="6" width="300" height="62" rx="6"/>
+        <text x="18" y="30" font-size="14" font-weight="600">1. Браузер</text>
+        <text class="sm" x="18" y="52">гость открыл адрес страницы</text>
+        <rect class="box" x="6" y="98" width="300" height="62" rx="6"/>
+        <text x="18" y="122" font-size="14" font-weight="600">2. DNS</text>
+        <text class="sm" x="18" y="144">имя → 185.199.108.153 (GitHub)</text>
+        <rect class="box" x="6" y="190" width="300" height="62" rx="6"/>
+        <text x="18" y="214" font-size="14" font-weight="600">3. GitHub Pages</text>
+        <text class="sm" x="18" y="236">отдаёт файлы из открытого репозитория</text>
+        <rect class="box" x="6" y="282" width="300" height="62" rx="6"/>
+        <text x="18" y="306" font-size="14" font-weight="600">4. Страница в браузере</text>
+        <text class="sm" x="18" y="328">просит строки у Supabase: публичный ключ</text>
+        <rect class="box" x="6" y="374" width="300" height="62" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <text x="18" y="398" font-size="14" font-weight="600">5. Supabase: правило RLS</text>
+        <text class="sm" x="18" y="420">гостю — только «подтверждено»</text>
+      </g>
+      <g>
+        <path class="arr" d="M156 68V90"/><path class="head" d="M156 98l-5-9h10z"/>
+        <path class="arr" d="M156 160V182"/><path class="head" d="M156 190l-5-9h10z"/>
+        <path class="arr" d="M156 252V274"/><path class="head" d="M156 282l-5-9h10z"/>
+        <path class="arr" d="M156 344V366"/><path class="head" d="M156 374l-5-9h10z"/>
+        <path class="arr" style="stroke-dasharray:5 4" d="M306 405H326V313H314"/><path class="head" d="M306 313l9-5v10z"/>
+      </g>
+      <text class="sm" x="6" y="464">пунктир — строки базы возвращаются</text>
+      <text class="sm" x="6" y="482">на страницу и встают в таблицу</text>
+      <text class="sm" x="6" y="506">выделено — где решается, что отдать;</text>
+      <text class="sm" x="6" y="524">GitHub данных базы не хранит</text>
+    </svg></div></div>
+
+  <div class="stack"><h2>Открыто, за входом, только своим</h2>
+    <p>Решите, кому видна страница, и запишите решение в журнал. У Сергея адреса делятся на три вида:</p>
+    <ul class="plain">
+      <li><b>Открыто всем:</b> главная <span class="mono">belhome.cc</span> и этот курс.</li>
+      <li><b>За входом:</b> семейное дерево. Перед ним стоит <b>Cloudflare Access</b> — проверка входа через Google перед сайтом: пропускает только адреса почты из списка<sup class="fn" data-fn="3">3</sup>. Чужой запрос до сайта не доходит.</li>
+      <li><b>Только своим:</b> пульт сервера виден лишь через <b>частную сеть</b> — сеть только своих устройств поверх интернета (у Сергея это Tailscale). Попасть может только устройство, которое вы добавили.</li>
+    </ul>
+    <div class="callout warn"><span class="lbl">Два разных замка</span><p>Access решает, пустить ли к сайту вообще. Вход Google на этом курсе — другое: он говорит базе, кто вы внутри сайта, а RLS решает, какие строки вам отдать (урок 24). Оба через Google, но это разные входы.</p></div>
+    <div class="callout story"><span class="lbl">Если у вас есть свой сервер, как у Сергея</span><p>Домашний компьютер стоит за роутером, и роутер правильно не пускает <b>входящие соединения</b> — когда кто-то снаружи сам стучится к вам. Стучатся в <b>порт</b> — номер «двери» компьютера для определённой программы. Открыть порт в роутере — значит открыть дверь всем подряд. <b>Туннель Cloudflare</b> устроен иначе: маленькая программа на сервере сама звонит в Cloudflare и не кладёт трубку, как жилец, который позвонил консьержу. Гости приходят к Cloudflare, а он передаёт их просьбы по этой линии. В его настройках записано, какое имя в какой туннель вести. Программа запускается сама при включении компьютера и перезванивает после сбоя<sup class="fn" data-fn="4">4</sup>.</p></div>
+    <div class="panel"><span class="eyebrow">Попробуйте сами</span>
+      <p>Соберите маршрут запроса. Выберите адрес, затем нажимайте блоки по порядку — от браузера до того, кто отдаёт данные. Лишние блоки в маршрут не входят.</p>
+      <div class="row" id="l26sc"></div>
+      <div class="l26-route" id="l26route"></div>
+      <div class="l26-pool" id="l26pool"></div>
+      <p class="out" id="l26out"></p>
+      <p class="why" id="l26why"></p>
+      <div class="row"><button type="button" id="l26reset">Сначала</button></div>
+      <p class="why">Маршруты упрощены, но устройство настоящее: так работают страницы на GitHub Pages и адреса Сергея (актуально на ноябрь 2026). Адрес страницы ферментов — условный.</p>
+    </div>
+    <div class="two">
+      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Страница поиска ферментов открыта на GitHub Pages: гость видит 140 подтверждённых измерений, строки «не проверено» база ему не отдаёт. В журнале запись «решение»: «открыто всем — данные из опубликованных статей; черновые строки закрыты правилом».</p></div>
+      <div class="panel"><span class="eyebrow">Свои проекты</span><p><span class="mono">belhome.cc</span>: главная и курсы открыты, семейные страницы — за входом Google, служебный пульт — только из своей сети. Каждый новый адрес — одна строка в DNS и одна запись «решение» в журнале: что открыли и почему.</p></div>
+    </div>
+    <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+      <li data-fn="1">Лучший способ понять DNS — завести свои записи и посмотреть, кто к ним обращается. В песочнице Mess with DNS (проект Джулии Эванс) вы получаете собственный поддомен, добавляете записи, в том числе CNAME, и видите живой журнал запросов. Ничего не сломать. <a href="https://messwithdns.net/" target="_blank" rel="noopener">Mess with DNS</a> (интерактив, англ., 20–40 мин).</li>
+      <li data-fn="2">На тарифах GitHub Pro и выше можно публиковать и из закрытого репозитория, но сама страница всё равно видна всем. Пошаговая инструкция на русском — от выбора папки до проверки адреса; её удобно дать агенту вместе с ТЗ. <a href="https://docs.github.com/ru/pages/getting-started-with-github-pages/creating-a-github-pages-site" target="_blank" rel="noopener">Документация GitHub: «Создание сайта GitHub Pages»</a> (инструкция, рус., 10 мин), проверено 10.11.2026.</li>
+      <li data-fn="3">Access входит в Cloudflare Zero Trust; бесплатный тариф — до 50 пользователей (актуально на ноябрь 2026).</li>
+      <li data-fn="4">Программа называется <span class="mono">cloudflared</span>; по документации Cloudflare она устанавливает только исходящие соединения, серверу не нужен публичный адрес. Туннели есть на всех тарифах, включая бесплатный. В документации есть схема: <a href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/" target="_blank" rel="noopener">Cloudflare Docs: Cloudflare Tunnel</a> (документация, англ., 15 мин).</li>
+    </ol></div></div>
+
+  <div class="panel"><span class="eyebrow">Словарик урока</span>
+    <div class="scroll"><table>
+      <tr><td><b>IP-адрес</b></td><td>числовой адрес компьютера в интернете: 185.199.108.153</td></tr>
+      <tr><td><b>Домен, поддомен</b></td><td>имя вместо номера, покупается на срок; поддомен — имя слева: agent.belhome.cc</td></tr>
+      <tr><td><b>DNS, CNAME</b></td><td>справочная: по имени выдаёт адрес; CNAME — переадресация «спросите у такого-то»</td></tr>
+      <tr><td><b>GitHub Pages</b></td><td>бесплатная публикация страниц из открытого репозитория</td></tr>
+      <tr><td><b>Порт, входящее соединение</b></td><td>номер «двери» программы; кто-то снаружи стучится в эту дверь</td></tr>
+      <tr><td><b>Туннель</b></td><td>линия, которую сервер сам открыл в Cloudflare; двери в роутере закрыты</td></tr>
+      <tr><td><b>Cloudflare Access</b></td><td>проверка входа перед сайтом: кого пускать дальше</td></tr>
+    </table></div></div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Страница поиска — отдельная задача агенту: короткое ТЗ, приёмка контрольными вопросами.</li>
+    <li>Основной путь: страница на GitHub Pages из открытого репозитория, данные — из Supabase с публичным ключом.</li>
+    <li>Что видит гость, решает правило RLS в базе; перед публикацией его проверяют в режиме инкогнито.</li>
+    <li>Доступ бывает трёх уровней: открыто всем, за входом (Access), только своя сеть; решение пишут в журнал.</li></ul></div>
+
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Откройте <a href="https://dns.google/resolve?name=agent.belhome.cc&amp;type=CNAME" target="_blank" rel="noopener">Google Public DNS: запрос agent.belhome.cc</a>. Это ответ справочной в машинном виде. Найдите в части <span class="mono">"Answer"</span> строку с <span class="mono">"type": 5</span> — это CNAME; после <span class="mono">"data"</span> стоит имя, куда переадресует курс. Затем замените в адресной строке <span class="mono">agent.belhome.cc</span> на <span class="mono">sergpanfilov.github.io</span>, а <span class="mono">CNAME</span> — на <span class="mono">A</span>: увидите числовые адреса GitHub Pages.</p>
+    <p>Запишите оба ответа и одной фразой — путь от имени курса до адреса компьютера.</p></div>
+  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 26</span>
+    <p>Опубликуйте страницу поиска по своей базе. 1) Положите ТЗ страницы (5–7 строк, как в уроке) в <span class="mono">TZ.md</span>. 2) Поручите агенту сделать страницу в <span class="mono">site/</span> и файл SQL, который открывает странице таблицы только на чтение (в шаге 24 доступа не было) и задаёт правило «гость видит только подтверждённые строки»; файл запускаете вы. 3) Примите страницу контрольными вопросами. 4) Проверьте в режиме инкогнито без входа: строк «не проверено» не видно. 5) Поручите агенту публикацию на GitHub Pages из отдельного открытого репозитория. 6) Откройте страницу с телефона. 7) Запишите в журнал запись «решение»: кому видна страница и почему.</p></div>
+
+  <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
+    <p>По желанию; одного материала достаточно. Путь — от «одной строки в DNS» к уверенной публикации своих страниц и к тому, как сервисы меняют умолчания в сторону «закрыто, пока не открыли».</p>
+    <h3>Понять лучше</h3>
+    <ul class="links">
+      <li><a href="https://developer.mozilla.org/ru/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works" target="_blank" rel="noopener">MDN: Как работает Веб</a><span class="meta">статья · рус. · 15 мин · если откроете одно — это</span><p>Что происходит между вводом адреса и появлением страницы: DNS, сервер, пакеты, файлы. Связывает схему урока в одну картину.</p></li>
+      <li><a href="https://www.youtube.com/watch?v=UVR9lhUGAyU" target="_blank" rel="noopener">Fireship: DNS Explained in 100 Seconds</a><span class="meta">видео · англ., есть субтитры · 2 мин</span><p>Путь от имени к адресу, включая записи вроде CNAME, в быстрой анимации.</p></li>
+    </ul>
+    <h3>Копнуть глубже</h3>
+    <ul class="links">
+      <li><a href="https://supabase.com/docs/guides/database/data-api" target="_blank" rel="noopener">Supabase Docs: Securing your API</a><span class="meta">документация · англ. · 20 мин</span><p>Как открыть странице ровно нужные таблицы: доступ к таблице и правила по строкам — два отдельных слоя. Настольная страница перед публикацией.</p></li>
+      <li><a href="https://developers.cloudflare.com/cloudflare-one/policies/access/" target="_blank" rel="noopener">Cloudflare Docs: Access policies</a><span class="meta">документация · англ. · 20 мин</span><p>Как записываются правила «кого пускать»: по адресу почты, по группе, по стране, с повторным входом через заданное время. Пригодится, если страницу нужно закрыть входом.</p></li>
+    </ul>
+    <h3>Куда движется область</h3>
+    <ul class="links">
+      <li><a href="https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically" target="_blank" rel="noopener">Supabase: Tables not exposed to Data API automatically</a><span class="meta">объявление · англ. · 2026 · 5 мин</span><p>С 30 мая 2026 года новые таблицы закрыты для страниц, пока доступ не выдан явно; с 30 октября — во всех проектах. Пример того, как сервисы после волны утечек переходят к «закрыто по умолчанию». Уже действует.</p></li>
+      <li><a href="https://supabase.com/blog/supabase-security-2025-retro" target="_blank" rel="noopener">Supabase Security Retro: 2025</a><span class="meta">статья · англ. · январь 2026 · 15 мин</span><p>Что сервис поменял за год: RLS по умолчанию в панели, новые отзываемые ключи, автоматический отзыв ключей, найденных на GitHub, помощник, который пишет правила по описанию словами. Честно: правила от помощника тоже надо проверять входом без пропуска.</p></li>
+    </ul></div>
+
+
+<script>
+(function(){
+var $=AI.$, el=AI.el;
+var SC=[
+ {b:'Страница ферментов (основной путь)',
+  ok:['Браузер: имя.github.io/pet-enzymes','DNS: имя → адрес GitHub Pages','GitHub Pages отдаёт файлы страницы','Страница просит строки у Supabase (публичный ключ)','RLS в базе: гостю — только подтверждённые строки'],
+  extra:['Секретный ключ Supabase','Туннель к домашнему серверу'],
+  done:'Готово. Сервер не нужен: файлы отдаёт GitHub, данные — Supabase, а что показать гостю, решает правило в базе.'},
+ {b:'agent.belhome.cc (курс)',
+  ok:['Браузер: agent.belhome.cc','DNS в Cloudflare: CNAME → sergpanfilov.github.io','GitHub Pages находит открытый репозиторий','Файлы курса уходят в браузер — вход не нужен'],
+  extra:['Cloudflare Access: вход через Google','Туннель к домашнему серверу'],
+  done:'Готово. Домашний сервер в этом маршруте не участвует вовсе: сайт целиком лежит на GitHub.'},
+ {b:'family.belhome.cc (закрыт)',
+  ok:['Браузер: family.belhome.cc','DNS в Cloudflare: имя ведёт в Cloudflare','Cloudflare Access: вход через Google, адрес в списке','Туннель: линия, открытая самим сервером','Домашний сервер: программа дерева отвечает'],
+  extra:['GitHub Pages','Открытый порт в роутере'],
+  done:'Готово. Чужой запрос остановился бы на шаге 3 и до дома не дошёл.'}
+];
+var cur=0, step=0, miss=0, pool;
+function mix(a){return a.map(function(x,i){return [x,(i*5+3)%a.length];}).sort(function(p,q){return p[1]-q[1];}).map(function(p){return p[0];});}
+function start(i){cur=i; step=0; miss=0; var s=SC[cur]; pool=mix(s.ok.concat(s.extra)); $('l26why').textContent=''; draw();}
+function draw(){
+  var s=SC[cur], r=$('l26route'), p=$('l26pool'); r.textContent=''; p.textContent='';
+  s.ok.slice(0,step).forEach(function(t){r.appendChild(el('div',null,t));});
+  pool.forEach(function(t){
+    if(s.ok.indexOf(t)>-1 && s.ok.indexOf(t)<step) return;
+    var b=el('button',null,t); b.type='button';
+    b.addEventListener('click',function(){
+      var k=s.ok.indexOf(t);
+      if(k===step){step++; $('l26why').textContent=''; draw();}
+      else{miss++; $('l26why').textContent= k<0 ? 'Не то: «'+t+'» в этом маршруте не участвует.' : 'Рано: сначала должен идти другой шаг.'; $('l26out').textContent='Шагов собрано: '+step+' из '+s.ok.length+' · промахов: '+miss;}
+    });
+    p.appendChild(b);
+  });
+  $('l26out').textContent= step===s.ok.length ? s.done+(miss?' Промахов: '+miss+'.':' Без единого промаха.') : 'Шагов собрано: '+step+' из '+s.ok.length+' · промахов: '+miss;
+  Array.prototype.forEach.call($('l26sc').children,function(x,i){x.classList.toggle('primary',i===cur);});
+}
+SC.forEach(function(s,i){var b=el('button',null,s.b); b.type='button'; b.addEventListener('click',function(){start(i);}); $('l26sc').appendChild(b);});
+$('l26reset').addEventListener('click',function(){start(cur);});
+start(0);
+})();
+</script>
