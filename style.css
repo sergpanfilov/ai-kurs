@@ -134,3 +134,24 @@ a.pseg:hover{filter:brightness(.92)}
 .pbar-wrap .legend{margin-top:0}
 .legend i{border-radius:2px;width:.9rem;height:.6rem;border:0;background:var(--line)}
 .legend i.o{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)} .legend i.d{background:var(--accent)}
+
+/* ---- оформление текста уроков (10.11, просьба Сержа: выделения, плашки, сноски, «Разобраться глубже») ---- */
+.hl{background:linear-gradient(transparent 52%,var(--signal-soft) 52%);padding:0 2px;border-radius:2px}
+.callout{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.callout .lbl{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.callout.fact{background:var(--accent-soft);border-left-color:var(--accent)}
+.callout.warn{background:var(--signal-soft);border-left-color:var(--signal)}
+.callout.warn .lbl{color:var(--signal)}
+.callout.story{background:transparent;border-left-style:dashed}
+.callout .big{font-family:var(--f-display);font-weight:600;font-size:1.9rem;line-height:1.1;color:var(--accent)}
+.callout.warn .big{color:var(--signal)}
+.pull{font-family:var(--f-display);font-size:1.25rem;line-height:1.35;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:4px 0}
+.fn{font-family:var(--f-mono);font-size:.68em;font-weight:500;color:var(--accent);cursor:pointer;border:1px solid var(--accent);border-radius:999px;padding:0 5px;margin-left:2px;vertical-align:super;line-height:1;user-select:none}
+.fn[aria-expanded="true"]{background:var(--accent);color:var(--surface)}
+.fn-pop{display:block;font-size:.88rem;line-height:1.5;color:var(--muted);background:var(--bg);border-left:2px solid var(--accent);padding:6px 10px;margin:8px 0 2px;border-radius:0 6px 6px 0}
+.footnotes{margin:0;padding-left:1.4rem;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.deeper ul.links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.deeper ul.links li{display:flex;flex-direction:column;gap:2px}
+.deeper ul.links a{font-weight:600}
+.deeper .meta{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.deeper ul.links p{font-size:.93rem;color:var(--muted)}

@@ -170,6 +170,22 @@
     document.title = L.title + ' · От модели до агентов';
     var qd = box.querySelector('script.quiz-data');
     if (qd) renderQuiz(n, box.querySelector('.quiz'), JSON.parse(qd.textContent));
+    // сноски: номер в тексте раскрывает пояснение прямо под абзацем (без переходов по #, их занимает маршрутизатор)
+    var fnText = {};
+    box.querySelectorAll('.footnotes li[data-fn]').forEach(function (li) { fnText[li.getAttribute('data-fn')] = li.innerHTML; });
+    box.querySelectorAll('sup.fn[data-fn]').forEach(function (s) {
+      s.setAttribute('role', 'button'); s.tabIndex = 0; s.setAttribute('aria-expanded', 'false'); s.title = 'Сноска';
+      var pop = null;
+      function toggle() {
+        if (pop) { pop.remove(); pop = null; s.setAttribute('aria-expanded', 'false'); return; }
+        pop = el('div', 'fn-pop'); pop.innerHTML = '<b>' + s.getAttribute('data-fn') + '.</b> ' + (fnText[s.getAttribute('data-fn')] || '');
+        var host = s.closest('p, li, td, .callout');
+        if (host && host.tagName === 'TD') host.appendChild(pop); else (host || s).after(pop);
+        s.setAttribute('aria-expanded', 'true');
+      }
+      s.addEventListener('click', toggle);
+      s.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
     box.querySelectorAll('[data-note]').forEach(function (p) { addNote(n, p, p.getAttribute('data-note')); });
     // интерактивы урока: скрипты, вставленные через innerHTML, браузер не выполняет — пересоздаём
     box.querySelectorAll('script:not([type="application/json"])').forEach(function (s) {
