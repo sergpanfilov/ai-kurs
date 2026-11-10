@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>От модели до агентов</title>
+<meta name="description" content="Курс о том, как устроены AI-модели и как с ними работать: от токенов до команды агентов.">
+<meta name="robots" content="noindex">
+<script>try{var t=localStorage.getItem('aicourse-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="wrap">
+<div class="topbar">
+  <a class="brand" href="#map">От модели до агентов</a>
+  <div class="tools">
+    <span class="progress-note" id="pnote"></span>
+    <button type="button" class="icon" id="themeBtn" aria-label="Светлая или тёмная тема" title="Светлая или тёмная тема"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" fill="currentColor"/></svg></button>
+    <span class="progress-note" id="who" hidden></span>
+    <button type="button" class="small" id="authBtn" hidden>Войти</button>
+  </div>
+</div>
+<p class="notice" id="notice" hidden></p>
+
+<!-- ================= MAP ================= -->
+<section id="v-map" class="stack" style="gap:28px">
+  <div class="stack">
+    <span class="eyebrow">Курс · 24 урока по 20–30 минут</span>
+    <h1>Как устроен AI и как с ним работать по-взрослому</h1>
+    <p class="lead">Для тех, кто не программирует, но хочет понимать, что происходит внутри: от токенов и весов до команды агентов с критиком и дизайнером. В каждом уроке одна идея, схема, живой пример, тест и задание на десять минут. Через весь курс идёт один проект: собственная база данных, собранная вместе с AI.</p>
+  </div>
+
+  <div class="plate" aria-label="Карта курса">
+    <div class="plate-grid" id="plate"></div>
+    <div class="legend"><span><i class="d"></i>пройден</span><span><i class="o"></i>открыт</span><span><i></i>готовится</span></div>
+  </div>
+  <p class="why">Карта сделана как 24-луночный планшет: одна лунка на урок, ряды A–D, столбцы 1–6. <span id="storeNote">Прогресс хранится в этом браузере. Войдите через Google, чтобы он сохранялся в аккаунте и был виден на других устройствах.</span></p>
+  <p id="progLink" hidden><a href="progress.html">Прогресс учащихся</a></p>
+
+  <div id="modules" class="stack" style="gap:18px"></div>
+
+  <div class="panel tint">
+    <span class="eyebrow">Сквозной проект · идёт через все модули</span>
+    <h3>Своя база данных: ферменты под один промышленный процесс</h3>
+    <p>Вы строите собственную базу на 50–100 ферментов для одного процесса, например разложения ПЭТ-пластика при 60&nbsp;°C или стирки при 30&nbsp;°C и pH&nbsp;10. У каждой цифры есть ссылка на источник и статус проверки. AI работает на каждом этапе в своей роли, а вы решаете, проверяете и делаете выводы.</p>
+    <div class="scroll"><table>
+      <tr><th>Модуль</th><th>Шаг проекта</th><th>Роль AI</th></tr>
+      <tr><td>1</td><td>Выбор процесса и пяти вопросов к базе</td><td>Собеседник</td></tr>
+      <tr><td>2</td><td>Расчёт: сколько стоит прочитать сто статей</td><td>Калькулятор объёма</td></tr>
+      <tr><td>3</td><td>Первые десять записей</td><td>Агент-сборщик</td></tr>
+      <tr><td>4</td><td>ТЗ и структура таблиц</td><td>Проектировщик</td></tr>
+      <tr><td>5</td><td>Массовый сбор, сверка, подсчёт ошибок</td><td>Сборщик и критик</td></tr>
+      <tr><td>6</td><td>База, история, копии, публикация</td><td>Строитель</td></tr>
+      <tr><td>7</td><td>Анализ и защита результата</td><td>Аналитик</td></tr>
+    </table></div>
+    <p>Открытые базы служат сырьём:</p>
+    <ul class="plain">
+      <li><a href="https://www.brenda-enzymes.org" target="_blank" rel="noopener">BRENDA</a>: свойства ферментов, оптимумы температуры и pH, кинетика</li>
+      <li><a href="https://www.uniprot.org" target="_blank" rel="noopener">UniProt</a> и <a href="https://alphafold.ebi.ac.uk" target="_blank" rel="noopener">AlphaFold DB</a>: последовательности и структуры белков</li>
+      <li><a href="https://www.rhea-db.org" target="_blank" rel="noopener">Rhea</a>: выверенные биохимические реакции</li>
+      <li><a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener">PubChem</a>: свойства веществ</li>
+      <li><a href="https://open-reaction-database.org" target="_blank" rel="noopener">Open Reaction Database</a>: условия и выходы реакций органического синтеза</li>
+      <li><a href="https://chem.echa.europa.eu" target="_blank" rel="noopener">ECHA CHEM</a>: вещества, зарегистрированные в ЕС, классификация опасности</li>
+    </ul>
+    <h3>Тот же каркас с другой темой</h3>
+    <p>Шаги не зависят от химии. Вместо ферментов можно собрать базу по своему проекту: компании и связи в расследовании, оборудование и гарантии, источники для книги. Сбор, критик, подсчёт ошибок и обвязка остаются теми же.</p>
+  </div>
+</section>
+
+<!-- ================= LESSON (содержимое берётся из lessons/NN.html) ================= -->
+<section id="v-lesson" class="stack" style="gap:24px" hidden></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
