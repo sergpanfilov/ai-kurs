@@ -123,3 +123,14 @@ button.icon{padding:5px 8px;line-height:0;border-color:var(--line);color:var(--m
 .learner .plate{max-width:22rem}
 .scores td.num{font-family:var(--f-mono);white-space:nowrap}
 .fit-w{max-width:100%;height:auto}
+/* полоса прогресса вместо планшета (решение Сержа 10.11) */
+.pbar-wrap{display:flex;flex-direction:column;gap:8px}
+.pbar{display:flex;gap:6px}
+.pseg-group{display:flex;gap:2px;flex-basis:0}
+.pseg{flex:1;height:10px;border-radius:2px;background:var(--line);display:block}
+.pseg.open{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.pseg.done{background:var(--accent)}
+a.pseg:hover{filter:brightness(.92)}
+.pbar-wrap .legend{margin-top:0}
+.legend i{border-radius:2px;width:.9rem;height:.6rem;border:0;background:var(--line)}
+.legend i.o{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)} .legend i.d{background:var(--accent)}

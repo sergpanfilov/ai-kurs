@@ -46,13 +46,13 @@
       hd.appendChild(el('h2', null, P.name));
       hd.appendChild(el('span', 'progress-note', 'пройдено ' + done + ' из 24' + (sumT ? ' · тесты: ' + sumR + ' из ' + sumT + ' верных ответов' : '')));
       card.appendChild(hd);
-      var plate = el('div', 'plate'), g = el('div', 'plate-grid');
-      g.appendChild(el('span', 'lab', '')); for (var c = 1; c <= 6; c++) g.appendChild(el('span', 'lab', String(c)));
-      for (var rr = 0; rr < 4; rr++) {
-        g.appendChild(el('span', 'lab', 'ABCD'[rr]));
-        for (c = 1; c <= 6; c++) { var k = rr * 6 + c, R = P.rows[k]; var w = el('span', 'well' + (R && R.done ? ' done' : ''), String(k)); w.title = 'Урок ' + k + ': ' + (titles[k] || ''); g.appendChild(w); }
-      }
-      plate.appendChild(g); card.appendChild(plate);
+      var bar = el('div', 'pbar');
+      course.modules.forEach(function (m) {
+        var gr = el('div', 'pseg-group'); gr.style.flexGrow = m.lessons.length;
+        m.lessons.forEach(function (L) { var R = P.rows[L.n]; var s = el('span', 'pseg' + (R && R.done ? ' done' : '')); s.title = 'Урок ' + L.n + ': ' + L.title; gr.appendChild(s); });
+        bar.appendChild(gr);
+      });
+      card.appendChild(bar);
       var rows = Object.keys(P.rows).map(Number).sort(function (a, b) { return a - b; }).filter(function (n) { return P.rows[n].done; });
       if (rows.length) {
         var wrap = el('div', 'scroll'), t = el('table', 'scores'), tr = el('tr');

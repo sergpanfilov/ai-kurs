@@ -9,7 +9,22 @@
 
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-  window.AI = { $: $, el: el };
+  // полоса прогресса: 24 деления, промежутки между модулями
+  function pbar(box, course, isDone, links) {
+    box.textContent = '';
+    course.modules.forEach(function (m, i) {
+      var g = el('div', 'pseg-group');
+      m.lessons.forEach(function (L) {
+        var cls = 'pseg' + (isDone(L.n) ? ' done' : (L.file ? ' open' : '')), s;
+        if (links && L.file) { s = el('a', cls); s.href = '#lesson-' + L.n; } else s = el('span', cls);
+        s.title = 'Урок ' + L.n + ': ' + L.title; s.setAttribute('aria-label', s.title);
+        g.appendChild(s);
+      });
+      g.style.flexGrow = m.lessons.length;
+      box.appendChild(g);
+    });
+  }
+  window.AI = { $: $, el: el, pbar: pbar };
 
   // ---------- состояние ----------
   // lessons[n] = {done, right, total, best, attempts, answers, at};  notes[n] = {task, step, at}
@@ -120,18 +135,7 @@
   function lessons() { var a = []; course.modules.forEach(function (m, i) { m.lessons.forEach(function (l) { l.module = i + 1; a.push(l); }); }); return a; }
   function info(n) { return lessons().filter(function (l) { return l.n === n; })[0]; }
   function renderMap() {
-    var p = $('plate'); p.textContent = '';
-    p.appendChild(el('span', 'lab', ''));
-    for (var c = 1; c <= 6; c++) p.appendChild(el('span', 'lab', String(c)));
-    for (var r = 0; r < 4; r++) {
-      p.appendChild(el('span', 'lab', 'ABCD'[r]));
-      for (c = 1; c <= 6; c++) {
-        var n = r * 6 + c, L = info(n), w;
-        if (L && L.file) { w = el('a', 'well ' + (st.lessons[n] && st.lessons[n].done ? 'done' : 'open'), String(n)); w.href = '#lesson-' + n; w.setAttribute('aria-label', 'Урок ' + n + ': ' + L.title); }
-        else w = el('span', 'well', String(n));
-        p.appendChild(w);
-      }
-    }
+    AI.pbar($('pbar'), course, function (n) { return st.lessons[n] && st.lessons[n].done; }, true);
     var m = $('modules'); m.textContent = '';
     course.modules.forEach(function (md, i) {
       var d = el('div', 'module'); d.appendChild(el('span', 'eyebrow', 'Модуль ' + (i + 1))); d.appendChild(el('h2', null, md.title));
