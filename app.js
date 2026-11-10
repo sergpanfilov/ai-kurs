@@ -168,8 +168,6 @@
     if (tok !== lessonToken) return;
     box.innerHTML = html;
     document.title = L.title + ' · От модели до агентов';
-    var qd = box.querySelector('script.quiz-data');
-    if (qd) renderQuiz(n, box.querySelector('.quiz'), JSON.parse(qd.textContent));
     // сноски: номер в тексте раскрывает пояснение прямо под абзацем (без переходов по #, их занимает маршрутизатор)
     var fnText = {};
     box.querySelectorAll('.footnotes li[data-fn]').forEach(function (li) { fnText[li.getAttribute('data-fn')] = li.innerHTML; });
@@ -191,6 +189,8 @@
     box.querySelectorAll('script:not([type="application/json"])').forEach(function (s) {
       var x = document.createElement('script'); x.textContent = s.textContent; s.replaceWith(x);
     });
+    // отметка «пройден» (тестов в курсе нет с 10.11.2026 — решение Сержа)
+    box.appendChild(doneBlock(n));
     // переход к соседним урокам
     var all = lessons(), i = all.indexOf(L), prev = all[i - 1], next = all[i + 1];
     var nav = el('div', 'lesson-nav'), a;
@@ -203,6 +203,22 @@
     box.appendChild(nav);
   }
 
+  function doneBlock(n) {
+    var p = el('div', 'panel done-panel'), row = el('div', 'row'), b = el('button', 'primary'), note = el('span', 'progress-note');
+    b.type = 'button';
+    function draw() {
+      var S = st.lessons[n];
+      if (S && S.done) { b.textContent = 'Снять отметку'; b.className = ''; note.textContent = 'Урок пройден' + (S.at ? ' ' + fmtDate(S.at) : '') + '.'; }
+      else { b.textContent = 'Отметить урок пройденным'; b.className = 'primary'; note.textContent = 'Прочитали, сделали задание и шаг проекта — отметьте.'; }
+    }
+    b.addEventListener('click', function () {
+      var S = st.lessons[n] || {};
+      st.lessons[n] = { done: !S.done, at: new Date().toISOString() };
+      saveLocal(); updNote(); pushLesson(n); draw();
+    });
+    row.appendChild(b); row.appendChild(note); p.appendChild(row); draw();
+    return p;
+  }
   function fmtDate(s) { try { return new Date(s).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }); } catch (e) { return ''; } }
   function renderQuiz(n, box, qs) {
     var answered = 0, right = 0, answers = [];

@@ -18,13 +18,13 @@
 
   <div class="stack"><h2>Туннель к домашнему серверу</h2>
     <p>С GitHub всё просто: его серверы открыты для всех. Домашний сервер — другое дело. Он стоит за роутером, а роутер правильно делает, что не пускает входящие соединения снаружи. Можно «пробросить порт» — открыть в роутере дверь. Но в открытую дверь стучат все подряд.</p>
-    <p><b>Cloudflare Tunnel</b><sup class="fn" data-fn="2">2</sup> решает это иначе. Маленькая программа на самом сервере <span class="hl">сама звонит в Cloudflare и держит линию открытой</span>. Запрос к <span class="mono">drevo.belhome.cc</span> (семейное дерево Сержа) приходит в Cloudflare и спускается по этой линии. Дверь в роутере закрыта, сервер разговаривает только с Cloudflare.</p>
+    <p><b>Cloudflare Tunnel</b><sup class="fn" data-fn="2">2</sup> решает это иначе. Маленькая программа на самом сервере <span class="hl">сама звонит в Cloudflare и держит линию открытой</span>. Запрос к <span class="mono">family.belhome.cc</span> (условный закрытый адрес семейного сайта) приходит в Cloudflare и спускается по этой линии. Дверь в роутере закрыта, сервер разговаривает только с Cloudflare.</p>
     <div class="callout story"><span class="lbl">Образ</span><p>Не открывать подъезд каждому, а самому позвонить консьержу и не класть трубку. Гости приходят к консьержу, он передаёт их просьбы по телефону, а ваша дверь заперта.</p></div>
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 534" width="340" height="534" role="img" aria-label="Путь закрытого адреса: браузер, DNS Cloudflare, Cloudflare Access с входом Google, туннель, домашний сервер за закрытым роутером; для открытого адреса курса DNS сразу ведёт на GitHub Pages">
       <g>
         <rect class="box" x="6" y="6" width="300" height="62" rx="6"/>
         <text x="18" y="30" font-size="14" font-weight="600">1. Браузер</text>
-        <text class="sm" x="18" y="52">вы набрали drevo.belhome.cc</text>
+        <text class="sm" x="18" y="52">вы набрали family.belhome.cc</text>
         <rect class="box" x="6" y="98" width="300" height="62" rx="6"/>
         <text x="18" y="122" font-size="14" font-weight="600">2. DNS в Cloudflare</text>
         <text class="sm" x="18" y="144">имя ведёт в Cloudflare</text>
@@ -108,7 +108,6 @@
     <li>Доступ решается на нескольких уровнях: открыто всем, за входом (Access), только своя сеть; данные внутри защищают правила базы.</li>
     <li>Файл правил говорит агенту, как работать; журнал решений — что решено и почему.</li></ul></div>
 
-  <div class="panel"><span class="eyebrow">Проверьте себя</span><div class="quiz"></div></div>
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
     <p>Откройте <a href="https://dns.google/query?name=agent.belhome.cc&amp;rr_type=CNAME" target="_blank" rel="noopener">Google Public DNS: запрос agent.belhome.cc</a> и найдите в ответе, куда переадресует имя курса. Подставьте в адрес <span class="mono">belhome.cc</span> или любой знакомый сайт и сравните ответы.</p>
@@ -127,14 +126,6 @@
       <li><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code Docs: How Claude remembers your project</a><span class="meta">документация · англ. · 15 мин</span><p>Как устроены файлы CLAUDE.md, где они лежат и что в них стоит писать.</p></li>
     </ul></div>
 
-<script type="application/json" class="quiz-data">
-[
- {"q": "Что делает запись CNAME agent → sergpanfilov.github.io?", "options": ["Копирует сайт с GitHub на сервер Сержа", "Переадресует: за этим именем обращаться к GitHub Pages", "Закрывает сайт паролем"], "answer": 1, "why": "CNAME — переадресация в DNS. Файлы курса отдаёт GitHub Pages."},
- {"q": "Чем туннель лучше открытого порта в роутере?", "options": ["Он быстрее домашнего интернета", "Он бесплатен, а порт платный", "Сервер сам открывает линию наружу, и входящие двери остаются закрытыми"], "answer": 2, "why": "Программа на сервере держит исходящее соединение с Cloudflare; снаружи стучаться некуда."},
- {"q": "Семейное дерево закрыто Cloudflare Access. Где отсекается чужой запрос?", "options": ["В Cloudflare, ещё до домашнего сервера", "На домашнем сервере, после загрузки страницы", "В браузере посетителя"], "answer": 0, "why": "Access стоит на шаге 3: без входа из списка запрос не идёт в туннель."},
- {"q": "Чем журнал решений отличается от файла правил проекта?", "options": ["Ничем, это два названия одного файла", "Журнал хранит, что решено и почему; правила — как агенту работать", "Журнал пишет только агент, правила — только человек"], "answer": 1, "why": "Правила задают порядок работы, журнал объясняет прошлые решения, чтобы их не переигрывать."}
-]
-</script>
 
 <script>
 (function(){
@@ -144,8 +135,8 @@ var SC=[
   ok:['Браузер: agent.belhome.cc','DNS в Cloudflare: CNAME → sergpanfilov.github.io','GitHub Pages находит открытый репозиторий','Файлы курса уходят в браузер — вход не нужен'],
   extra:['Cloudflare Access: вход через Google','Туннель к домашнему серверу'],
   done:'Готово. Домашний сервер в этом маршруте не участвует вовсе: сайт целиком лежит на GitHub.'},
- {b:'drevo.belhome.cc (закрыт)',
-  ok:['Браузер: drevo.belhome.cc','DNS в Cloudflare: имя ведёт в Cloudflare','Cloudflare Access: вход через Google, адрес в списке семьи','Туннель: линия, открытая самим сервером','Домашний сервер: программа дерева отвечает'],
+ {b:'family.belhome.cc (закрыт)',
+  ok:['Браузер: family.belhome.cc','DNS в Cloudflare: имя ведёт в Cloudflare','Cloudflare Access: вход через Google, адрес в списке семьи','Туннель: линия, открытая самим сервером','Домашний сервер: программа дерева отвечает'],
   extra:['GitHub Pages','Открытый порт в роутере'],
   done:'Готово. Чужой запрос остановился бы на шаге 3 и до дома не дошёл.'}
 ];

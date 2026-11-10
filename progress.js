@@ -44,7 +44,7 @@
       var card = el('div', 'learner');
       var hd = el('div', 'stack'); hd.style.gap = '4px';
       hd.appendChild(el('h2', null, P.name));
-      hd.appendChild(el('span', 'progress-note', 'пройдено ' + done + ' из ' + Object.keys(titles).length + (sumT ? ' · тесты: ' + sumR + ' из ' + sumT + ' верных ответов' : '')));
+      hd.appendChild(el('span', 'progress-note', 'пройдено ' + done + ' из ' + Object.keys(titles).length + ''));
       card.appendChild(hd);
       var bar = el('div', 'pbar');
       course.modules.forEach(function (m) {
@@ -56,12 +56,11 @@
       var rows = Object.keys(P.rows).map(Number).sort(function (a, b) { return a - b; }).filter(function (n) { return P.rows[n].done; });
       if (rows.length) {
         var wrap = el('div', 'scroll'), t = el('table', 'scores'), tr = el('tr');
-        ['Урок', 'Тест', 'Лучший', 'Попыток', 'Когда'].forEach(function (h) { tr.appendChild(el('th', null, h)); }); t.appendChild(tr);
+        ['Урок', 'Отмечен'].forEach(function (h) { tr.appendChild(el('th', null, h)); }); t.appendChild(tr);
         rows.forEach(function (n) {
           var R = P.rows[n], q = R.quiz_total ? R.quiz_right + ' из ' + R.quiz_total : '—';
           tr = el('tr'); tr.appendChild(el('td', null, n + '. ' + (titles[n] || '')));
-          tr.appendChild(el('td', 'num', q)); tr.appendChild(el('td', 'num', R.quiz_total ? String(R.best_right) : '—'));
-          tr.appendChild(el('td', 'num', String(R.attempts || 0))); tr.appendChild(el('td', 'num', fmtDate(R.updated_at)));
+          tr.appendChild(el('td', 'num', fmtDate(R.updated_at)));
           t.appendChild(tr);
         });
         wrap.appendChild(t); card.appendChild(wrap);
