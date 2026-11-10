@@ -5,11 +5,11 @@
   'use strict';
   var C = window.AI_CONFIG || {};
   var sb = (window.supabase && C.supabaseUrl) ? window.supabase.createClient(C.supabaseUrl, C.supabaseKey) : null;
-  var TOTAL = 24;
+  var TOTAL = 24; // уточняется по course.json при загрузке
 
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-  // полоса прогресса: 24 деления, промежутки между модулями
+  // полоса прогресса: по делению на урок, промежутки между модулями
   function pbar(box, course, isDone, links) {
     box.textContent = '';
     course.modules.forEach(function (m, i) {
@@ -265,7 +265,7 @@
   });
   (async function start() {
     st = loadLocal();
-    try { course = await (await fetch('course.json', { cache: 'no-cache' })).json(); }
+    try { course = await (await fetch('course.json', { cache: 'no-cache' })).json(); TOTAL = lessons().length; }
     catch (e) { showNotice('Не удалось загрузить план курса. Обновите страницу.'); return; }
     renderAuth(); updNote();
     if (sb) {

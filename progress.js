@@ -1,4 +1,4 @@
-/* Страница прогресса: по каждому учащемуся — планшет на 24 лунки и таблица результатов тестов. */
+/* Страница прогресса: по каждому учащемуся — полоса прогресса лунки и таблица результатов тестов. */
 (function () {
   'use strict';
   var C = window.AI_CONFIG || {};
@@ -44,7 +44,7 @@
       var card = el('div', 'learner');
       var hd = el('div', 'stack'); hd.style.gap = '4px';
       hd.appendChild(el('h2', null, P.name));
-      hd.appendChild(el('span', 'progress-note', 'пройдено ' + done + ' из 24' + (sumT ? ' · тесты: ' + sumR + ' из ' + sumT + ' верных ответов' : '')));
+      hd.appendChild(el('span', 'progress-note', 'пройдено ' + done + ' из ' + Object.keys(titles).length + (sumT ? ' · тесты: ' + sumR + ' из ' + sumT + ' верных ответов' : '')));
       card.appendChild(hd);
       var bar = el('div', 'pbar');
       course.modules.forEach(function (m) {
