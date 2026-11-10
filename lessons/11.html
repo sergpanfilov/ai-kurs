@@ -1,0 +1,190 @@
+  <style>
+    .l11-row{display:flex;flex-direction:column;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
+    .l11-row:first-child{border-top:0}
+    .l11-row .l11-v{font-family:var(--f-mono);font-size:.86rem}
+    .l11-row .row{gap:8px}
+    .l11-row button{padding:4px 10px;font-size:.85rem}
+    .l11-row.l11-on{background:var(--signal-soft);border-radius:6px;padding-left:8px;padding-right:8px}
+    .l11-res{font-size:.9rem}
+    .l11-ok{color:var(--good)} .l11-bad{color:var(--bad)}
+  </style>
+  <div class="stack"><span class="eyebrow">Модуль 3 · Урок 11 из 25 · 30 минут</span>
+    <h1>Первый агент: десять записей из открытых баз</h1>
+    <p class="lead">Первое настоящее задание агенту: как его сформулировать, что потребовать на выходе и как за полчаса проверить результат руками.</p></div>
+
+  <div class="stack"><h2>Задание, которое можно проверить</h2>
+    <p>Просьба «найди ферменты, разлагающие ПЭТ» даст красивый список, который нечем проверить. Хорошее задание агенту отвечает на пять вопросов: <b>откуда</b> брать, <b>сколько</b>, <b>какие поля</b>, <b>что делать при пробелах</b> и <b>в каком виде вернуть</b>.</p>
+    <div class="callout"><span class="lbl">Пример задания</span><p>Собери 10 ферментов, разлагающих ПЭТ, из UniProt — только проверенные записи (Swiss-Prot)<sup class="fn" data-fn="1">1</sup>. Для каждого: название, организм, идентификатор UniProt, оптимум температуры, оптимум pH, субстрат и условия измерения, первоисточник (номер PubMed) и дословная фраза из записи. Если значения нет — пиши «нет данных», не подбирай. Если значений несколько — дай все, с условиями. Верни таблицу CSV, у каждой строки статус «не проверено».</p></div>
+    <p>Два требования здесь главные. <span class="hl">Дословная фраза</span> позволяет проверить строку за минуту, не перечитывая всю запись. <span class="hl">«Нет данных» вместо догадки</span> защищает от самой частой ошибки модели — правдоподобной выдумки (урок 5).</p>
+    <div class="callout story"><span class="lbl">Почему десять, а не сто</span><p>Это пилотный прогон, как пробная партия в лаборатории перед большой серией. Десять строк дёшевы, их реально проверить все до одной, и на них видны слабые места самого задания: какое поле агент понимает не так, где нужны условия опыта, где он путает записи. Сначала исправляют задание, потом увеличивают объём — в модуле 5 сбор пойдёт уже на сотни строк.</p></div></div>
+
+  <div class="stack"><h2>Путь одной записи</h2>
+    <p>Проследим, откуда берётся одна строка. Фермент LCC найден в компосте из листьев и веток; его улучшенный вариант разлагает больше 90&nbsp;% ПЭТ за 10 часов<sup class="fn" data-fn="2">2</sup>.</p>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 542" width="340" height="542" role="img" aria-label="Путь записи: база UniProt, запись G9BY57; раздел свойств; фраза об оптимуме на ПЭТ выше 70 градусов; первоисточник PubMed 22194294; строка таблицы со статусом «не проверено»; человек сверяет и ставит «подтверждено»">
+      <g>
+        <rect class="box" x="6" y="6" width="300" height="62" rx="6"/>
+        <text x="18" y="30" font-size="14" font-weight="600">1. База: UniProt</text>
+        <text class="sm" x="18" y="52">запись G9BY57 · LC-cutinase (LCC)</text>
+        <rect class="box" x="6" y="96" width="300" height="62" rx="6"/>
+        <text x="18" y="120" font-size="14" font-weight="600">2. Раздел записи</text>
+        <text class="sm" x="18" y="142">Function → Biophysicochemical props</text>
+        <rect class="box" x="6" y="186" width="300" height="80" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <text x="18" y="210" font-size="14" font-weight="600">3. Дословная фраза</text>
+        <text class="sm" x="18" y="232">«Optimum temperature using PET as</text>
+        <text class="sm" x="18" y="250">substrate is superior to 70 °C»</text>
+        <rect class="box" x="6" y="294" width="300" height="62" rx="6"/>
+        <text x="18" y="318" font-size="14" font-weight="600">4. Первоисточник</text>
+        <text class="sm" x="18" y="340">PubMed 22194294 · Sulaiman, 2012</text>
+        <rect class="box" x="6" y="384" width="300" height="62" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <text x="18" y="408" font-size="14" font-weight="600">5. Строка таблицы</text>
+        <text class="sm" x="18" y="430">LCC · G9BY57 · &gt;70 °C · ПЭТ · не провер.</text>
+        <rect class="box" x="6" y="474" width="300" height="62" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+        <text x="18" y="498" font-size="14" font-weight="600">6. Человек сверяет</text>
+        <text class="sm" x="18" y="520">ссылка → фраза → число → «подтверждено»</text>
+      </g>
+      <g>
+        <path class="arr" d="M156 68V88"/><path class="head" d="M156 96l-5-9h10z"/>
+        <path class="arr" d="M156 158V178"/><path class="head" d="M156 186l-5-9h10z"/>
+        <path class="arr" d="M156 266V286"/><path class="head" d="M156 294l-5-9h10z"/>
+        <path class="arr" d="M156 356V376"/><path class="head" d="M156 384l-5-9h10z"/>
+        <path class="arr" style="stroke:var(--signal)" d="M156 446V466"/><path class="head" style="fill:var(--signal)" d="M156 474l-5-9h10z"/>
+        <path class="arr" style="stroke:var(--signal);stroke-dasharray:4 4" d="M306 505H326V37H314"/><path class="head" style="fill:var(--signal)" d="M306 37l9-5v10z"/>
+      </g>
+    </svg></div>
+    <p>Шаги 1–5 делает агент, шаг 6 — вы, обратным ходом по пунктирной стрелке. Обратите внимание на шаг 3: в той же записи стоит и «50&nbsp;°C», но <b>на модельном субстрате</b>, а не на ПЭТ. Без поля «условия» эти два числа легко перепутать.</p></div>
+
+  <div class="stack"><h2>Как проверить десять строк руками</h2>
+    <ul class="plain">
+      <li><b>Откройте ссылку</b> из строки. Не открылась или ведёт на другой белок — ошибка сразу.</li>
+      <li><b>Найдите дословную фразу</b> поиском по странице (Ctrl+F). Нет такой фразы — агент её сочинил.</li>
+      <li><b>Сверьте число, единицу и условия.</b> Самые коварные ошибки — верное число при чужих условиях.</li>
+      <li><b>Поставьте статус</b>: «подтверждено» или «расхождение». Десять строк занимают 20–30 минут.</li>
+    </ul>
+    <div class="panel">
+      <span class="eyebrow">Попробуйте сами</span>
+      <p>Агент вернул десять строк. В двух из них ошибки. Откройте ссылки UniProt, найдите раздел <span class="mono">Function → Biophysicochemical properties</span> и отметьте подозрительные строки.</p>
+      <div id="l11rows"></div>
+      <div class="row"><button id="l11check" class="primary" type="button">Проверить</button><button id="l11reset" type="button">Сначала</button></div>
+      <p class="out" id="l11out"></p>
+      <p class="why">Данные настоящие: значения из проверенных записей UniProt (сверено 10.11.2026), кроме двух намеренно испорченных. В строках 4–9 условия опыта в UniProt не указаны — их смотрят в статье.</p>
+    </div></div>
+
+  <div class="stack"><h2>Что делать при расхождении</h2>
+    <p>Расхождение — не всегда ошибка агента. Различайте три случая:</p>
+    <ul class="plain">
+      <li><b>Агент ошибся</b> — не то число, не те условия, чужая запись. Исправьте строку, запишите в журнал, учтите в проценте ошибок (урок 18).</li>
+      <li><b>Источники расходятся.</b> Для TfCut2 в разных статьях оптимум от 25–50 до 65&nbsp;°C. Это не ошибка: храните все значения, каждое со своими условиями.</li>
+      <li><b>База расходится со статьёй.</b> Правда — в первоисточнике; база только указывает на него. Запишите оба значения.</li>
+    </ul>
+    <p class="pull">Главное правило: ничего не исправлять молча.</p>
+    <div class="callout warn"><span class="lbl">До массового сбора</span><p>Проверьте условия использования каждой базы и запишите их в журнал проекта. Данные UniProt и BRENDA выдаются по лицензии CC BY 4.0: можно использовать с указанием источника<sup class="fn" data-fn="3">3</sup>. BRENDA просит ссылаться на свою последнюю статью, перед скачиванием файлов требует принять лицензию и предупреждает о правилах раздела выгод для коммерческих пользователей. Массовый сбор ведите через официальные выгрузки и интерфейсы для программ, а не тысячей открытий страниц.</p></div></div>
+
+  <div class="stack"><h2>Примеры</h2>
+    <div class="two">
+      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Для IsPETase в UniProt три оптимума: 40&nbsp;°C на плёнке ПЭТ, 3030&nbsp;°C на измельчённой бутылкеnbsp;°C на ПЭТ из бутылки, 35–45&nbsp;°C на модельных эфирах. Агент, вернувший одно число без условий, формально прав и при этом бесполезен для вашего вопроса про 60–70&nbsp;°C.</p></div>
+      <div class="panel"><span class="eyebrow">Свои проекты</span><p>То же для расследования: агент собирает из реестра KRS десять фундаций с датой регистрации и ссылкой на запись. Вы открываете три-четыре ссылки и сверяете дату и номер. Ссылка не открылась или номер другой — строка не принимается.</p></div>
+    </div>
+    <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+      <li data-fn="1">UniProt состоит из двух частей: Swiss-Prot — записи, проверенные кураторами вручную, и TrEMBL — автоматические аннотации. На 10.11.2026 в Swiss-Prot 11 записей с номером EC 3.1.1.101 (ПЭТ-гидролаза).</li>
+      <li data-fn="2">Tournier и соавторы, Nature, 2020: улучшенный вариант LCC за 10 часов разложил не менее 90&nbsp;% ПЭТ до мономеров. Исходный фермент описан в Sulaiman и соавторы, 2012.</li>
+      <li data-fn="3">Страница «License &amp; disclaimer» BRENDA и раздел лицензии UniProt, проверено 10.11.2026. Правила могут измениться — перед сбором перепроверьте.</li>
+    </ol></div></div>
+
+  <div class="panel"><span class="eyebrow">Словарик урока</span>
+    <div class="scroll"><table>
+      <tr><td><b>Идентификатор UniProt</b></td><td>постоянный код записи о белке, например G9BY57; по нему запись открывается всегда</td></tr>
+      <tr><td><b>Первоисточник</b></td><td>статья, где число измерили; база только пересказывает её</td></tr>
+      <tr><td><b>Статус строки</b></td><td>не проверено · подтверждено · расхождение</td></tr>
+      <tr><td><b>CC BY 4.0</b></td><td>открытая лицензия: использовать можно, указав источник</td></tr>
+    </table></div></div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Задание агенту: источник, количество, поля, правило «нет данных», формат результата.</li>
+    <li>У каждой строки — ссылка, дословная фраза и условия измерения; без них проверка невозможна.</li>
+    <li>Проверка: открыть ссылку, найти фразу, сверить число, единицу и условия, поставить статус.</li>
+    <li>Расхождение записывают и разбирают: ошибка агента, разногласие источников или ошибка базы.</li></ul></div>
+
+  <div class="panel"><span class="eyebrow">Проверьте себя</span><div class="quiz"></div></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Дайте агенту (Claude, ChatGPT в режиме Work или Claude Code; актуально на ноябрь 2026) задание из примера выше, но на <b>три</b> фермента. Возьмите любые три строки из ответа и проверьте их по шагам урока.</p>
+    <p>Запишите: сколько строк подтвердилось, какие расхождения нашлись и к какому из трёх случаев они относятся. Писал ли агент «нет данных» там, где данных правда нет?</p></div>
+  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 11</span>
+    <p>Получите от агента первые десять записей для своей базы — с источником, дословной фразой и условиями у каждой строки. Проверьте все десять вручную, поставьте статусы и посчитайте, сколько расхождений. Запишите в журнал проекта условия использования UniProt и BRENDA. Если тема своя — замените базы на открытые реестры своей области.</p></div>
+
+  <div class="panel deeper"><span class="eyebrow">Разобраться глубже</span>
+    <p>Если хочется понять лучше — от простого к сложному:</p>
+    <ul class="links">
+      <li><a href="https://www.uniprot.org/uniprotkb/G9BY57/entry" target="_blank" rel="noopener">UniProt: запись G9BY57 (LCC)</a><span class="meta">база данных · англ. · 10 мин</span><p>Запись из схемы урока. Найдите раздел Function и фразу про 70&nbsp;°C — это и есть ручная проверка.</p></li>
+      <li><a href="https://www.ebi.ac.uk/training/online/courses/uniprot-quick-tour/" target="_blank" rel="noopener">EMBL-EBI Training: UniProt quick tour</a><span class="meta">курс · англ. · 30 мин</span><p>Короткий бесплатный курс: как устроена запись UniProt, чем Swiss-Prot отличается от TrEMBL.</p></li>
+      <li><a href="https://www.brenda-enzymes.org/enzyme.php?ecno=3.1.1.101" target="_blank" rel="noopener">BRENDA: EC 3.1.1.101, ПЭТ-гидролаза</a><span class="meta">база данных · англ. · 15 мин</span><p>Все ПЭТ-гидролазы в BRENDA с оптимумами температуры и pH, у каждого числа — ссылка на статью.</p></li>
+      <li><a href="https://www.brenda-enzymes.org/copy.php" target="_blank" rel="noopener">BRENDA: License &amp; disclaimer</a><span class="meta">правила · англ. · 5 мин</span><p>Условия использования данных — их нужно записать в журнал проекта до массового сбора.</p></li>
+      <li><a href="https://pazy.eu/" target="_blank" rel="noopener">PAZy — The Plastics Active Enzyme Database</a><span class="meta">база данных · англ. · 15 мин</span><p>Специальная база ферментов, разрушающих пластики (Гамбург и Штутгарт). Хороший источник для сверки списка ферментов.</p></li>
+      <li><a href="https://doi.org/10.1038/s41586-020-2149-4" target="_blank" rel="noopener">Tournier et al.: An engineered PET depolymerase (Nature, 2020)</a><span class="meta">статья · англ. · 40 мин</span><p>Как из LCC сделали промышленный фермент. Читать аннотацию и рисунки; полный текст может быть за подпиской.</p></li>
+    </ul></div>
+
+<script type="application/json" class="quiz-data">
+[
+ {"q": "Зачем требовать от агента дословную фразу из источника у каждой строки?", "options": ["Чтобы проверить строку за минуту поиском по странице", "Чтобы таблица выглядела солиднее", "Так агент работает быстрее"], "answer": 0, "why": "Фразу находят по Ctrl+F и сразу видят, есть ли она и что именно в ней сказано."},
+ {"q": "В записи LCC есть «50 °C» и «выше 70 °C». Что это значит?", "options": ["В базе ошибка, верно одно из чисел", "Фермент работает только при 60 °C", "Это измерения при разных субстратах"], "answer": 2, "why": "50 °C — на модельном субстрате pNP-бутирате, выше 70 °C — на ПЭТ. Поэтому в строке нужны условия."},
+ {"q": "Для TfCut2 разные статьи дают оптимум от 25–50 до 65 °C. Что делать?", "options": ["Взять среднее", "Хранить все значения, каждое со своими условиями", "Удалить фермент из базы"], "answer": 1, "why": "Это расхождение источников, а не ошибка агента. Среднее скрыло бы разницу в условиях опыта."},
+ {"q": "Что сделать до массового сбора из BRENDA?", "options": ["Ничего, данные открытые", "Скачать всё сразу, пока не закрыли", "Прочитать условия использования и записать их в журнал"], "answer": 2, "why": "Лицензия BRENDA — CC BY 4.0 с требованием ссылки и оговорками; условия фиксируют в журнале до сбора."}
+]
+</script>
+
+<script>
+(function(){
+var $=AI.$, el=AI.el;
+// [название, организм, UniProt, T, pH, субстрат/условия, источник, ошибка?, пояснение]
+var R=[
+ ['IsPETase','Ideonella sakaiensis','A0A0K8P6T7','65 °C','9','плёнка ПЭТ','Yoshida 2016, Science',1,'В записи: оптимум 40 °C на плёнке ПЭТ. 65 °C — температура, при которой фермент ещё сохраняет около 60 % активности. Агент принял «ещё работает» за «оптимум».'],
+ ['LCC','метагеном компоста','G9BY57','50 °C','8.5','ПЭТ','Sulaiman 2012, Appl Environ Microbiol',1,'Число настоящее, условия чужие: 50 °C и pH 8,5 измерены на модельном субстрате pNP-бутирате. На ПЭТ оптимум выше 70 °C.'],
+ ['PHL7','метагеном компоста','A0AA82WPD4','≈ 70 °C','нет данных','не указан','Sonnendecker 2022, ChemSusChem',0,'Верно: «около 70 °C». pH в записи нет — и агент честно написал «нет данных».'],
+ ['TfCut2','Thermobifida fusca','Q6A0I4','55 °C','8','см. статью','Hegde 2013, Appl Biochem Biotechnol',0,'Верно для этой статьи. Но в записи ещё пять значений от 25–50 до 65 °C из других работ — это расхождение источников, их стоит хранить все.'],
+ ['Cut1','Thermobifida fusca','G8GER6','55 °C','8','см. статью','Hegde 2013, Appl Biochem Biotechnol',0,'Верно. В записи есть и второе значение, 65 °C, из другой статьи (Tournier 2020).'],
+ ['TfH (Tfu_0883)','Thermobifida fusca YX','Q47RJ6','60 °C','8','см. статью','Chen 2008, J Biol Chem',0,'Верно: значения совпадают с записью UniProt.'],
+ ['Tfu_0882','Thermobifida fusca YX','Q47RJ7','60 °C','8','см. статью','Chen 2008, J Biol Chem',0,'Верно: значения совпадают с записью UniProt.'],
+ ['Est1','Thermobifida alba','D4Q9N1','50 °C','6','см. статью','Thumarat 2015, J Biosci Bioeng',0,'Верно: значения совпадают с записью UniProt.'],
+ ['Est2 (Est119)','Thermobifida alba','F7IX06','50 °C','6','см. статью','Hu 2010, Appl Microbiol Biotechnol',0,'Верно: значения совпадают с записью UniProt.'],
+ ['TfCa, карбоксилэстераза','Thermobifida fusca KW3','P86325','60 °C','6','циклические тримеры ПЭТ','Billig и др., депонировано в UniProt 2009',0,'Верно. Субстрат — не сам ПЭТ, а его короткие кольцевые фрагменты; поле «условия» это показывает.']
+];
+var mark=[], checked=false;
+function draw(){
+  var box=$('l11rows'); box.textContent='';
+  R.forEach(function(r,i){
+    var d=el('div','l11-row'+(mark[i]?' l11-on':''));
+    var h=el('div'); var b=el('b',null,(i+1)+'. '+r[0]); h.appendChild(b); h.appendChild(document.createTextNode(' · '));
+    var o=el('i',null,r[1]); h.appendChild(o); d.appendChild(h);
+    d.appendChild(el('div','l11-v','T опт '+r[3]+' · pH '+r[4]+' · '+r[5]));
+    var row=el('div','row');
+    var a=el('a',null,'UniProt '+r[2]); a.href='https://www.uniprot.org/uniprotkb/'+r[2]+'/entry'; a.target='_blank'; a.rel='noopener';
+    row.appendChild(a); row.appendChild(el('span','why',r[6]));
+    d.appendChild(row);
+    var bt=el('button',mark[i]?'primary':null,mark[i]?'Отмечено как ошибка':'Подозреваю ошибку'); bt.type='button';
+    bt.disabled=checked;
+    bt.addEventListener('click',function(){mark[i]=!mark[i]; draw();});
+    var br=el('div','row'); br.appendChild(bt); d.appendChild(br);
+    if(checked){
+      var res=el('p','l11-res');
+      if(r[7]&&mark[i]){res.className+=' l11-ok'; res.textContent='Нашли ошибку. '+r[8];}
+      else if(r[7]){res.className+=' l11-bad'; res.textContent='Пропущена ошибка. '+r[8];}
+      else if(mark[i]){res.className+=' l11-bad'; res.textContent='Ложная тревога. '+r[8];}
+      else if(i===3){res.className+=' why'; res.textContent=r[8];}
+      if(res.textContent) d.appendChild(res);
+    }
+    box.appendChild(d);
+  });
+  var n=mark.filter(Boolean).length;
+  if(!checked) $('l11out').textContent='Отмечено строк: '+n+'. Ошибок в таблице — две.';
+}
+$('l11check').addEventListener('click',function(){
+  checked=true; var hit=0, fa=0;
+  R.forEach(function(r,i){ if(r[7]&&mark[i]) hit++; if(!r[7]&&mark[i]) fa++; });
+  draw();
+  $('l11out').textContent='Найдено ошибок: '+hit+' из 2 · ложных тревог: '+fa+'.';
+  $('l11check').disabled=true;
+});
+$('l11reset').addEventListener('click',function(){mark=[]; checked=false; $('l11check').disabled=false; draw();});
+draw();
+})();
+</script>

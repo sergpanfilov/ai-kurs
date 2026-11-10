@@ -1,0 +1,255 @@
+  <style>
+    .l25-form{display:flex;flex-direction:column;gap:10px}
+    .l25-form label{display:flex;flex-direction:column;gap:4px;font-size:.9rem;color:var(--muted)}
+    .l25-form input,.l25-form textarea,.l25-form select{font:inherit;font-size:.95rem;width:100%;border:1px solid var(--line);border-radius:8px;
+      padding:7px 10px;background:var(--surface);color:var(--ink)}
+    .l25-form textarea{min-height:3.6rem;resize:vertical}
+    .l25-q{display:grid;grid-template-columns:1fr;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+    .l25-nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .l25-sheet{border:1px solid var(--line);border-radius:4px 18px 4px 4px;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;
+      box-shadow:0 1px 0 var(--line),0 3px 0 -1px var(--bg),0 4px 0 -1px var(--line)}
+    .l25-sheet h3{font-size:1.1rem}
+    .l25-sheet .l25-h{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+    .l25-sheet p,.l25-sheet li{font-size:.93rem}
+    .l25-sheet ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:4px}
+    .l25-conf{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
+    .l25-empty{color:var(--signal)}
+  </style>
+
+  <div class="stack"><span class="eyebrow">Модуль 7 · Урок 25 из 25 · 25 минут</span>
+    <h1>Защита проекта: что показала база</h1>
+    <p class="lead">Как превратить таблицу в вывод, которому можно верить, честно показать его границы и уложить всё на одну страницу.</p></div>
+
+  <div class="stack"><h2>Таблица — ещё не результат</h2>
+    <p>За 24 урока у вас появилась база: ферменты, цифры, у каждой цифры источник и статус проверки. Это материал. <span class="hl">Результат — ответ на вопрос, ради которого всё строилось</span>, и честный рассказ, насколько этому ответу можно верить.</p>
+    <div class="two">
+      <div class="callout warn"><span class="lbl">Так — нет</span><p>«Лучший фермент для ПЭТ — LCC-ICCG».</p></div>
+      <div class="callout"><span class="lbl">Так — да</span><p>«В одном сравнении четырёх улучшенных ферментов в одинаковых условиях больше всего ПЭТ разложил LCC-ICCG<sup class="fn" data-fn="1">1</sup>. Для остальных ферментов базы условия опытов разные, и прямо сравнивать их нельзя».</p></div>
+    </div>
+    <p>Вторая фраза длиннее, зато в ней есть условия, основание и граница. Её трудно опровергнуть, потому что она не утверждает больше, чем показывают данные.</p>
+    <p class="pull">Оговорка — не слабость вывода, а его область применимости.</p></div>
+
+  <div class="stack"><h2>Отчёт на одну страницу</h2>
+    <p>Семь блоков. Порядок важен: сначала то, что нужно читателю, потом то, что нужно проверяющему.</p>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 482" width="340" height="482" role="img" aria-label="Макет отчёта на одну страницу: шапка с объёмом базы, главный вывод, ответы на пять вопросов с уверенностью, расхождения и пробелы, качество данных, проверка в лаборатории и что сделать иначе">
+      <path d="M4 4H312L336 28V452H4Z" style="fill:var(--surface);stroke:var(--line)"/>
+      <path d="M312 4V28H336" style="fill:none;stroke:var(--line)"/>
+      <text x="16" y="28" font-size="14" font-weight="600">Отчёт: база ферментов для ПЭТ</text>
+      <text class="sm" x="16" y="46">64 фермента · 112 источников · 11.2026</text>
+      <path d="M16 56H324" style="stroke:var(--line)"/>
+      <rect x="16" y="64" width="308" height="44" rx="5" style="fill:var(--accent-soft);stroke:none"/>
+      <text x="26" y="84" font-size="13" font-weight="600">Главный вывод</text>
+      <text class="sm" x="26" y="100">2–3 фразы: условия, основание, граница</text>
+      <rect class="box" x="16" y="116" width="308" height="96" rx="5" style="stroke:var(--accent);stroke-width:2"/>
+      <text x="26" y="138" font-size="13" font-weight="600">1. Ответы на пять вопросов</text>
+      <text class="sm" x="26" y="158">вопрос → ответ → на чём основан</text>
+      <text class="sm" x="26" y="178">В1 ●●● высокая   В2 ●●○ средняя</text>
+      <text class="sm" x="26" y="196">В3 ●○○ низкая    В4 … В5 …</text>
+      <rect class="box" x="16" y="222" width="150" height="70" rx="5"/>
+      <text x="26" y="244" font-size="13" font-weight="600">2. Расхождения</text>
+      <text class="sm" x="26" y="262">где источники</text>
+      <text class="sm" x="26" y="277">спорят и почему</text>
+      <rect class="box" x="174" y="222" width="150" height="70" rx="5"/>
+      <text x="184" y="244" font-size="13" font-weight="600">3. Пробелы</text>
+      <text class="sm" x="184" y="262">чего в данных</text>
+      <text class="sm" x="184" y="277">нет совсем</text>
+      <rect class="box" x="16" y="302" width="308" height="58" rx="5"/>
+      <text x="26" y="324" font-size="13" font-weight="600">4. Качество данных</text>
+      <text class="sm" x="26" y="344">ошибки AI: 2 из 30 ≈ 7 % (2–21 %)</text>
+      <rect class="box" x="16" y="370" width="150" height="70" rx="5"/>
+      <text x="26" y="392" font-size="13" font-weight="600">5. Лаборатория</text>
+      <text class="sm" x="26" y="410">что проверить</text>
+      <text class="sm" x="26" y="425">своим опытом</text>
+      <rect class="box" x="174" y="370" width="150" height="70" rx="5"/>
+      <text x="184" y="392" font-size="13" font-weight="600">6. Иначе</text>
+      <text class="sm" x="184" y="410">что изменить</text>
+      <text class="sm" x="184" y="425">в следующий раз</text>
+      <text class="sm" x="4" y="474">числа условные · читается за 3 минуты</text>
+    </svg></div>
+    <p><b>Главный вывод</b> — две-три фразы, как во втором примере выше. <b>Ответы на пять вопросов</b> из урока 5: на каждый — ответ, уровень уверенности и на чём он основан (сколько источников, проверены ли вручную).</p>
+    <div class="callout fact"><span class="lbl">Уверенность — по двум осям</span><p>Межправительственная группа экспертов по изменению климата (IPCC) просит авторов своих докладов оценивать вывод по двум осям: <b>сколько свидетельств</b> и <b>насколько они согласны</b> между собой<sup class="fn" data-fn="2">2</sup>. Много согласных источников — высокая уверенность. Один источник или спор — низкая. Такая шкала из трёх уровней подойдёт и вашей базе.</p></div></div>
+
+  <div class="stack"><h2>Расхождения, пробелы, ошибки — тоже результат</h2>
+    <p><b>Расхождения.</b> Две статьи дают для одного фермента разные оптимумы — это не ошибка, которую надо спрятать. Запишите оба значения с условиями опыта: буфер, форма ПЭТ, количество фермента, время. Часто разницу объясняют условия, а не чья-то неправота. Авторы того самого сравнения четырёх ферментов прямо пишут: сопоставлять опубликованные результаты трудно, потому что методики слишком разные<sup class="fn" data-fn="1">1</sup>.</p>
+    <p><b>Пробелы.</b> Пишите прямо: «данных о стабильности при 65 °C дольше суток нет для 31 фермента из 64». Пустая клетка читается как «забыли». Запись «не найдено в таких-то источниках» — как результат поиска.</p>
+    <p><b>Качество данных.</b> Процент ошибок из урока 18 — в отчёт, и обязательно с разбросом. Две ошибки на 30 проверенных строк — это около 7 %, но <span class="hl">при такой выборке честный диапазон — примерно от 2 до 21 %</span><sup class="fn" data-fn="3">3</sup>. Если важный вывод держится на цифрах, которые извлёк AI и которые никто не сверил вручную, так и скажите.</p></div>
+
+  <div class="stack"><h2>Чего база не скажет</h2>
+    <p>База собирает чужие измерения. Она показывает, какие ферменты стоит проверять, но не показывает, как они поведут себя в ваших условиях: с вашей плёнкой ПЭТ, вашей загрузкой, вашим реактором. Последнее слово — за опытом. Хороший раздел <b>«Проверить в лаборатории»</b> короткий: три кандидата, одни условия, что измерить.</p>
+    <p>Раздел <b>«Что сделать иначе»</b> пишется для себя через полгода и для того, кто продолжит. Обычно хватает двух-трёх пунктов: какое поле надо было задать в ТЗ сразу, на каком шаге агент ошибался чаще, где ушло больше всего времени.</p>
+    <div class="callout story"><span class="lbl">Защита</span><p>Покажите страницу человеку, который проекта не видел: преподавателю, коллеге, правлению фундации. Десять минут рассказа, потом вопросы. Вопрос, на который нечего ответить, — готовый пункт для раздела «Пробелы».</p></div></div>
+
+  <div class="panel"><span class="eyebrow">Попробуйте сами</span>
+    <p>Шаблон отчёта. Поля заполнены условным примером — замените своими данными и посмотрите, как меняется страница. Текст никуда не отправляется, он остаётся в вашем браузере.</p>
+    <div class="l25-form" id="l25form">
+      <label>Тема базы<input id="l25topic"></label>
+      <div class="l25-nums">
+        <label>Объектов в базе<input id="l25n" type="number" min="0"></label>
+        <label>Источников<input id="l25src" type="number" min="0"></label>
+      </div>
+      <label>Главный вывод (2–3 фразы)<textarea id="l25main"></textarea></label>
+      <div id="l25qs" class="stack" style="gap:10px"></div>
+      <label>Расхождения между источниками<textarea id="l25diff"></textarea></label>
+      <label>Пробелы в данных<textarea id="l25gap"></textarea></label>
+      <div class="l25-nums">
+        <label>Проверено вручную строк<input id="l25chk" type="number" min="0"></label>
+        <label>Из них с ошибкой<input id="l25err" type="number" min="0"></label>
+      </div>
+      <label>Проверить в лаборатории<textarea id="l25lab"></textarea></label>
+      <label>Что сделать иначе<textarea id="l25next"></textarea></label>
+    </div>
+    <span class="eyebrow">Собранная страница</span>
+    <div class="l25-sheet" id="l25sheet"></div>
+    <p class="why" id="l25warn"></p>
+    <div class="row"><button type="button" class="primary" id="l25copy">Скопировать текст</button><button type="button" id="l25clear">Очистить поля</button><button type="button" id="l25reset">Сначала</button><span class="out" id="l25out"></span></div>
+    <p class="why">Пример условный. Диапазон ошибок считается настоящей формулой (интервал Уилсона, 95 %).</p></div>
+
+  <div class="two">
+    <div class="panel"><span class="eyebrow">Биотехнология</span><p>Честный вывод по базе ПЭТ может звучать так: «прямых сравнений в одинаковых условиях мало, поэтому большинство ферментов ранжировать нельзя». Это не провал проекта, а его находка: она объясняет, зачем нужен единый протокол и какие три фермента проверять первыми.</p></div>
+    <div class="panel"><span class="eyebrow">Свои проекты</span><p>В расследовании о фундациях «у 12 из 40 фундаций отчётов в реестре не найдено» (числа условные) — это пробел, а не обвинение. Формулировка «не найдено в реестре на такую-то дату» и ручная проверка до публикации отделяют аккуратный вывод от ошибки, за которую придётся извиняться.</p></div>
+  </div>
+
+  <div class="stack"><h2>Курс закончен</h2>
+    <p>Вы прошли путь от токена до команды агентов с базой, историей версий и отчётом. Названия инструментов сменятся за год-два. Останется привычка: ставить задачу так, чтобы результат можно было проверить, и проверять.</p>
+    <p>Что дальше. Держите базу живой: раз в квартал новый сбор по тем же правилам и запись в журнал. Каркас (объекты, свойства, источники, статус проверки) переносится на любую тему. Если хочется глубже в инструменты — в «Разобраться глубже» есть курсы Anthropic: бесплатные, нужна только почта (актуально на ноябрь 2026).</p>
+    <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+      <li data-fn="1">Arnal и др., ACS Catalysis, 2023, «Assessment of Four Engineered PET Degrading Enzymes Considering Large-Scale Industrial Applications». LCC-ICCG разложил 98 % ПЭТ за 24 ч; авторы снизили температуру с 72 до 68 °C и количество фермента втрое. У FAST-PETase и HotPETase — ограничения для большого масштаба, PES-H1 L92F/Q94Y дошёл до 80 %. Для экономически оправданного процесса авторы считают нужным не меньше 90 % (лучше 95 %).</li>
+      <li data-fn="2">IPCC, «Guidance Note for Lead Authors… on Consistent Treatment of Uncertainties», 2010. Свидетельства: ограниченные, средние, надёжные; согласие: низкое, среднее, высокое. Там же шкала вероятностей: «вероятно» — от 66 %, «весьма вероятно» — от 90 %.</li>
+      <li data-fn="3">95-процентный интервал Уилсона для 2 ошибок из 30. При 0 ошибок из 30 верхняя граница — около 11 %: «ошибок не найдено» не значит «ошибок нет». Подробнее о выборке — в уроке 18.</li>
+    </ol></div></div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Результат проекта — вывод с условиями, основанием и границами, а не таблица.</li>
+    <li>Расхождения, пробелы и процент ошибок AI с разбросом — полноправные части отчёта.</li>
+    <li>База подсказывает, что проверять; последнее слово — за лабораторным опытом.</li>
+    <li>Одна страница, вывод первым, затем всё, что нужно проверяющему.</li></ul></div>
+
+  <div class="panel"><span class="eyebrow">Проверьте себя</span><div class="quiz"></div></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Заполните шаблон выше своими данными (или оставьте условный пример) и нажмите «Скопировать текст». Откройте новый чат и вставьте текст с просьбой: «Ты строгий рецензент. Найди утверждения, которые сильнее, чем позволяют данные, и предложи оговорки».</p>
+    <p>Запишите, что нашёл рецензент и что из этого вы поправили, а с чем не согласны и почему.</p></div>
+  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 25</span>
+    <p>Соберите отчёт по своей базе на одну страницу по семи блокам. Покажите его человеку, который проекта не видел: десять минут рассказа, потом вопросы. Запишите вопросы, на которые не нашлось ответа, — они станут первыми пунктами в разделе «Пробелы» и планом следующего сбора.</p></div>
+
+  <div class="panel deeper"><span class="eyebrow">Разобраться глубже</span>
+    <p>Если хочется понять лучше — от простого к сложному:</p>
+    <ul class="links">
+      <li><a href="https://www.uni-greifswald.de/en/forschung/nachrichten-aus-der-forschung/details/n/boosting-pet-recycling-by-defining-higher-standards-for-laboratory-experiments-new6572cc2964d05269388731/" target="_blank" rel="noopener">University of Greifswald: Boosting PET recycling by defining higher standards for laboratory experiments</a><span class="meta">новость · англ. · 5 мин</span><p>Короткий пересказ работы о сравнении четырёх ферментов: почему без единых условий опыта цифры разных статей не складываются.</p></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10594578/" target="_blank" rel="noopener">Arnal и др.: Assessment of Four Engineered PET Degrading Enzymes</a><span class="meta">статья · англ., открытый доступ · 40 мин</span><p>Образец вывода с оговорками по вашей теме. Достаточно прочитать аннотацию, введение и обсуждение.</p></li>
+      <li><a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005619" target="_blank" rel="noopener">PLOS Computational Biology: Ten simple rules for structuring papers</a><span class="meta">статья · англ. · 20 мин</span><p>Как строить текст вокруг одного главного вывода. Годится и для отчёта на одну страницу.</p></li>
+      <li><a href="https://www.ipcc.ch/site/assets/uploads/2017/08/AR5_Uncertainty_Guidance_Note.pdf" target="_blank" rel="noopener">IPCC: Guidance Note on Consistent Treatment of Uncertainties</a><span class="meta">PDF · англ. · 6 страниц · 20 мин</span><p>Первоисточник шкалы уверенности «свидетельства × согласие» и словаря «вероятно / весьма вероятно».</p></li>
+      <li><a href="https://anthropic.skilljar.com/" target="_blank" rel="noopener">Anthropic Courses</a><span class="meta">курсы · англ. · от 1 часа</span><p>Что дальше: Claude 101, Claude Code in Action, курсы о субагентах и навыках. Начинать без программирования — с Claude 101.</p></li>
+      <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic: Building effective agents</a><span class="meta">статья · англ. · 20 мин</span><p>Как разработчики модели советуют собирать агентов: от простого к сложному и только там, где это окупается. Хорошее продолжение модулей 3 и 5.</p></li>
+    </ul></div>
+
+<script type="application/json" class="quiz-data">
+[
+ {"q": "Какая формулировка вывода лучше?", "options": ["«LCC-ICCG — лучший фермент для ПЭТ»", "«В одинаковых условиях из четырёх ферментов больше всего ПЭТ разложил LCC-ICCG; остальные данные получены в разных условиях»", "«Все ферменты базы примерно одинаково хороши»"], "answer": 1, "why": "В ней есть условия, основание и граница. Она не утверждает больше, чем показывают данные."},
+ {"q": "Две статьи дают для фермента разные оптимумы температуры. Что делать в отчёте?", "options": ["Записать оба значения с условиями опыта в «Расхождения»", "Оставить более свежее значение", "Взять среднее из двух"], "answer": 0, "why": "Расхождение — часть результата. Часто его объясняют условия опыта, и читателю нужно видеть оба значения."},
+ {"q": "При ручной проверке нашлось 2 ошибки на 30 строк. Как честно записать качество данных?", "options": ["«Ошибок 7 %» — без уточнений", "«Ошибок нет: две строки исправлены»", "«Около 7 %, вероятный диапазон примерно 2–21 %»"], "answer": 2, "why": "Выборка маленькая, поэтому истинная доля ошибок может быть заметно выше или ниже. Диапазон говорит об этом честно."},
+ {"q": "Зачем в отчёте раздел «Проверить в лаборатории»?", "options": ["База показывает, кого проверять, но не как фермент поведёт себя в ваших условиях", "Чтобы отчёт выглядел солиднее", "Лаборатория проверит, правильно ли работал AI"], "answer": 0, "why": "База собирает чужие измерения в чужих условиях. Решает опыт в своих."}
+]
+</script>
+
+<script>
+(function(){
+var $=AI.$, el=AI.el;
+var CONF=[['высокая','●●●','много источников, согласны'],['средняя','●●○','источников мало или детали расходятся'],['низкая','●○○','один источник или сильный спор']];
+var EX={topic:'База ферментов для разложения ПЭТ при 60–70 °C', n:64, src:112,
+ main:'В одинаковых условиях из четырёх сравненных ферментов больше всего ПЭТ разложил LCC-ICCG. Для остальных ферментов базы условия опытов разные, прямо ранжировать их нельзя.',
+ qs:[['Какие ферменты сохраняют активность выше 60 °C?','По данным статей — 23 из 64; для 9 из них есть хотя бы два независимых источника.',1],
+     ['Для каких ферментов данные разных статей расходятся?','Для 11; в 8 случаях расхождение объясняется разной формой ПЭТ.',0],
+     ['','',1],['','',1],['','',1]],
+ diff:'Оптимум температуры одного и того же фермента в двух работах отличается на 10 °C; опыты шли на разной форме ПЭТ. Записаны оба значения.',
+ gap:'Для 31 фермента из 64 нет данных о стабильности при 65 °C дольше суток.',
+ chk:30, err:2,
+ lab:'Три лучших кандидата — в одинаковых условиях: одна плёнка ПЭТ, 65 °C, одна загрузка фермента, 24 ч.',
+ next:'С первого дня записывать условия опыта отдельными полями, а не текстом в примечании.'};
+var qrows=[];
+function buildQs(){
+  var box=$('l25qs');
+  for(var i=0;i<5;i++){
+    var d=el('div','l25-q');
+    var lq=el('label',null,'Вопрос '+(i+1)+' (из урока 5)'), iq=el('input'); iq.id='l25q'+i; lq.appendChild(iq);
+    var la=el('label',null,'Ответ'), ia=el('textarea'); ia.id='l25a'+i; ia.style.minHeight='2.6rem'; la.appendChild(ia);
+    var lc=el('label',null,'Уверенность'), sc=el('select'); sc.id='l25c'+i;
+    CONF.forEach(function(c,j){var o=el('option',null,c[0]+' — '+c[2]); o.value=j; sc.appendChild(o);});
+    lc.appendChild(sc);
+    d.appendChild(lq); d.appendChild(la); d.appendChild(lc); box.appendChild(d);
+    qrows.push([iq,ia,sc]);
+  }
+}
+function fill(x){
+  $('l25topic').value=x.topic; $('l25n').value=x.n; $('l25src').value=x.src; $('l25main').value=x.main;
+  qrows.forEach(function(r,i){r[0].value=x.qs[i][0]; r[1].value=x.qs[i][1]; r[2].value=x.qs[i][2];});
+  $('l25diff').value=x.diff; $('l25gap').value=x.gap; $('l25chk').value=x.chk; $('l25err').value=x.err; $('l25lab').value=x.lab; $('l25next').value=x.next;
+}
+function wilson(k,n){var z=1.96,p=k/n,d=1+z*z/n,c=(p+z*z/(2*n))/d,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;return [Math.max(0,c-h)*100,Math.min(1,c+h)*100];}
+function v(id){return ($(id).value||'').trim();}
+function pct(x){return (x<10?x.toFixed(1):x.toFixed(0)).replace('.',',');}
+var plain='';
+function render(){
+  var S=$('l25sheet'), T=[], warn=[]; S.textContent='';
+  var topic=v('l25topic')||'Тема не указана', n=v('l25n'), src=v('l25src');
+  S.appendChild(el('h3',null,'Отчёт: '+topic)); T.push('ОТЧЁТ: '+topic.toUpperCase());
+  var meta='объектов: '+(n||'—')+' · источников: '+(src||'—');
+  S.appendChild(el('span','l25-conf',meta)); T.push(meta,'');
+  if(!n||!src) warn.push('не указан объём базы');
+  function sec(title,text,miss){
+    S.appendChild(el('span','l25-h',title)); T.push(title.toUpperCase());
+    if(text){S.appendChild(el('p',null,text)); T.push(text,'');}
+    else {S.appendChild(el('p','l25-empty',miss)); T.push(miss,''); warn.push('пусто: «'+title+'»');}
+  }
+  sec('Главный вывод',v('l25main'),'Вывод не сформулирован.');
+  S.appendChild(el('span','l25-h','1. Ответы на вопросы')); T.push('1. ОТВЕТЫ НА ВОПРОСЫ');
+  var ol=el('ol'), cnt=0, low=0;
+  qrows.forEach(function(r){
+    var q=r[0].value.trim(), a=r[1].value.trim(), c=+r[2].value; if(!q) return;
+    var li=el('li'); li.appendChild(el('b',null,q+' '));
+    if(a){cnt++; if(c===2) low++; li.appendChild(document.createTextNode(a+' ')); li.appendChild(el('span','l25-conf',CONF[c][1]+' '+CONF[c][0])); T.push('— '+q+' '+a+' [уверенность: '+CONF[c][0]+']');}
+    else {li.appendChild(el('span','l25-empty','ответа пока нет')); T.push('— '+q+' [ответа пока нет]');}
+    ol.appendChild(li);
+  });
+  if(ol.children.length) S.appendChild(ol); else S.appendChild(el('p','l25-empty','Вопросы не заполнены.'));
+  T.push('');
+  if(cnt<5) warn.push('вопросов с ответом: '+cnt+' из 5');
+  sec('2. Расхождения',v('l25diff'),'Не заполнено. Если расхождений нет, так и напишите — и укажите, как искали.');
+  sec('3. Пробелы',v('l25gap'),'Не заполнено. Пробелы есть почти всегда.');
+  var k=parseInt(v('l25err'),10), m=parseInt(v('l25chk'),10), q4='';
+  if(m>0 && k>=0 && k<=m){
+    var w=wilson(k,m);
+    q4='Ручная проверка: строк с ошибкой — '+k+' из '+m+', около '+pct(k/m*100)+' %; вероятный диапазон '+pct(w[0])+'–'+pct(w[1])+' %.';
+    if(m<30) warn.push('выборка меньше 30 строк — диапазон очень широкий');
+  } else if(m>0 && k>m) { warn.push('ошибок больше, чем проверено строк'); }
+  sec('4. Качество данных',q4,'Нет данных ручной проверки — доля ошибок AI неизвестна.');
+  sec('5. Проверить в лаборатории',v('l25lab'),'Не заполнено.');
+  sec('6. Что сделать иначе',v('l25next'),'Не заполнено.');
+  if(low && cnt && low===cnt) warn.push('у всех ответов низкая уверенность — тогда это и есть главный вывод');
+  $('l25warn').textContent= warn.length ? 'Обратите внимание: '+warn.join('; ')+'.' : 'Все блоки заполнены.';
+  plain=T.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+}
+function copy(){
+  var done=function(ok){$('l25out').textContent= ok?'Скопировано: '+plain.length+' знаков':'Не удалось скопировать — выделите текст страницы вручную';};
+  try{
+    if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(plain).then(function(){done(true);},function(){fallback();}); return; }
+  }catch(e){}
+  fallback();
+  function fallback(){
+    var ok=false;
+    try{var t=document.createElement('textarea'); t.value=plain; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); ok=document.execCommand('copy'); document.body.removeChild(t);}catch(e){ok=false;}
+    done(ok);
+  }
+}
+buildQs();
+$('l25form').addEventListener('input',function(){ $('l25out').textContent=''; render(); });
+$('l25form').addEventListener('change',render);
+$('l25copy').addEventListener('click',copy);
+$('l25clear').addEventListener('click',function(){
+  fill({topic:'',n:'',src:'',main:'',qs:[['','',1],['','',1],['','',1],['','',1],['','',1]],diff:'',gap:'',chk:'',err:'',lab:'',next:''});
+  $('l25out').textContent=''; render();
+});
+$('l25reset').addEventListener('click',function(){ fill(EX); $('l25out').textContent=''; render(); });
+fill(EX); render();
+})();
+</script>

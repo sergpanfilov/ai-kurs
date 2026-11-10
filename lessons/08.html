@@ -1,0 +1,173 @@
+  <style>
+    .l08-res{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-family:var(--f-mono);font-size:.88rem}
+    .l08-res .num{font-weight:600}
+  </style>
+
+  <div class="stack"><span class="eyebrow">Модуль 2 · Урок 8 из 25 · 25 минут</span>
+    <h1>Практика: что потянет ваш компьютер</h1>
+    <p class="lead">Проверяем расчёты урока 6 на настоящем железе: сколько токенов в секунду даст домашний сервер, ноутбук и Mac, как это измерить самому и во что обойдётся чтение ста статей.</p></div>
+
+  <div class="stack"><h2>Две скорости: чтение и письмо</h2>
+    <p>У локальной модели не одна скорость, а две.</p>
+    <ul class="plain">
+      <li><b>Чтение</b> — модель обрабатывает ваш запрос. Все его токены идут через слои разом, поэтому чтение упирается в вычисления и обычно в разы быстрее письма.</li>
+      <li><b>Письмо</b> — модель выдаёт ответ по одному токену, и на каждый перечитывает все веса. Как мы выяснили в уроке 6, тут решает пропускная способность памяти.</li>
+    </ul>
+    <div class="callout warn"><span class="lbl">Ловушка</span><p>В обзорах обычно пишут только скорость письма. Но в нашем проекте модель в основном <b>читает</b>: статья — около 16 тысяч токенов (урок 4), а ответ — строчка таблицы на несколько сотен. На слабом компьютере <span class="hl">чтение статьи может занять больше времени, чем ответ</span>.</p></div></div>
+
+  <div class="stack"><h2>Что потянет сервер ftm</h2>
+    <p>Наш пример — домашний сервер <span class="mono">ftm</span>: процессор Intel i3-6100T 2015 года, 2 ядра и 4 потока, 16 ГБ оперативной памяти, видеокарты нет. Память по паспорту процессора отдаёт до <b>34 ГБ/с</b><sup class="fn" data-fn="1">1</sup>. Считаем потолок письма по формуле урока 6 — пропускная способность ÷ размер модели в Q4_K_M:</p>
+    <div class="scroll"><table>
+      <tr><th>Модель</th><th>Файл</th><th>Потолок письма</th><th>Ждём на деле</th></tr>
+      <tr><td>1,7 млрд</td><td>1,4 ГБ</td><td>24 ток/с</td><td>около 10</td></tr>
+      <tr><td>4 млрд</td><td>2,5 ГБ</td><td>14 ток/с</td><td>5–7</td></tr>
+      <tr><td>8 млрд</td><td>5,2 ГБ</td><td>7 ток/с</td><td>2–4</td></tr>
+      <tr><td>14 млрд</td><td>9,3 ГБ</td><td>4 ток/с</td><td>1–2, и памяти почти не останется</td></tr>
+    </table></div>
+    <p>«На деле» примерно вдвое ниже потолка: память не отдаёт паспортную скорость полностью, а двум ядрам ещё и считать надо. Это <b>наша оценка, а не замер</b>. Её подтверждают опубликованные цифры: на старом 12-ядерном серверном процессоре 2013 года модели 7–8 млрд писали 7–8 токенов в секунду, модель на 1 млрд — 25<sup class="fn" data-fn="2">2</sup>.</p>
+    <div class="callout fact"><span class="lbl">Живой замер на ftm</span><span class="big">≈ 6–7 мин</span><p>столько модель <span class="mono">qwen3-vl:8b</span> переписывает одну рукописную страницу (около 500 знаков) в проекте reMarkable. Модель на 2 млрд — около 3 минут. Большую часть времени модель «читает» картинку страницы<sup class="fn" data-fn="3">3</sup>.</p></div>
+    <p>Вывод: <span class="hl">малые модели в 4 битах на ftm работают — медленно, но работают</span>. Для ночной работы без спешки этого хватает. Для живого разговора — нет.</p></div>
+
+  <div class="stack"><h2>Где кончается терпение</h2>
+    <p>Человек читает около 240 слов в минуту<sup class="fn" data-fn="4">4</sup> — в пересчёте на русский текст это примерно 5–8 токенов в секунду. Если модель пишет медленнее, вы ждёте её. Если быстрее — она ждёт вас.</p>
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 460" width="340" height="460" role="img" aria-label="Шкала токенов в секунду от 1 до 300: до 3 — невозможно читать, от 3 до 10 — терпимо, выше 10 — комфортно. Отметки: ftm с моделью 8B около 3, ftm с моделью 2B около 10, Mac на M4 24, Mac на M5 Max 120, облачная Claude Haiku 5.5 около 250">
+      <text class="sm" x="4" y="14">токенов в секунду, письмо; шкала логарифмическая</text>
+      <rect x="54" y="353" width="20" height="77" style="fill:var(--bad);opacity:.35"/>
+      <rect x="54" y="268.5" width="20" height="84.5" style="fill:var(--signal);opacity:.45"/>
+      <rect x="54" y="30" width="20" height="238.5" style="fill:var(--accent);opacity:.35"/>
+      <text font-size="11" transform="translate(68,420) rotate(-90)">нечитаемо</text>
+      <text font-size="11" transform="translate(68,340) rotate(-90)">терпимо</text>
+      <text font-size="11" transform="translate(68,220) rotate(-90)">комфортно</text>
+      <path class="ax" d="M54 30V430"/>
+      <g text-anchor="end">
+        <text class="sm" x="48" y="434">1</text><text class="sm" x="48" y="357">3</text><text class="sm" x="48" y="272">10</text>
+        <text class="sm" x="48" y="195">30</text><text class="sm" x="48" y="111">100</text><text class="sm" x="48" y="34">300</text>
+      </g>
+      <path class="ax" style="stroke-dasharray:4 3;stroke:var(--muted)" d="M54 304H336"/>
+      <text class="sm" x="196" y="300">чтение человека ≈ 6</text>
+      <g>
+        <circle class="pt" cx="74" cy="353" r="5"/><path class="arr" d="M80 353H88"/>
+        <text x="92" y="351" font-size="13" font-weight="600">ftm, модель 8B</text><text class="sm" x="92" y="365">≈ 3 · оценка</text>
+        <circle class="pt" cx="74" cy="268.5" r="5"/><path class="arr" d="M80 268.5H88"/>
+        <text x="92" y="266" font-size="13" font-weight="600">ftm, модель 2B</text><text class="sm" x="92" y="280">≈ 10 · оценка</text>
+        <circle class="pt" cx="74" cy="207" r="5"/><path class="arr" d="M80 207H88"/>
+        <text x="92" y="205" font-size="13" font-weight="600">Mac на M4, модель 7B</text><text class="sm" x="92" y="219">24 · замер</text>
+        <circle class="pt" cx="74" cy="94" r="5"/><path class="arr" d="M80 94H88"/>
+        <text x="92" y="92" font-size="13" font-weight="600">Mac на M5 Max, модель 7B</text><text class="sm" x="92" y="106">120 · замер</text>
+        <circle class="pt" cx="74" cy="43" r="5"/><path class="arr" d="M80 43H88"/>
+        <text x="92" y="41" font-size="13" font-weight="600">облако, Claude Haiku 5.5</text><text class="sm" x="92" y="55">≈ 250 · замер</text>
+      </g>
+      <text class="sm" x="4" y="454">замеры: llama.cpp, Artificial Analysis</text>
+    </svg></div>
+    <p>Границы зон условные: кто-то готов ждать дольше. Но порядок величин честный. И помните: для пакетной работы, которую никто не читает глазами, «нечитаемо» не приговор, а лишь долгая ночь.</p></div>
+
+  <div class="stack"><h2>Как измерить самому</h2>
+    <p>Оценки полезны, замер лучше. Если стоит Ollama, наберите в терминале:</p>
+    <p class="mono">ollama run qwen3:4b --verbose</p>
+    <p>Задайте вопрос. После ответа появятся строки с временем<sup class="fn" data-fn="5">5</sup>. Нужны две: <span class="mono">prompt eval rate</span> — скорость чтения, <span class="mono">eval rate</span> — скорость письма, обе в токенах в секунду. Первый раз время включает загрузку модели в память — спросите дважды. Чтобы увидеть скорость чтения, вставьте длинный абзац. В LM Studio скорость показана прямо под ответом.</p></div>
+
+  <div class="stack"><h2>Ноутбук со встроенной графикой и Mac</h2>
+    <p>Встроенная графика — видеокарта внутри процессора. Своей памяти у неё нет: она берёт общую оперативную. Поэтому <b>чтение</b> она ускоряет (вычислителей больше), а <b>письмо</b> упирается в ту же общую память.</p>
+    <p>Всё решает скорость этой памяти. В современных ноутбуках она заметно выше, чем у ftm. Например, у Intel Core Ultra 7 258V память до LPDDR5X-8533 — по расчёту около 136 ГБ/с<sup class="fn" data-fn="6">6</sup>. Mac устроен так же — общая память на всё, но быстрая: MacBook Air на M5 — 153 ГБ/с, MacBook Pro на M5 Pro — 307 ГБ/с, на M5 Max — до 614 ГБ/с (по сайту Apple, актуально на ноябрь 2026).</p>
+    <div class="callout fact"><span class="lbl">Замер</span><p>Модель 7B в 4 битах (llama.cpp): Mac на M4 (120 ГБ/с) читает около 220 токенов в секунду и пишет 24. Mac на M5 Max (614 ГБ/с) — 3200 и 120<sup class="fn" data-fn="7">7</sup>. Пятикратная разница в памяти дала пятикратную разницу в письме.</p></div>
+    <p>Плюс Mac ещё и в объёме: до 128 ГБ общей памяти, туда помещаются модели, которые на обычную видеокарту не влезут.</p></div>
+
+  <div class="panel">
+    <span class="eyebrow">Попробуйте сами</span>
+    <p>Сколько времени и денег уйдёт на чтение статей? Время = статьи × (токены статьи ÷ скорость чтения + токены ответа ÷ скорость письма).</p>
+    <label for="l08n">Статей: <span id="l08nv" class="mono"></span></label>
+    <input type="range" id="l08n" min="0" max="6" step="1" value="3">
+    <label for="l08m">Токенов в статье: <span id="l08mv" class="mono"></span></label>
+    <input type="range" id="l08m" min="2000" max="40000" step="1000" value="16000">
+    <label for="l08o">Токенов в ответе на статью: <span id="l08ov" class="mono"></span></label>
+    <input type="range" id="l08o" min="200" max="4000" step="100" value="1000">
+    <span class="eyebrow">Где считать локально</span>
+    <div class="row" id="l08dev"></div>
+    <div class="l08-res" id="l08res"></div>
+    <p class="out" id="l08out"></p>
+    <p class="why">Скорости ftm — наша оценка, скорости Mac — опубликованные замеры на модели 7B; на длинной статье чтение будет медленнее. Цены Claude — с официальной страницы, актуально на ноябрь 2026, при пакетной обработке вдвое ниже. Время в облаке условное: около 10 запросов одновременно.</p>
+  </div>
+
+  <div class="two">
+    <div class="panel"><span class="eyebrow">Биотехнология</span><p>Сто открытых статей о ПЭТ-гидролазах моделью 8B на ftm — почти трое суток. В облаке Claude Haiku 5.5 — около 20 центов и минуты. Приватность здесь не нужна, так что локальная модель проигрывает по всем пунктам, кроме независимости.</p></div>
+    <div class="panel"><span class="eyebrow">Свои проекты</span><p>Рукописные дневники — другое дело. Там приватность важнее скорости, и проект reMarkable сознательно распознаёт около 27 страниц за ночь на ftm. Медленно, но ни одна строчка не уходит из дома.</p></div>
+  </div>
+
+  <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
+    <li data-fn="1">Спецификация Intel для Core i3-6100T: 2 ядра, 4 потока, DDR4-2133 в два канала, максимальная пропускная способность 34,1 ГБ/с. Свободной памяти на 10.11.2026 — около 10 ГБ: остальное заняли службы сервера.</li>
+    <li data-fn="2">K. Malakhov, «Deploying LLMs on CPU-only Environments with llama.cpp» (CEUR-WS, 2025): Intel Xeon E5-2695 v2, 4-битные модели GGUF — Qwen2.5-7B 8 ток/с, DeepSeek-R1-Distill-Llama-8B 7, Llama-3.2-1B 25. Там же: запрос в 256 токенов модель 7B читала около 6,5 с.</li>
+    <li data-fn="3">Проба пяти моделей на шести страницах, 09.11.2026, журнал проекта <span class="mono">~/Projects/remarkable</span>: в среднем 6,7 мин на страницу у <span class="mono">qwen3-vl:8b</span> и 2,9 мин у <span class="mono">qwen3-vl:2b</span>. Картинка 1400 точек — это порядка тысячи токенов на чтение, ответ — пара сотен на письмо.</li>
+    <li data-fn="4">M. Brysbaert, мета-анализ 190 исследований (Journal of Memory and Language, 2019): 238 слов в минуту для научно-популярного текста про себя, на английском. Русские слова режутся на токены мельче (урок 1), отсюда 5–8 токенов в секунду.</li>
+    <li data-fn="5">Флаг <span class="mono">--verbose</span> («показать время ответа») проверен в справке Ollama 0.40.15. Те же цифры отдаёт и программный интерфейс: поля <span class="mono">eval_count</span> и <span class="mono">eval_duration</span>, скорость = первое ÷ второе (документация Ollama, раздел Usage).</li>
+    <li data-fn="6">Спецификация Intel: LPDDR5X-8533, два канала. Расчёт: 8533 млн передач в секунду × 16 байт ≈ 136 ГБ/с. Сама Intel пропускную способность для этой модели не указывает.</li>
+    <li data-fn="7">Сводная таблица замеров llama.cpp на Apple Silicon (обсуждение 4167 на GitHub): модель LLaMA 7B, формат Q4_0, чтение 512 токенов, письмо 128. Облачная скорость — Artificial Analysis, страница Claude Haiku 5.5, 10.11.2026.</li>
+  </ol></div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>У модели две скорости: чтение запроса (упирается в вычисления) и письмо ответа (упирается в память).</li>
+    <li>Сервер без видеокарты вроде ftm тянет модели 1–8 млрд в 4 битах: от единиц до десятка токенов в секунду.</li>
+    <li>Скорость надо мерить: <span class="mono">ollama run … --verbose</span> покажет и чтение, и письмо.</li>
+    <li>Для открытых статей облако дешевле времени: сто статей — центы или доллары против суток локальной работы.</li></ul></div>
+
+  <div class="panel"><span class="eyebrow">Проверьте себя</span><div class="quiz"></div></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Если на вашем компьютере есть Ollama или LM Studio, скачайте малую модель (например, <span class="mono">qwen3:1.7b</span> — 1,4 ГБ) и задайте два вопроса: короткий и с длинным абзацем из статьи. Запишите скорость чтения и письма.</p>
+    <p>Если ставить программу не хотите — посчитайте по формуле урока 6: узнайте скорость памяти своего компьютера (в спецификации процессора, строка «пропускная способность памяти», или в характеристиках Mac на сайте Apple) и разделите на размер модели. Запишите оценку для моделей 2B и 8B.</p></div>
+
+  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 8</span>
+    <p>Посчитайте, во что обойдётся чтение ста статей вашего проекта. Возьмите свою оценку размера статьи из шага 4 и примерный ответ — строку таблицы на несколько сотен токенов. Запишите в журнал две строки: «облако — модель, цена, время» и «локально — устройство, модель, время». Цены берите на <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">официальной странице Claude</a> в день расчёта: на 10.11.2026 Claude Haiku 5.5 — $0,10 за миллион токенов на входе и $0,50 на выходе, Sonnet 5.5 — $2 и $10, Opus 5.5 — $4 и $20 (актуально на ноябрь 2026). Для сравнения у OpenAI: GPT-6 Luna — $0,10 и $0,50, GPT-6.1 Sol — $2 и $10. Добавьте вывод одной фразой: что из проекта отдать локальной модели, а что облаку.</p></div>
+
+  <div class="panel deeper"><span class="eyebrow">Разобраться глубже</span>
+    <p>Если хочется понять лучше — от простого к сложному:</p>
+    <ul class="links">
+      <li><a href="https://docs.ollama.com/api/usage" target="_blank" rel="noopener">Ollama: Usage</a><span class="meta">документация · англ. · 5 мин</span><p>Какие цифры о скорости отдаёт Ollama и как из них получить токены в секунду.</p></li>
+      <li><a href="https://github.com/ggml-org/llama.cpp/discussions/4167" target="_blank" rel="noopener">llama.cpp: Performance on Apple Silicon M-series</a><span class="meta">таблица замеров · англ. · 10 мин</span><p>Скорость чтения и письма для всех чипов Apple от M1 до M5 рядом с пропускной способностью памяти. Видно, как одно следует из другого.</p></li>
+      <li><a href="https://zeux.io/2024/03/15/llm-inference-sol/" target="_blank" rel="noopener">Arseny Kapoulkine: LLM inference speed of light</a><span class="meta">статья · англ. · 20 мин</span><p>Подробный расчёт потолка скорости письма — если формула урока 6 показалась слишком простой.</p></li>
+      <li><a href="https://ceur-ws.org/Vol-4164/paper11.pdf" target="_blank" rel="noopener">K. Malakhov: Deploying LLMs on CPU-only Environments with llama.cpp</a><span class="meta">научная статья · англ. · PDF · 30 мин</span><p>Замеры семи моделей на трёх процессорах без видеокарты: скорость, задержка, память.</p></li>
+      <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude: Pricing</a><span class="meta">справочник · англ. · 10 мин</span><p>Официальные цены всех моделей Claude, скидки за пакетную обработку и кэширование.</p></li>
+    </ul></div>
+
+<script type="application/json" class="quiz-data">
+[
+ {"q": "Почему модель читает запрос быстрее, чем пишет ответ?", "options": ["Токены запроса обрабатываются разом, а ответ пишется по одному токену", "Запрос короче ответа", "При чтении модель пропускает слои"], "answer": 0, "why": "Чтение упирается в вычисления и идёт пачкой, письмо — по токену, и каждый раз читаются все веса из памяти."},
+ {"q": "Память компьютера отдаёт 34 ГБ/с, модель весит 5 ГБ. Каков потолок скорости письма?", "options": ["Около 170 токенов в секунду", "Около 0,15 токена в секунду", "Около 7 токенов в секунду"], "answer": 2, "why": "Потолок ≈ пропускная способность ÷ размер модели: 34 ÷ 5 ≈ 7. На деле обычно вдвое ниже."},
+ {"q": "Какая строка в выводе ollama run --verbose показывает скорость письма?", "options": ["prompt eval rate", "eval rate", "load duration"], "answer": 1, "why": "eval rate — токены ответа в секунду; prompt eval rate — скорость чтения запроса."},
+ {"q": "Сто открытых статей по 16 тысяч токенов: что выгоднее для проекта без требований приватности?", "options": ["Модель 8B на сервере без видеокарты — бесплатно", "Малая облачная модель — центы и минуты", "Купить видеокарту под этот проект"], "answer": 1, "why": "Локально на ftm это около трёх суток, в облаке Claude Haiku 5.5 — порядка 20 центов. Локальная модель оправдана, когда важна приватность."}
+]
+</script>
+
+<script>
+(function(){
+var $=AI.$, el=AI.el;
+var NS=[10,20,50,100,200,500,1000];
+var DEV=[['ftm, 8B',8,3],['ftm, 2B',35,10],['Mac M4, 7B',221,24],['Mac M5 Max, 7B',3220,120]], di=0;
+var CL=[['Claude Haiku 5.5',0.10,0.50],['Claude Sonnet 5.5',2,10],['Claude Opus 5.5',4,20]];
+function num(x){return String(x).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function dur(s){
+  if(s<90) return Math.round(s)+' с';
+  if(s<5400) return Math.round(s/60)+' мин';
+  if(s<172800) return (s/3600).toFixed(1).replace('.',',')+' ч';
+  return (s/86400).toFixed(1).replace('.',',')+' сут';
+}
+function money(x){return x<1 ? (x*100).toFixed(x<0.1?1:0).replace('.',',')+' ¢' : '$'+x.toFixed(x<10?2:0).replace('.',',');}
+DEV.forEach(function(d,i){var b=el('button',null,d[0]); b.type='button'; b.addEventListener('click',function(){di=i; draw();}); $('l08dev').appendChild(b);});
+function line(k,v){ $('l08res').appendChild(el('span',null,k)); $('l08res').appendChild(el('span','num',v)); }
+function draw(){
+  var n=NS[+$('l08n').value], m=+$('l08m').value, o=+$('l08o').value, d=DEV[di];
+  $('l08nv').textContent=num(n); $('l08mv').textContent=num(m); $('l08ov').textContent=num(o);
+  Array.prototype.forEach.call($('l08dev').children,function(x,i){x.classList.toggle('primary',i===di);});
+  var tr=n*m/d[1], tw=n*o/d[2], tl=tr+tw;
+  $('l08res').textContent='';
+  line('Локально ('+d[0]+'): чтение', dur(tr));
+  line('письмо', dur(tw));
+  line('итого локально', dur(tl));
+  CL.forEach(function(c){ line('облако, '+c[0], money(n*(m*c[1]+o*c[2])/1e6)); });
+  var tc=n*(m/5000+o/150)/10;
+  line('время в облаке (условно)', dur(tc));
+  $('l08out').textContent= tl>tc*20 ? 'Локально в '+Math.round(tl/tc)+' раз дольше облака.' : 'Локально по времени сопоставимо с облаком.';
+}
+['l08n','l08m','l08o'].forEach(function(id){$(id).addEventListener('input',draw);});
+draw();
+})();
+</script>
