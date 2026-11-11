@@ -1,58 +1,73 @@
   <style>
     .l13-files{display:flex;flex-direction:column;gap:6px}
-    .l13-files label{display:flex;gap:8px;align-items:baseline;font-size:.92rem}
+    .l13-files label{display:flex;gap:8px;align-items:baseline;font-size:.92rem;flex-wrap:wrap}
     .l13-files .mono{font-size:.85rem}
-    .l13-modes{display:flex;flex-wrap:wrap;gap:6px}
-    .l13-res{display:grid;grid-template-columns:7.5rem 1fr;gap:6px 12px;font-size:.92rem}
+    .l13-asks{display:flex;flex-wrap:wrap;gap:6px}
+    .l13-res{display:grid;grid-template-columns:6.2rem 1fr;gap:6px 12px;font-size:.92rem}
     .l13-res .k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);padding-top:2px}
     .l13-bad{color:var(--bad)} .l13-ok{color:var(--good)}
-    .l13-log{font-family:var(--f-mono);font-size:.84rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;margin:0}
+    .l13-log{font-family:var(--f-mono);font-size:.84rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+    .l13-pair{display:grid;grid-template-columns:1fr;gap:8px}
+    .l13-pair .why{margin:0}
+    .l13-view{border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:.92rem}
+    .l13-view b.h{display:block;font-family:var(--f-head,inherit);font-size:1.05rem;margin-bottom:2px}
+    .l13-view ul{margin:0;padding-left:1.1rem}
+    @media (min-width:640px){.l13-pair{grid-template-columns:1fr 1fr}}
   </style>
-  <div class="stack"><span class="eyebrow">Модуль 3 · Урок 13 из 28 · 30 минут</span>
-    <h1>Рабочее место: папка проекта и агент</h1>
-    <p class="lead">Где физически живёт ваш проект, как открыть агента для кода в своей папке, какие настройки включить в первый же день и куда записывать решения.</p></div>
+  <div class="stack"><span class="eyebrow">Модуль 3 · Урок 13 из 31 · 25 минут</span>
+    <h1>Папка проекта: файлы и журнал</h1>
+    <p class="lead">Где физически живёт ваш проект, из каких файлов он состоит, кто и когда их читает и куда записывать решения. Без установки и оплаты: хватит Проводника и блокнота.</p></div>
 
   <div class="stack"><h2>Проект живёт в файлах</h2>
-    <p>Модель ничего не помнит между разговорами (урок 3), а окно конечно (урок 5). Всё, что агент «знает» о проекте в начале новой сессии, обвязка кладёт в окно из <b>файлов</b>. Поэтому у проекта должно быть постоянное место — <span class="hl">папка, где лежат правила, журнал, таблицы и статьи</span>. Её читаете и вы, и агент.</p>
-    <div class="callout fact"><span class="lbl">Рабочая среда курса</span><p>С этого урока — <b>Claude Code в папке проекта</b>, через приложение Claude для компьютера. Нужен платный план (Pro — $20 в месяц, актуально на ноябрь 2026). Без него есть запасной путь — он ниже, в разделе «Открыть агента», с честным списком того, что получится, а что нет.</p></div></div>
+    <p>Представьте лабораторию, куда каждое утро приходит новый сотрудник: толковый, но вчера его здесь не было. Что должно лежать на столе, чтобы он продолжил работу, а не начал её заново? Агент — именно такой сотрудник: модель ничего не помнит между разговорами (урок 3), а окно конечно (урок 5). Всё, что агент «знает» о проекте в начале новой сессии, обвязка кладёт в окно из <b>файлов</b>. Поэтому у проекта должно быть постоянное место — <span class="hl">папка, где лежат правила, журнал, таблицы и статьи</span>. Её читаете и вы, и агент.</p>
+    <p>Сегодня вы соберёте эту папку руками — в Проводнике (на Mac — в Finder) и в обычном блокноте. Агент придёт в неё в уроке 14.</p>
+    <div class="callout"><span class="lbl">Где создать папку</span><p>Создайте папку <span class="mono">pet-enzymes</span> в «Документах». В инструкциях вам встретится значок <span class="mono">~</span> — это сокращение для вашей домашней папки: на Windows это <span class="mono">C:\Users\ваше имя</span>, на Mac — папка с домиком. Дальше курс пишет адреса файлов от папки проекта: <span class="mono">data/pilot.csv</span> значит «в папке проекта → папка data → файл pilot.csv». Такой адрес называют <b>путём</b>.</p></div></div>
 
-  <div class="stack"><h2>Файл, папка, формат</h2>
-    <p><b>Файл</b> — именованный кусок данных на диске. <b>Папка</b> — место, где лежат файлы и другие папки. Что внутри файла, подсказывает окончание имени — <b>формат</b>:</p>
-    <ul class="plain">
-      <li><span class="mono">.txt</span> и <span class="mono">.md</span> — просто текст. <b>Markdown</b> (.md) — текст с простой разметкой: <span class="mono">#</span> в начале строки — заголовок, <span class="mono">-</span> — пункт списка<sup class="fn" data-fn="1">1</sup>. Его одинаково легко читают человек и агент.</li>
-      <li><span class="mono">.csv</span> — таблица текстом: одна строка — одна запись, значения через запятую. Открывается в Excel и Google Таблицах.</li>
-      <li><span class="mono">.json</span> — данные вида «имя поля: значение» в фигурных скобках: <span class="mono">{"name": "LCC", "t_opt": 72}</span>. Так одна строка таблицы выглядит для программ.</li>
-      <li><span class="mono">.pdf</span> — свёрстанный документ, например статья.</li>
-    </ul>
-    <p><b>Путь</b> — адрес файла: <span class="mono">~/Projects/pet-enzymes/journal.md</span> читается как «в домашней папке (<span class="mono">~</span>) → папка Projects → папка проекта → файл журнала».</p></div>
+  <div class="stack"><h2>Два формата проекта</h2>
+    <p>Что внутри файла, подсказывает окончание имени — <b>формат</b>. Проекту хватит двух, и оба — обычный текст.</p>
+    <p><b>Markdown</b> (<span class="mono">.md</span>) — текст с простой разметкой: <span class="mono">#</span> в начале строки — заголовок, <span class="mono">-</span> — пункт списка<sup class="fn" data-fn="1">1</sup>. Открывается блокнотом; его одинаково легко читают человек и агент.</p>
+    <div class="l13-pair">
+      <div><p class="why">так в файле</p><pre class="l13-log"># Мой проект
+- собрать записи
+- проверить каждую</pre></div>
+      <div><p class="why">так это выглядит в программе, которая понимает разметку</p><div class="l13-view"><b class="h">Мой проект</b><ul><li>собрать записи</li><li>проверить каждую</li></ul></div></div>
+    </div>
+    <p><b>CSV</b> (<span class="mono">.csv</span>) — таблица текстом: строка файла — строка таблицы, запятая — граница клеток, первая строка — названия столбцов<sup class="fn" data-fn="2">2</sup>. Открывается в Excel и Google Таблицах.</p>
+    <div class="l13-pair">
+      <div><p class="why">так в файле</p><pre class="l13-log">name,temp_c,substrate
+PHL7,70,PET
+IsPETase,40,PET film</pre></div>
+      <div><p class="why">так в таблицах</p><div class="scroll"><table><tr><th style="text-transform:none">name</th><th style="text-transform:none">temp_c</th><th style="text-transform:none">substrate</th></tr><tr><td>PHL7</td><td>70</td><td>PET</td></tr><tr><td>IsPETase</td><td>40</td><td>PET film</td></tr></table></div></div>
+    </div>
+    <p>Ещё встретится <span class="mono">.pdf</span> — свёрстанный документ, например статья: его читают, но не правят.</p></div>
 
   <div class="stack"><h2>Папка проекта</h2>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Папка проекта pet-enzymes. CLAUDE.md — правила, агент читает в начале каждой сессии. journal.md — журнал, по просьбе. TZ.md — техническое задание, по просьбе. data — таблицы CSV, агент читает и меняет. articles — статьи PDF, по просьбе, тяжёлые. notes — заметки. .env — секреты, чтение запретить. Внизу: окно в начале сессии — инструкции обвязки, CLAUDE.md и ваше задание; остальное попадает в окно, только когда агент вызовет чтение файла.">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Папка проекта pet-enzymes. CLAUDE.md — правила, агент читает в начале каждой сессии. journal.md — журнал, по просьбе. TZ.md — задание на базу, появится в уроке 18. data — таблицы CSV, агент читает сам, меняет с вашего согласия. articles — статьи PDF, по просьбе, одна статья — тысячи токенов. notes — ваши заметки. notes/plan.md — план большой задачи, появится в уроке 17. Внизу: окно в начале сессии — инструкции обвязки, CLAUDE.md и ваше задание; остальные файлы попадают в окно, только когда агент вызовет чтение.">
       <g>
         <text x="6" y="22" font-size="14" font-weight="600">pet-enzymes/</text>
-        <path class="arr" d="M14 30V318"/>
+        <path class="arr" d="M14 30V304"/>
         <path class="arr" d="M14 52H30M14 94H30M14 136H30M14 178H30M14 220H30M14 262H30M14 304H30"/>
         <rect class="box" x="34" y="34" width="300" height="36" rx="5" style="stroke:var(--accent);stroke-width:2"/>
-        <text class="sm" x="44" y="50" style="fill:var(--accent)">CLAUDE.md — правила (урок 15)</text>
+        <text class="sm" x="44" y="50" style="fill:var(--accent)">CLAUDE.md — правила</text>
         <text class="sm" x="44" y="64">агент читает в начале каждой сессии</text>
         <rect class="box" x="34" y="76" width="300" height="36" rx="5"/>
-        <text class="sm" x="44" y="92">journal.md — журнал решений</text>
+        <text class="sm" x="44" y="92">journal.md — журнал</text>
         <text class="sm" x="44" y="106" style="fill:var(--muted)">агент читает, когда вы попросите</text>
-        <rect class="box" x="34" y="118" width="300" height="36" rx="5"/>
-        <text class="sm" x="44" y="134">TZ.md — задание на базу (урок 16)</text>
-        <text class="sm" x="44" y="148" style="fill:var(--muted)">по просьбе</text>
+        <rect class="box" x="34" y="118" width="300" height="36" rx="5" style="stroke-dasharray:4 4"/>
+        <text class="sm" x="44" y="134">TZ.md — задание на базу</text>
+        <text class="sm" x="44" y="148" style="fill:var(--muted)">появится в уроке 18; по просьбе</text>
         <rect class="box" x="34" y="160" width="300" height="36" rx="5"/>
         <text class="sm" x="44" y="176">data/ — таблицы .csv</text>
-        <text class="sm" x="44" y="190" style="fill:var(--muted)">агент читает и меняет — с вашего «да»</text>
+        <text class="sm" x="44" y="190" style="fill:var(--muted)">читает сам; меняет — с вашего «да»</text>
         <rect class="box" x="34" y="202" width="300" height="36" rx="5"/>
         <text class="sm" x="44" y="218">articles/ — статьи .pdf</text>
         <text class="sm" x="44" y="232" style="fill:var(--muted)">по просьбе; одна статья — тысячи токенов</text>
         <rect class="box" x="34" y="244" width="300" height="36" rx="5"/>
         <text class="sm" x="44" y="260">notes/ — ваши заметки</text>
         <text class="sm" x="44" y="274" style="fill:var(--muted)">по просьбе</text>
-        <rect class="box" x="34" y="286" width="300" height="36" rx="5" style="stroke:var(--signal);stroke-width:2"/>
-        <text class="sm" x="44" y="302" style="fill:var(--signal)">.env — секреты, ключи (урок 25)</text>
-        <text class="sm" x="44" y="316">чтение запретить заранее</text>
+        <rect class="box" x="34" y="286" width="300" height="36" rx="5" style="stroke-dasharray:4 4"/>
+        <text class="sm" x="44" y="302">notes/plan.md — план большой задачи</text>
+        <text class="sm" x="44" y="316" style="fill:var(--muted)">появится в уроке 17</text>
         <rect class="box" x="6" y="348" width="328" height="96" rx="8" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="372" font-size="14" font-weight="600">Окно в начале сессии</text>
         <text class="sm" x="18" y="394">инструкции обвязки + CLAUDE.md</text>
@@ -60,153 +75,140 @@
         <text class="sm" x="18" y="430">когда агент вызовет чтение (урок 11)</text>
       </g>
     </svg></div>
-    <p>Правила (<span class="mono">CLAUDE.md</span>) короткие и ложатся в окно каждый раз — как инструкция на стене лаборатории. Всё остальное агент открывает по делу. Так окно не забивается, а знание о проекте не теряется между сессиями<sup class="fn" data-fn="2">2</sup>.</p></div>
+    <p>Подписи отвечают на вопрос «кто когда читает». Файл правил ложится в окно всегда, остальное агент открывает по делу. Так окно не забивается, а знание о проекте не теряется между сессиями.</p></div>
 
-  <div class="stack"><h2>Открыть агента в своей папке</h2>
-    <p><b>Через приложение (без терминала).</b> Установите приложение Claude для компьютера и войдите. Слева вверху — вкладка <b>Code</b>. Под полем ввода выберите среду <b>Local</b> (ваш компьютер), затем <b>Open folder…</b> и папку проекта<sup class="fn" data-fn="3">3</sup>.</p>
-    <p><b>Через терминал.</b> Перейдите в папку проекта и наберите <span class="mono">claude</span>. Установка — одна команда со страницы документации.</p>
-    <p>Дальше — разговор, как в чате. Разница в том, что агент <b>действует на вашем компьютере</b>: перед правкой он показывает, что именно изменит, и ждёт кнопки «да» или «нет». Команды с косой чертой набирают прямо в поле ввода: <span class="mono">/</span> покажет их список.</p>
-    <div class="callout"><span class="lbl">Запасной путь без Claude Code</span><p>В приложении Claude для компьютера можно дать обычному Claude доступ к папке: он читает и создаёт в ней файлы, пока приложение открыто. Так получатся уроки 14–17: пилотный сбор, ТЗ, приёмка. Не получатся или будут неудобны уроки 18–26: подчинённые агенты, тонкие правила доступа, история изменений, база в Supabase.</p></div></div>
+  <div class="stack"><h2>Файл правил: инструкция на стене</h2>
+    <p><span class="mono">CLAUDE.md</span> — короткий файл правил проекта. Обвязка Claude Code кладёт его в окно в начале каждой сессии<sup class="fn" data-fn="3">3</sup> — <span class="hl">как инструкция на стене лаборатории: её видит каждый, кто вошёл</span>. Пустым его не оставляйте. Для начала хватит трёх правил:</p>
+    <pre class="l13-log"># Правила проекта
+- Температуру писать в °C.
+- У каждого числа — источник и дословная фраза из него.
+- Ничего не исправлять молча: нашёл расхождение — запиши и спроси.</pre>
+    <p>Впишите эти три; дополнять файл научит урок 17. Последнее правило закрывает и вопрос из урока 11: увидев два разных числа, агент не выбирает молча — записывает оба и спрашивает вас.</p></div>
 
-  <div class="stack"><h2>Первые настройки безопасности</h2>
-    <p>Сколько агент делает без спроса, задаёт <b>режим разрешений</b>. Он виден под полем ввода; в терминале переключается клавишами Shift+Tab<sup class="fn" data-fn="4">4</sup>.</p>
-    <div class="scroll"><table>
-      <tr><th>Режим</th><th>Без спроса</th><th>Спрашивает</th></tr>
-      <tr><td><b>Manual</b> (вручную)</td><td>только чтение файлов в папке</td><td>каждую правку и команду</td></tr>
-      <tr><td><b>Accept edits</b></td><td>чтение и правка файлов в папке</td><td>команды</td></tr>
-      <tr><td><b>Plan</b></td><td>чтение; пишет план, ничего не меняет</td><td>одобрить план</td></tr>
-      <tr><td><b>Auto</b></td><td>почти всё; рискованное останавливает отдельная модель-проверяльщик</td><td>редко (урок 22)</td></tr>
-    </table></div>
-    <div class="callout warn"><span class="lbl">Правило курса</span><p>До урока 18 работайте в режиме <b>Manual</b>. В терминале на ноябрь 2026 агент по умолчанию стартует в Auto — переключите. И помните: <span class="hl">читать файлы в своей папке агент может без спроса в любом режиме</span>. Поэтому секреты закрывают отдельным запретом: команда <span class="mono">/permissions</span> → правило запрета <span class="mono">Read(./.env)</span>. Это запрет для встроенного чтения файлов; полная защита секретов — урок 25.</p></div></div>
-
-  <div class="stack"><h2>Инструменты и журнал</h2>
-    <p><b>Встроено:</b> чтение и правка файлов в папке, поиск и чтение страниц в интернете, запуск команд. <b>Подключается:</b> коннекторы по стандарту MCP (урок 12). Что есть на самом деле, смотрите командами: <span class="mono">/mcp</span> — подключённые сервисы, <span class="mono">/permissions</span> — правила. Не спрашивайте об этом модель: о себе она тоже может выдумать (урок 6).</p>
-    <p><b>Журнал</b> из шага 1 переезжает в файл <span class="mono">journal.md</span>. Одна запись — дата, тип (<b>решение</b>, <b>проверка</b>, <b>ошибка</b>, <b>сделано</b>), что, почему и что отвергли. Настоящая запись из журнала этого курса:</p>
+  <div class="stack"><h2>Журнал</h2>
+    <p>Журнал из шага 1 переезжает в файл <span class="mono">journal.md</span>. Одна запись — дата, тип, что, почему и что отвергли. Типов четыре: <b>решение</b>, <b>проверка</b>, <b>ошибка</b>, <b>сделано</b>. Настоящая запись из журнала этого курса:</p>
     <pre class="l13-log">## 2026-11-10 · решение
 Адрес курса — agent.belhome.cc.
 Почему: ai.belhome.cc уже занят другим сайтом.
 Отвергли: переносить тот сайт.</pre>
-    <p>Через полгода такая запись отвечает на вопрос «почему так», которого не помнит ни агент, ни вы. Читать папку с <span class="mono">.md</span> как записную книжку удобно в бесплатной программе Obsidian — по желанию<sup class="fn" data-fn="5">5</sup>.</p></div>
+    <p>Через полгода такая запись отвечает на вопрос «почему так», которого не помнит ни агент, ни вы<sup class="fn" data-fn="4">4</sup>.</p>
+    <div class="callout warn"><span class="lbl">Пока нет истории</span><p>Если файл испортится, вернуть его пока нечем: история изменений появится в уроке 25. До тех пор раз в неделю копируйте папку проекта целиком — рядом, с датой в имени: <span class="mono">pet-enzymes 2026-11-17</span>.</p></div></div>
 
   <div class="stack"><h2>Что увидит агент</h2>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
-      <p>Что увидит агент? Отметьте, какие файлы лежат в папке, выберите режим — и посмотрите, что агент прочитает в начале сессии, что изменит без спроса и о чём спросит.</p>
+      <p>Отметьте, какие файлы лежат в папке, и выберите, о чём вы попросили агента. Смотрите, что окажется в окне в начале сессии и что — после просьбы.</p>
       <div class="l13-files" id="l13files"></div>
-      <div class="l13-modes" id="l13modes"></div>
-      <label style="display:flex;gap:8px;align-items:baseline;font-size:.92rem"><input type="checkbox" id="l13deny"> запрет <span class="mono">Read(./.env)</span> через /permissions</label>
+      <div class="l13-asks" id="l13asks"></div>
+      <span class="eyebrow">Окно после просьбы</span>
+      <div class="meter" id="l13meter"><i style="width:0"></i></div>
       <div class="l13-res" id="l13res"></div>
       <div class="row"><button id="l13reset" type="button">Сначала</button></div>
-      <p class="why">Объёмы в токенах условные, порядок величин. Поведение режимов — по документации Claude Code, актуально на ноябрь 2026. Упрощение: на деле в режиме Plan агент может выполнять и безопасные команды для чтения.</p>
+      <p class="why">Объёмы в токенах условные, порядок величин. Шкала — 100&nbsp;000 токенов. Что обвязка кладёт в окно сама — по документации Claude Code, актуально на ноябрь 2026.</p>
     </div></div>
 
   <div class="stack"><h2>Примеры</h2>
     <div class="two">
-      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Папка <span class="mono">pet-enzymes</span>: в <span class="mono">CLAUDE.md</span> три правила — «температуру писать в °C», «у каждого числа — источник и дословная фраза», «ничего не исправлять молча». В <span class="mono">articles/</span> — пять статей о LCC и IsPETase. Агент открывает их по одной, а итог пишет в <span class="mono">data/</span>.</p></div>
-      <div class="panel"><span class="eyebrow">Свои проекты</span><p>Этот курс — тоже папка на <span class="mono">ftm</span>: уроки лежат в <span class="mono">site/lessons/</span>, отчёты учебной команды — в <span class="mono">docs/review/</span>, а в <span class="mono">CHANGELOG.md</span> — журнал «что и когда менялось». Каждая новая сессия агента начинает с правил и паспорта проекта и продолжает с того места, где остановилась прошлая.</p></div>
+      <div class="panel"><span class="eyebrow">Биотехнология</span><p>Папка <span class="mono">pet-enzymes</span>: в <span class="mono">CLAUDE.md</span> — три правила, в <span class="mono">journal.md</span> — пять вопросов к базе и словарь, в <span class="mono">articles/</span> — пять статей о ферментах LCC и IsPETase (справка — урок 1). Агент будет открывать статьи по одной, а итог писать в <span class="mono">data/</span>.</p></div>
+      <div class="panel"><span class="eyebrow">Свои проекты</span><p>Этот курс — тоже папка на <span class="mono">ftm</span>: уроки лежат в <span class="mono">site/lessons/</span>, отчёты учебной команды — в <span class="mono">docs/review/</span>, а в <span class="mono">CHANGELOG.md</span> — журнал «что и когда менялось». Каждая новая сессия агента начинает с файла правил и продолжает с того места, где остановилась прошлая.</p></div>
     </div>
     <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
       <li data-fn="1">Вся разметка Markdown на одной странице с примерами «как написать → как выглядит». Хватит 10 минут, чтобы читать и писать журнал и правила: <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener">Markdown Guide: Basic Syntax</a> (справочник, англ., 10 мин).</li>
-      <li data-fn="2">Claude Code в начале каждой сессии загружает файлы CLAUDE.md (свой в папке проекта и общий для всех проектов) и короткие заметки, которые агент ведёт сам. Это подсказка, а не замок: запреты задаются разрешениями. <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code Docs: How Claude remembers your project</a> (документация, англ., 15 мин).</li>
-      <li data-fn="3">Пошаговая инструкция от установки до первой правки, с тем, что вы увидите на экране: <a href="https://code.claude.com/docs/en/desktop-quickstart" target="_blank" rel="noopener">Claude Code Docs: Get started with the desktop app</a> (инструкция, англ., 10 мин). Claude Code входит в планы Pro, Max, Ultra, Team и Enterprise; приложение есть для macOS, Windows и Linux (бета). Проверено 10.11.2026.</li>
-      <li data-fn="4">Таблица всех режимов и того, что в каждом проходит без спроса; там же — с какого режима агент стартует в терминале, в приложении и в редакторе кода: <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Claude Code Docs: Choose a permission mode</a> (документация, англ., 15 мин). Если терминал никогда не открывали — у той же документации есть <a href="https://code.claude.com/docs/en/terminal-guide" target="_blank" rel="noopener">Terminal guide for new users</a>.</li>
-      <li data-fn="5">Заметки Obsidian — обычные файлы .md в вашей папке: их читает любой редактор и любой агент, и они не пропадут вместе с сервисом. Глава Obsidian Стеф Анго назвал это «файл важнее программы»: <a href="https://stephango.com/file-over-app" target="_blank" rel="noopener">Steph Ango: File over app</a> (эссе, англ., 3 мин). Программа бесплатна; платные только синхронизация и публикация (актуально на ноябрь 2026).</li>
+      <li data-fn="2">Если в самом значении есть запятая, его берут в кавычки: <span class="mono">"Sulaiman, 2012"</span>. Таблицы делают это сами при сохранении. Коротко о формате и его подводных камнях (разделитель, кавычки, кодировка): <a href="https://ru.wikipedia.org/wiki/CSV" target="_blank" rel="noopener">Википедия: CSV</a> (статья, рус., 5 мин).</li>
+      <li data-fn="3">Claude Code в начале каждой сессии загружает файлы CLAUDE.md и короткие заметки, которые агент ведёт сам. Документация советует держать файл короче 200 строк: длинные правила выполняются хуже. Это подсказка, а не замок — запреты задаются иначе (урок 14). <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code Docs: How Claude remembers your project</a> (документация, англ., 15 мин).</li>
+      <li data-fn="4">Читать папку с файлами .md как записную книжку удобно в программе Obsidian — она не обязательна. Заметки остаются обычными файлами в вашей папке и не пропадут вместе с сервисом; глава Obsidian назвал это «файл важнее программы»: <a href="https://stephango.com/file-over-app" target="_blank" rel="noopener">Steph Ango: File over app</a> (эссе, англ., 3 мин). Программа бесплатна; платные только синхронизация и публикация (актуально на ноябрь 2026).</li>
     </ol></div></div>
 
   <div class="panel"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
-      <tr><td><b>Файл, папка, путь</b></td><td>именованный кусок данных; место для файлов; адрес файла вида <span class="mono">~/Projects/…</span></td></tr>
-      <tr><td><b>Markdown (.md)</b></td><td>текст с простой разметкой: <span class="mono">#</span> заголовок, <span class="mono">-</span> список</td></tr>
-      <tr><td><b>CSV / JSON</b></td><td>таблица текстом через запятые / запись «поле: значение» для программ</td></tr>
+      <tr><td><b>Папка проекта</b></td><td>постоянное место проекта на диске: правила, журнал, таблицы, статьи</td></tr>
+      <tr><td><b>Путь</b></td><td>адрес файла от папки проекта: <span class="mono">data/pilot.csv</span></td></tr>
+      <tr><td><b>Markdown (.md)</b></td><td>текст с простой разметкой: <span class="mono">#</span> заголовок, <span class="mono">-</span> пункт списка</td></tr>
+      <tr><td><b>CSV (.csv)</b></td><td>таблица текстом: строка — строка, запятая — граница клеток</td></tr>
       <tr><td><b>CLAUDE.md</b></td><td>файл правил проекта; агент читает его в начале каждой сессии</td></tr>
-      <tr><td><b>Режим разрешений</b></td><td>что агент делает без спроса: Manual, Accept edits, Plan, Auto</td></tr>
-      <tr><td><b>Команда с косой чертой</b></td><td>служебная команда обвязке: <span class="mono">/permissions</span>, <span class="mono">/mcp</span></td></tr>
+      <tr><td><b>Журнал (journal.md)</b></td><td>записи «решение, проверка, ошибка, сделано» с датой и причиной</td></tr>
     </table></div></div>
 
   <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
-    <li>Память проекта — файлы в одной папке: правила, журнал, ТЗ, таблицы, статьи.</li>
+    <li>Память проекта — файлы в одной папке: правила, журнал, таблицы, статьи.</li>
+    <li>Два формата: Markdown для текста и CSV для таблиц; оба открываются без агента.</li>
     <li>В начале сессии в окно попадают только инструкции обвязки, CLAUDE.md и задание; остальное агент открывает по делу.</li>
-    <li>Claude Code открывают вкладкой Code в приложении или командой <span class="mono">claude</span> в терминале; до урока 18 — режим Manual и запрет на чтение секретов.</li>
-    <li>Что умеет агент, проверяют командами <span class="mono">/mcp</span> и <span class="mono">/permissions</span>, а не вопросом к модели.</li></ul></div>
+    <li>Журнал хранит не только «что сделано», но и «почему» и «что отвергли».</li></ul></div>
 
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Создайте пустую папку и откройте в ней Claude Code (или запасной путь). Включите режим Manual. Попросите: «Создай файл hello.md: заголовок — название моего проекта и три пункта списка о том, что он будет делать». Посмотрите, как агент спрашивает разрешения, и ответьте «да».</p>
-    <p>Откройте файл в обычном блокноте. Запишите: что спросил агент перед созданием файла, как выглядят <span class="mono">#</span> и <span class="mono">-</span> в тексте и что показала команда <span class="mono">/permissions</span>.</p></div>
+    <p>В любой пробной папке создайте блокнотом два файла. Первый — <span class="mono">hello.md</span>: заголовок с названием вашего проекта и три пункта списка. Второй — <span class="mono">test.csv</span>: строка с названиями трёх столбцов и две строки данных. При сохранении в блокноте Windows выберите «Тип файла: все файлы», иначе он допишет <span class="mono">.txt</span>.</p>
+    <p>Откройте <span class="mono">test.csv</span> в Excel или Google Таблицах (Файл → Импортировать). Запишите: как в тексте выглядят <span class="mono">#</span>, <span class="mono">-</span> и запятая — и во что каждый из них превратился.</p></div>
   <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 13</span>
-    <p>Создайте папку проекта по схеме: <span class="mono">CLAUDE.md</span>, <span class="mono">journal.md</span>, <span class="mono">data/</span>, <span class="mono">articles/</span>, <span class="mono">notes/</span>. Перенесите журнал из шагов 1–12 в <span class="mono">journal.md</span>, туда же — пять вопросов к базе (шаг 6) и словарь терминов (шаг 2). Запрет на чтение <span class="mono">.env</span> поставьте сразу, даже если файла ещё нет. Первая запись в новом файле — <b>решение</b>: какую рабочую среду выбрали и почему.</p></div>
+    <p><b>Время: ≈ 20 минут.</b> Создайте папку проекта по схеме: <span class="mono">CLAUDE.md</span>, <span class="mono">journal.md</span>, папки <span class="mono">data</span>, <span class="mono">articles</span>, <span class="mono">notes</span>. В <span class="mono">CLAUDE.md</span> впишите три правила из урока. В <span class="mono">journal.md</span> перенесите журнал из шагов 1–12: записи, пять вопросов к базе (шаг 6), словарь терминов (шаг 2) и лист «Карта этапов» (шаги 10 и 12) — списком: этап — где модель — какой продукт. Первая запись в новом файле — <b>решение</b>: где лежит папка проекта и как вы будете делать её копии. Если тема своя — назовите папку по-своему, состав тот же.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
-    <p>По желанию; одного материала достаточно. Этот путь — от первой сессии в своей папке до привычки держать проект в файлах, понятных и вам, и агенту.</p>
+    <p>По желанию; одного материала достаточно. Этот путь — к привычке держать проект в простых файлах, понятных и вам, и агенту.</p>
     <h3>Понять лучше</h3>
     <ul class="links">
-      <li><a href="https://code.claude.com/docs/en/desktop-quickstart" target="_blank" rel="noopener">Claude Code Docs: Get started with the desktop app</a><span class="meta">инструкция · англ. · 10 мин · если откроете одно — это</span><p>Установка, вкладка Code, выбор папки, первая правка и кнопки «да / нет». Ровно то, что нужно для задания урока.</p></li>
-      <li><a href="https://www.markdownguide.org/getting-started/" target="_blank" rel="noopener">Markdown Guide: Getting Started</a><span class="meta">статья · англ. · 10 мин</span><p>Что такое Markdown, почему его файлы переживут любую программу и где его читают — от блокнота до Obsidian.</p></li>
+      <li><a href="https://doka.guide/tools/markdown/" target="_blank" rel="noopener">Дока: Язык разметки Markdown</a><span class="meta">статья · рус. · 10 мин · если откроете одно — это</span><p>Вся разметка по-русски с примерами: заголовки, списки, ссылки, таблицы. Написано для веб-разработчиков, но читается без подготовки.</p></li>
+      <li><a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noopener">Markdown Guide: Cheat Sheet</a><span class="meta">шпаргалка · англ. · 3 мин</span><p>Одна страница «что набрать → что получится». Удобно держать открытой, пока ведёте журнал.</p></li>
     </ul>
     <h3>Копнуть глубже</h3>
     <ul class="links">
-      <li><a href="https://academy.claude.com/courses/claude-code-101" target="_blank" rel="noopener">Claude Academy: Claude Code 101</a><span class="meta">курс · англ. · 1–2 часа</span><p>Бесплатный курс Anthropic по Claude Code в своём темпе: сессии, правила проекта, разрешения. Код можно не писать — смотрите, как устроена работа.</p></li>
-      <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Claude Code Docs: Best practices</a><span class="meta">документация · англ. · 25 мин</span><p>Как ставить агенту задачи, когда просить план, как держать файл правил коротким. Подготовка к модулю 4.</p></li>
+      <li><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code Docs: How Claude remembers your project</a><span class="meta">документация · англ. · 15 мин</span><p>Что именно агент читает в начале сессии, как писать файл правил, чтобы ему следовали, и где лежат заметки, которые агент ведёт сам. Подготовка к урокам 14 и 17.</p></li>
+      <li><a href="https://stephango.com/file-over-app" target="_blank" rel="noopener">Steph Ango: File over app</a><span class="meta">эссе · англ. · 3 мин</span><p>Почему заметки стоит хранить в файлах, которые переживут любую программу. Короткий текст, после которого папка проекта перестаёт казаться мелочью.</p></li>
     </ul>
     <h3>Куда движется область</h3>
     <ul class="links">
-      <li><a href="https://agents.md/" target="_blank" rel="noopener">AGENTS.md — открытый формат файла правил</a><span class="meta">сайт · англ. · 5 мин</span><p>Попытка договориться об одном файле правил для всех агентов для кода: им пользуются десятки тысяч открытых проектов, его читают Codex, Jules и другие; Claude Code умеет читать его вместо CLAUDE.md. Уже в продуктах, но стандарт молодой.</p></li>
-      <li><a href="https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude" target="_blank" rel="noopener">Справочный центр Claude: Cowork and chat are one Claude</a><span class="meta">справка · англ. · 7 мин</span><p>Обычный Claude тоже получил доступ к папкам на компьютере. Граница между агентом для документов и агентом для кода стирается — следите, что из запасного пути станет основным.</p></li>
+      <li><a href="https://agents.md/" target="_blank" rel="noopener">AGENTS.md — открытый формат файла правил</a><span class="meta">сайт · англ. · 5 мин</span><p>Попытка договориться об одном файле правил для всех агентов для кода: его читают Codex, Jules и другие, а Claude Code умеет читать его вместо CLAUDE.md. Уже в продуктах, но стандарт молодой.</p></li>
+      <li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">Anthropic: Effective harnesses for long-running agents</a><span class="meta">статья · англ. · ноябрь 2025 · 20 мин</span><p>Как агент работает много сессий подряд, если каждое окно начинается с чистого листа: файл с прогрессом, список дел, проверка после шага. Ваши журнал и файл правил — тот же приём в малом. Уже в продуктах, но область активных поисков.</p></li>
     </ul></div>
 
 
 <script>
 (function(){
-var $=AI.$, el=AI.el, SYS=15000;
+var $=AI.$, el=AI.el, SYS=15000, MAX=100000;
 var F=[
- {id:'claude', name:'CLAUDE.md', what:'правила', tok:800, start:true, on:true},
- {id:'journal', name:'journal.md', what:'журнал', tok:1500, on:true},
- {id:'tz', name:'TZ.md', what:'задание на базу', tok:1200, on:false},
- {id:'data', name:'data/pilot.csv', what:'таблица (урок 14)', tok:1500, on:true},
- {id:'art', name:'articles/ (5 статей)', what:'статьи PDF', tok:60000, on:true},
- {id:'env', name:'.env', what:'секретный ключ', tok:50, secret:true, on:false}
+ {name:'CLAUDE.md', what:'правила', tok:300, start:true},
+ {name:'journal.md', what:'журнал', tok:1500},
+ {name:'data/pilot.csv', what:'таблица (урок 15)', tok:1500},
+ {name:'articles/ (5 статей)', what:'статьи PDF', tok:60000}
 ];
-var M=[
- ['manual','Manual','ничего: каждую правку и команду покажет и спросит','каждую правку файла и каждую команду'],
- ['edits','Accept edits','правит файлы в папке, в том числе data/ и journal.md','команды компьютеру'],
- ['plan','Plan','ничего: пишет план, правки — только после вашего одобрения','одобрить план'],
- ['auto','Auto','почти всё; рискованное останавливает модель-проверяльщик','редко — до урока 18 не включайте']
-], mode='manual', deny=false;
+var A=[
+ ['none','Только задание'],
+ ['journal','«Прочитай журнал и продолжи»'],
+ ['all','«Прочитай всё в папке»']
+], ask='none';
+function init(){ F.forEach(function(f){f.on=true;}); ask='none'; }
+function fmt(n){return n.toLocaleString('ru-RU');}
 function build(){
   var fb=$('l13files'); fb.textContent='';
   F.forEach(function(f){
     var lab=el('label'); var c=el('input'); c.type='checkbox'; c.checked=f.on;
     c.addEventListener('change',function(){f.on=c.checked; draw();});
-    lab.appendChild(c); lab.appendChild(el('span','mono',f.name)); lab.appendChild(el('span','why',f.what+(f.tok>=1000?' · ~'+f.tok.toLocaleString('ru-RU')+' токенов':'')));
+    lab.appendChild(c); lab.appendChild(el('span','mono',f.name)); lab.appendChild(el('span','why',f.what+' · ~'+fmt(f.tok)+' токенов'));
     fb.appendChild(lab);
   });
-  var mb=$('l13modes'); mb.textContent='';
-  M.forEach(function(m){
-    var b=el('button',m[0]===mode?'primary':null,m[1]); b.type='button';
-    b.addEventListener('click',function(){mode=m[0]; build(); draw();});
-    mb.appendChild(b);
+  var ab=$('l13asks'); ab.textContent='';
+  A.forEach(function(a){
+    var b=el('button',a[0]===ask?'primary':null,a[1]); b.type='button';
+    b.addEventListener('click',function(){ask=a[0]; build(); draw();});
+    ab.appendChild(b);
   });
-  $('l13deny').checked=deny;
 }
 function row(k,v,cls){ var r=$('l13res'); r.appendChild(el('span','k',k)); r.appendChild(el('span',cls||null,v)); }
 function draw(){
   $('l13res').textContent='';
   var cm=F[0].on, start=SYS+(cm?F[0].tok:0)+60;
-  row('в начале', 'инструкции обвязки (~'+SYS.toLocaleString('ru-RU')+')'+(cm?' + CLAUDE.md':' — CLAUDE.md нет, правил агент не знает')+' + задание ≈ '+start.toLocaleString('ru-RU')+' токенов', cm?null:'l13-bad');
-  var lazy=F.filter(function(f){return f.on&&!f.start&&!f.secret;});
-  var big=F[4].on ? ' Все пять статей разом — ещё ~60 000: просите по одной.' : '';
-  row('по просьбе', lazy.length ? lazy.map(function(f){return f.name;}).join(', ')+' — в окно, только когда агент их откроет.'+big : 'других файлов нет');
-  var m=M.filter(function(x){return x[0]===mode;})[0];
-  row('без спроса', 'читает файлы в папке; меняет: '+m[2], mode==='auto'?'l13-bad':null);
-  row('спросит', m[3]);
-  var env=F[5];
-  if(env.on){
-    if(deny) row('.env', 'прочитать встроенными инструментами не сможет — запрет действует в любом режиме.', 'l13-ok');
-    else row('.env', 'может прочитать без спроса, даже в Manual: чтение в своей папке разрешено. Ключ попадёт в окно — и к провайдеру. Поставьте запрет.', 'l13-bad');
-  } else row('.env', deny ? 'файла нет, запрет уже стоит — хорошо.' : 'файла пока нет; запрет лучше поставить заранее.');
+  row('в начале','инструкции обвязки (~'+fmt(SYS)+')'+(cm?' + CLAUDE.md':'')+' + задание ≈ '+fmt(start)+' токенов');
+  if(!cm) row('правила','файла CLAUDE.md нет — правил агент не знает: единицы, источники и «не исправлять молча» придётся повторять в каждом задании.','l13-bad');
+  else row('правила','три правила в окне с первой секунды — напоминать не нужно.','l13-ok');
+  var read=F.filter(function(f,i){ return i>0 && f.on && (ask==='all' || (ask==='journal'&&i===1)); });
+  var add=read.reduce(function(s,f){return s+f.tok;},0), wait=F.filter(function(f,i){return i>0&&f.on&&read.indexOf(f)<0;});
+  if(ask==='journal'&&!F[1].on) row('по просьбе','журнала в папке нет — агенту нечего читать: он не знает, что решено раньше.','l13-bad');
+  else row('по просьбе', read.length ? 'прочитал: '+read.map(function(f){return f.name;}).join(', ')+' — ещё ~'+fmt(add)+' токенов.'+(ask==='all'&&F[3].on?' Пять статей разом заняли больше половины шкалы: просите по одной.':'') : 'ничего не читал.');
+  row('лежит в папке', wait.length ? wait.map(function(f){return f.name;}).join(', ')+' — в окно не попали и места не занимают.' : 'непрочитанных файлов нет.');
+  var tot=start+add;
+  row('в окне','≈ '+fmt(tot)+' токенов');
+  $('l13meter').firstChild.style.width=Math.min(100,tot/MAX*100).toFixed(1)+'%';
 }
-$('l13deny').addEventListener('change',function(){deny=this.checked; draw();});
-$('l13reset').addEventListener('click',function(){F.forEach(function(f,i){f.on=[true,true,false,true,true,false][i];}); mode='manual'; deny=false; build(); draw();});
-build(); draw();
+$('l13reset').addEventListener('click',function(){init(); build(); draw();});
+init(); build(); draw();
 })();
 </script>
