@@ -1,16 +1,32 @@
   <style>
     .l21-json{margin:0;font-family:var(--f-mono);font-size:.8rem;line-height:1.5;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
-    .l21-way{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface)}
+    .l21-way{border:1px solid var(--line);border-radius:10px;padding:12px 14px 14px;background:var(--surface);display:flex;flex-direction:column;gap:10px}
     .l21-way b{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:500}
-    .l21-way ol{list-style:none;margin:8px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 5px;align-items:center}
-    .l21-way li{font-family:var(--f-mono);font-size:.8rem;border:1px solid var(--line);border-radius:6px;padding:4px 8px;color:var(--muted)}
-    .l21-way li.l21-ar{border:0;padding:0}
-    .l21-way li.l21-now{border:2px solid var(--accent);color:var(--ink);font-weight:600}
+    .l21-way ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;counter-reset:l21w}
+    .l21-way li{counter-increment:l21w;position:relative;display:flex;flex-direction:column;justify-content:center;min-height:46px;font-family:var(--f-mono);font-size:.76rem;line-height:1.3;border:1px solid var(--line);border-radius:6px;padding:5px 7px;color:var(--muted)}
+    .l21-way li::before{content:counter(l21w);font-size:.68rem;line-height:1.2}
+    .l21-way li:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);font-size:.8rem;color:var(--muted)}
+    .l21-way li.l21-now{border:2px solid var(--accent);background:var(--accent-soft);color:var(--ink);font-weight:600}
+    .l21-way li.l21-now::before{color:var(--accent)}
     .l21-way p{margin:0;font-size:.9rem;line-height:1.45;color:var(--muted)}
-    .l21-row{white-space:normal}
-    .l21-row span{display:block;font-size:.85rem;line-height:1.45}
-    .l21-row span b{font-weight:500;opacity:.7}
-    .l21-row span.l21-bad{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;font-weight:600}
+    @media (max-width:759px){.l21-way li:nth-child(3)::after{content:none}}
+    @media (min-width:760px){.l21-way ol{grid-template-columns:repeat(6,minmax(0,1fr))}}
+    .l21-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .l21-seg button{padding-inline:6px}
+    .l21-par{margin:0;padding:10px 12px 10px 14px;border-left:3px solid var(--signal);border-radius:0 8px 8px 0;background:var(--bg);font-family:var(--f-display);font-size:1rem;line-height:1.5}
+    .l21-par-l{display:block;margin-bottom:2px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .opts button.l21-row{white-space:normal;display:grid;grid-template-columns:5.6rem minmax(0,1fr);gap:3px 8px;align-items:baseline;padding:10px 12px;font-size:.88rem;line-height:1.4;font-weight:400}
+    .opts button.l21-row::before{content:none}
+    .l21-row .l21-sg{font-weight:700;margin-right:4px}
+    .opts button.right .l21-sg{color:var(--good)} .opts button.wrong .l21-sg{color:var(--bad)}
+    .l21-row .l21-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .l21-row .l21-k{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+    .l21-row .l21-v{color:var(--ink)}
+    .l21-row .l21-v.l21-q{font-style:italic}
+    .l21-row .l21-bad{background:var(--surface);border-radius:4px;box-shadow:0 0 0 2px var(--bad);padding:0 4px;font-weight:600;color:var(--bad)}
+    .l21-row .l21-k.l21-badk{color:var(--bad);font-weight:600}
+    .l21-row .l21-k.l21-badk::before{content:"✕ "}
+    .opts button.l21-row.l21-dim{opacity:.6}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 5 · Урок 21 из 31 · 30 минут</span>
     <h1>Сборщик: из статьи в строку таблицы</h1>
@@ -21,17 +37,17 @@
     <div class="l21-way" role="group" aria-label="Конвейер модуля 5: сборщик, склейка кодом, чистильщик, критик, ваша выборка, принятые таблицы. Сегодня — сборщик и склейка">
       <b>Конвейер модуля · вы здесь</b>
       <ol>
-        <li class="l21-now">сборщик</li><li class="l21-ar" aria-hidden="true">→</li>
-        <li class="l21-now">склейка кодом</li><li class="l21-ar" aria-hidden="true">→</li>
-        <li>чистильщик</li><li class="l21-ar" aria-hidden="true">→</li>
-        <li>критик</li><li class="l21-ar" aria-hidden="true">→</li>
-        <li>ваша выборка</li><li class="l21-ar" aria-hidden="true">→</li>
+        <li class="l21-now">сборщик</li>
+        <li class="l21-now">склейка кодом</li>
+        <li>чистильщик</li>
+        <li>критик</li>
+        <li>ваша выборка</li>
         <li>принятые таблицы</li>
       </ol>
       <p>Сегодня — первые два звена: сборщик читает статьи, код склеивает его файлы в общий черновик.</p>
     </div>
     <p><b>Извлечение</b> — перевод свободного текста в заполненные поля. Было: абзац из раздела «Результаты». Стало: строка таблицы. Вот один абзац и одна строка целиком:</p>
-    <figure class="fig wide">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 600" width="340" height="600" role="img" aria-label="Учебный абзац статьи: выделены фермент, форма ПЭТ, значение 68 °C, pH и прочие условия; отдельно помечена ссылка на чужую работу с 55 °C. Стрелка ведёт к строке таблицы: слева подписи полей, в середине значения, справа имена полей латиницей. 55 °C в строку не попадает; приведённые значение и единицу заполнит чистильщик">
       <rect class="box" x="4" y="4" width="332" height="178" rx="8"/>
       <text class="sm" x="16" y="24">АБЗАЦ СТАТЬИ · учебный, условный</text>
@@ -46,7 +62,7 @@
       </g>
       <path class="arr" d="M110 182V208"/><path class="head" d="M110 216l-5-9h10z"/>
       <path class="arr" d="M250 182V200" style="stroke:var(--signal);stroke-dasharray:4 3"/>
-      <text class="sm" x="196" y="214" style="fill:var(--signal)">[12] — чужая работа,</text>
+      <text class="sm" x="196" y="211" style="fill:var(--signal)">[12] — чужая работа,</text>
       <text class="sm" x="196" y="228" style="fill:var(--signal)">в строку не идёт</text>
       <rect class="box" x="4" y="236" width="332" height="336" rx="8" style="stroke:var(--accent);stroke-width:2"/>
       <text x="16" y="260" font-size="14" font-weight="600">Строка черновика</text>
@@ -80,10 +96,14 @@
     <p>Приведённые поля <span class="mono">value</span> и <span class="mono">unit</span> — нижняя, рыжая строка схемы — он не трогает: пересчёт в единицу базы — работа чистильщика (урок 23).</p>
     <p>Пустая клетка значит «не искали», «нет данных» — «искали, в статье нет».</p>
     <p>Программы записывают строку таблицы текстом — в виде <b>JSON</b>: в фигурных скобках пары «имя поля: значение» через запятую, текст — в кавычках, числа — без. Вот начало той же строки (восемь полей из тринадцати):</p>
-    <pre class="l21-json">{"enzyme": "LCC-X", "parameter": "t_opt",
- "sign": "=", "value_raw": 68, "unit_raw": "°C",
- "pet_form": "аморфная плёнка", "ph": 8.0,
- "quote": "…", "status": "не проверено"}</pre>
+    <pre class="l21-json">{"enzyme": "LCC-X",
+ "parameter": "t_opt",
+ "sign": "=", "value_raw": 68,
+ "unit_raw": "°C",
+ "pet_form": "аморфная плёнка",
+ "ph": 8.0,
+ "quote": "…",
+ "status": "не проверено"}</pre>
     <div class="callout warn"><span class="lbl">Форма — не правда</span><p>Формат гарантирует форму, а не правду: поле точно будет числом, но не обязательно тем, что в статье. Поэтому в формате всегда разрешено «нет данных». В программах, которые ходят к модели через API (урок 7), форму держит <b>схема</b> — машинное описание полей<sup class="fn" data-fn="2">2</sup>; в Claude Code — формат в ТЗ и проверка файла после работы.</p></div></div>
 
   <div class="stack"><h2>Правило 2: цитата рядом с цифрой</h2>
@@ -105,8 +125,8 @@
     <div class="callout warn"><span class="lbl">Чем опасны</span><p>Все три ошибки дают правдоподобную строку: 55 °C — нормальный оптимум, его глазами не отличить от верного. Подсказки в таблице помогают заметить подозрительное механически. Окончательно ошибку ловит сверка с источником — урок 22.</p></div>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Сборщик предложил по три строки на абзац — выберите верную. Сравнивайте с текстом каждое поле, а не длину цитаты. Ответ можно поменять.</p>
-      <div class="row" id="l21tabs"></div>
-      <p id="l21par" style="border-left:3px solid var(--line);padding-left:12px"></p>
+      <div class="l21-seg" id="l21tabs"></div>
+      <p id="l21par" class="l21-par"></p>
       <div class="opts" id="l21opts"></div>
       <div class="row"><button type="button" id="l21reset">Сначала</button><span class="out" id="l21out"></span></div>
       <p class="try-note">Абзацы учебные, данные условные. Во вкладке «Таблица» цитата из двух кусков — шапка и клетка, между ними многоточие.</p>
@@ -238,27 +258,34 @@ var T=[
    ['LCC-ICCG · производительность · 16,7 · г/(л·ч) · 65 °C · цитата: «Производительность деполимеризации, г терефталата на литр в час, при 72 °C … LCC-ICCG — 16,7»','Не те условия: цитата та же, что у верной строки, но в поле стоит 65 °C вместо 72 °C. Длина цитаты ничего не гарантирует.',4]
   ], ok:0}
 ];
-var LBL=['','','число: ','единица: ','условия: ','цитата: '];
+var LBL=['','','число','единица','условия','цитата'], ABC=['А','Б','В'];
 var cur=0, pick=[null,null,null];
 function nb(x){return x.replace(/ (°C|%|мг|мкмоль|г\/)/g,'\u00a0$1').replace(/pH /g,'pH\u00a0');}
-function field(label,text,bad){var s=el('span',bad?'l21-bad':null); if(label) s.appendChild(el('b',null,label)); s.appendChild(document.createTextNode(nb(text))); return s;}
 function draw(){
   var tabs=$('l21tabs'); tabs.textContent='';
-  T.forEach(function(t,i){var b=el('button',i===cur?'primary':null,t.name); b.type='button'; b.addEventListener('click',function(){cur=i; draw();}); tabs.appendChild(b);});
+  T.forEach(function(t,i){var b=el('button',i===cur?'primary':null,(pick[i]===t.ok?'✓ ':'')+t.name); b.type='button'; b.setAttribute('aria-pressed',i===cur?'true':'false'); b.addEventListener('click',function(){cur=i; draw();}); tabs.appendChild(b);});
   var t=T[cur], a=pick[cur];
-  $('l21par').textContent=nb(t.par);
+  var par=$('l21par'); par.textContent=''; par.appendChild(el('span','l21-par-l',t.name==='Таблица'?'Таблица статьи':'Абзац статьи')); par.appendChild(document.createTextNode(nb(t.par)));
   var box=$('l21opts'); box.textContent='';
   t.rows.forEach(function(r,i){
-    var p=r[0].split(' · '), b=el('button','mono l21-row'); b.type='button';
+    var p=r[0].split(' · '), b=el('button','l21-row'); b.type='button';
     var picked=a===i, bad=picked&&i!==t.ok ? r[2] : -1;
-    b.appendChild(field('',p[0]+' · '+p[1],false));
-    for(var k=2;k<6;k++) b.appendChild(field(LBL[k],k===5?p[k].replace(/^цитата: /,''):p[k],k===bad));
+    var h=el('span','l21-h'); if(picked) h.appendChild(el('span','l21-sg',i===t.ok?'✓':'✕')); h.appendChild(document.createTextNode('Строка '+ABC[i]+' · '+p[0]+' · '+p[1])); b.appendChild(h);
+    for(var k=2;k<6;k++){
+      b.appendChild(el('span','l21-k'+(k===bad?' l21-badk':''),LBL[k]));
+      var v=el('span','l21-v'+(k===5?' l21-q':''),nb(k===5?p[k].replace(/^цитата: /,''):p[k]));
+      if(k===bad) v.classList.add('l21-bad');
+      b.appendChild(v);
+    }
     if(picked) b.classList.add(i===t.ok?'right':'wrong');
+    else if(a!==null) b.classList.add('l21-dim');
     b.addEventListener('click',function(){pick[cur]=i; draw();});
     box.appendChild(b);
-    if(picked) box.appendChild(el('div','verdict '+(i===t.ok?'ok':'no'),(i===t.ok?'Верная строка. ':'Не сходится подчёркнутое поле. ')+r[1]+(i===t.ok?'':' Выберите другую строку.')));
+    if(picked){var v2=el('div','verdict '+(i===t.ok?'ok':'no')); v2.appendChild(el('b',null,i===t.ok?'Верная строка. ':'Не сходится поле «'+LBL[r[2]]+'». ')); v2.appendChild(document.createTextNode(r[1]+(i===t.ok?'':' Выберите другую строку.'))); box.appendChild(v2);}
+    if(picked&&i===t.ok){var nx=-1; for(var j=1;j<T.length;j++){var q=(cur+j)%T.length; if(pick[q]!==T[q].ok){nx=q;break;}}
+      if(nx>=0){var go=el('button','primary','Дальше: '+T[nx].name+' →'); go.type='button'; go.addEventListener('click',function(){cur=nx; draw(); $('l21tabs').scrollIntoView({block:'nearest',behavior:'smooth'});}); box.appendChild(go);}}
   });
-  var done=pick.filter(function(x){return x!==null;}).length;
+var done=pick.filter(function(x){return x!==null;}).length;
   $('l21out').textContent='Разобрано абзацев: '+done+' из 3';
 }
 $('l21reset').addEventListener('click',function(){pick=[null,null,null]; cur=0; draw();});

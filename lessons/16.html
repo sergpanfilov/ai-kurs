@@ -19,7 +19,7 @@
       <li><b>по чему вы поймёте, что работа сделана</b>.</li>
     </ol>
     <p>Вот как это выглядит на задаче из сквозного проекта.</p>
-    <figure class="fig"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 466" width="340" height="466" role="img" aria-label="Вверху пять вещей, которые знаете вы: цель, для кого, данные, ограничения, признак готовности. В запрос попадает одна фраза. В окне модели эта фраза, а остальные пять пунктов модель достраивает типичными догадками">
+    <figure class="fig" style="align-items:start"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 446" width="340" height="446" role="img" aria-label="Вверху пять вещей, которые знаете вы: цель, для кого, данные, ограничения, признак готовности. В запрос попадает одна фраза. В окне модели эта фраза, а остальные пять пунктов модель достраивает типичными догадками">
       <g>
         <rect class="box" x="6" y="6" width="320" height="150" rx="6"/>
         <text x="18" y="30" font-size="14" font-weight="600">У вас в голове</text>
@@ -34,6 +34,8 @@
         <rect class="box" x="6" y="270" width="320" height="164" rx="6"/>
         <text x="18" y="294" font-size="14" font-weight="600">Что у модели в окне</text>
         <text class="sm" x="18" y="318">запрос: найти ферменты для ПЭТ</text>
+        <rect x="12" y="327" width="308" height="100" rx="4" style="fill:var(--signal-soft)"/>
+        <text class="sm" x="314" y="318" text-anchor="end" style="fill:var(--signal)">догадки</text>
         <g style="fill:var(--signal)">
           <text class="sm" x="18" y="340" style="fill:var(--signal)">цель → ? общий обзор темы</text>
           <text class="sm" x="18" y="360" style="fill:var(--signal)">для кого → ? для новичка</text>
@@ -46,7 +48,6 @@
         <path class="arr" d="M166 156V176"/><path class="head" d="M166 184l-5-9h10z"/>
         <path class="arr" d="M166 242V262"/><path class="head" d="M166 270l-5-9h10z"/>
       </g>
-      <text class="sm" x="6" y="456">оранжевое модель достроит самым типичным</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз: из пяти строк в вашей голове в запрос попала одна фраза. Оранжевые строки внизу — то, что модель достроила сама. DOI — постоянный номер статьи.</figcaption></figure>
     <p>До модели дошла одна строка — сам запрос. Пять вещей из вашей головы она не «не знает», а <b>угадывает</b>, и угадывает по-среднему: обзор для новичка, по памяти, без фильтра по температуре.</p></div>
@@ -72,12 +73,12 @@
       <div class="checks" id="l16checks"></div>
       <div class="row"><button type="button" class="primary" id="l16next">Добавить следующий элемент</button><button type="button" id="l16reset">Сначала</button></div>
       <span class="eyebrow">Каким будет ответ</span>
-      <ul class="plain" id="l16ans"></ul>
+      <ul class="l16-ans" id="l16ans" aria-live="polite"></ul>
       <span class="eyebrow">Модели приходится угадывать</span>
       <div class="meter" id="l16meter"><i style="width:100%"></i></div>
       <p class="out" id="l16guess"></p>
       <span class="eyebrow">Запрос целиком</span>
-      <p class="mono" id="l16prompt"></p>
+      <p class="mono l16-prompt" id="l16prompt"></p>
       <p class="try-note">Ответы условные: конкретная модель в конкретный день ответит по-своему. <span class="mono">data/pilot.csv</span> — десять записей пилота из урока 15.</p>
     </div></div>
 
@@ -173,7 +174,20 @@
     </ul></div>
 
 
-<style>.l16-five{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:4px}</style>
+<style>
+.l16-five{list-style:none;margin:0;padding:0;counter-reset:l16;display:grid;gap:8px}
+.l16-five>li{counter-increment:l16;position:relative;padding-left:2.6rem;min-height:1.8rem}
+.l16-five>li::before{position:absolute;left:0;top:.05rem;content:counter(l16);display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:.85rem;font-weight:600}
+.l16-ans{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.l16-ans>li{background:var(--bg);border-radius:8px;padding:8px 12px;font-size:.95rem;line-height:1.5}
+.l16-ans>li>b{color:var(--accent);font-weight:600}
+.l16-ans>li.is-new>b{color:var(--signal)}
+.l16-prompt{background:var(--bg);border-radius:8px;padding:10px 12px;max-height:9.5em;overflow-y:auto;margin:0}
+#l16checks{padding-inline:6px}
+#l16checks label{border-radius:8px;padding-inline:6px;margin-inline:-6px}
+#l16checks label.l16-on{background:var(--accent-soft)}
+#l16checks label.l16-on .num{color:var(--accent)}
+</style>
 <script>
 (function(){
 var $=AI.$, el=AI.el;
@@ -206,7 +220,7 @@ function answer(){
   return a;
 }
 function draw(){
-  boxes.forEach(function(b,i){b.checked=on[i];});
+  boxes.forEach(function(b,i){b.checked=on[i]; b.parentNode.classList.toggle('l16-on',on[i]); b.parentNode.lastChild.textContent=on[i]?'в запросе':'';});
   var n=on.filter(Boolean).length, txt='Найди ферменты, которые разлагают ПЭТ.';
   E.forEach(function(e,i){ if(on[i]) txt+=' '+e.t; });
   $('l16prompt').textContent='«'+txt+'»';
@@ -214,7 +228,8 @@ function draw(){
   $('l16guess').textContent= g ? 'Угадывает '+g+' из 5: '+E.filter(function(e,i){return !on[i];}).map(function(e){return e.k.toLowerCase();}).join(', ')+'.'
                                : 'Угадывать нечего: все пять элементов в окне.';
   var ul=$('l16ans'), cur=answer(); ul.textContent='';
-  cur.forEach(function(s,i){ var li=el('li',null,s); if(prev && prev[i]!==s) li.className='is-new'; ul.appendChild(li); });
+  cur.forEach(function(s,i){ var c=s.indexOf(': '), li=el('li'); li.appendChild(el('b',null,s.slice(0,c+1))); li.appendChild(document.createTextNode(s.slice(c+1)));
+    if(prev && prev[i]!==s) li.className='is-new'; ul.appendChild(li); });
   prev=cur;
   $('l16next').disabled = n===5;
 }

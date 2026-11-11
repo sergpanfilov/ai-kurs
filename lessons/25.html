@@ -1,14 +1,32 @@
   <style>
+    .l25-do{margin:0;font-size:.95rem;color:var(--accent);font-weight:500}
     .l25-log{display:flex;flex-direction:column;gap:6px}
-    .l25-log button{text-align:left;border-color:var(--line);color:var(--ink);display:grid;grid-template-columns:1.6rem 1fr auto;gap:6px;align-items:baseline}
-    .l25-log button .mono{color:var(--muted);font-size:.8rem}
+    .l25-log button{text-align:left;border-color:var(--line);color:var(--ink);display:grid;grid-template-columns:1.75rem minmax(0,1fr) 1.6rem;gap:10px;align-items:center;min-height:52px;padding:7px 10px;white-space:normal}
+    .l25-log button .l25-n{display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--bg);font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+    .l25-log button .l25-t{display:flex;flex-direction:column;line-height:1.3}
+    .l25-log button .l25-t small{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);margin-top:2px}
+    .l25-mark{display:grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:50%;font-weight:700;font-size:.9rem}
+    .l25-log button.l25-good .l25-mark{color:var(--good);background:var(--good-soft)}
+    .l25-log button.l25-bad .l25-mark{color:var(--bad);background:var(--bad-soft)}
     .l25-log button.l25-bad{border-color:var(--bad)}
-    .l25-log button.l25-bad .l25-mark{color:var(--bad)}
-    .l25-log button.l25-good .l25-mark{color:var(--good)}
-    .l25-log button.l25-new{border-color:var(--good)}
-    .l25-log button.primary .mono,.l25-log button.primary .l25-mark{color:var(--surface)}
-    .l25-mark{font-weight:600}
-    #l25tab th,#l25tab td{padding:6px 8px;font-size:.88rem}
+    .l25-log button.l25-cur{box-shadow:inset 0 0 0 2px var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+    .l25-log button.l25-cur .l25-n{background:var(--accent);color:var(--surface)}
+    .l25-log button.l25-cur.l25-bad{border-color:var(--bad)}
+    .l25-log button.l25-new{border-style:dashed}
+    @media (hover:hover){.l25-log button:hover{background:var(--accent-soft)}}
+    .verdict.l25-hint{padding-left:2.3rem}
+    .verdict.l25-hint::before{content:"→";color:var(--accent)}
+    .l25-acts{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+    .l25-acts button{white-space:normal;line-height:1.3;padding:8px 10px}
+    @media (max-width:520px){.l25-acts{grid-template-columns:1fr 1fr}.l25-acts button#l25reset{grid-column:1/-1;justify-self:start}}
+    .l25-snap{border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+    .l25-snap .eyebrow{color:var(--muted)}
+    #l25tab th,#l25tab td{padding:5px 8px;font-size:.88rem}
+    #l25tab td.l25-k{color:var(--bad);font-weight:600}
+    .l25-snap .out{margin:0;padding-left:10px;border-left:3px solid var(--line);font-size:.84rem;line-height:1.5}
+    .l25-snap .out.l25-pass{border-left-color:var(--good)} .l25-snap .out.l25-fail{border-left-color:var(--bad)}
+    .l25-snap .why:empty{display:none}
+    .l25-leg line{stroke-width:3}
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 6 · Урок 25 из 31 · 25 минут</span>
@@ -62,13 +80,16 @@
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>История учебной таблицы ферментов: четыре коммита, последний снимок на контрольный вопрос отвечает «пять». Открывайте коммиты по одному, найдите первый, где проверка не проходит, — и исправьте ошибку одним из двух способов.</p>
+      <p class="l25-do">→ Нажмите коммит — ниже откроется его снимок.</p>
       <div class="l25-log" id="l25log"></div>
-      <div class="row"><button type="button" id="l25rev">Отменить новым коммитом</button><button type="button" id="l25res">Перемотать назад</button><button type="button" id="l25reset">Сначала</button></div>
       <p class="verdict" id="l25why"></p>
-      <span class="eyebrow" id="l25cap"></span>
-      <div class="scroll"><table id="l25tab"></table></div>
-      <p class="out" id="l25chk"></p>
-      <p class="why" id="l25mix"></p>
+      <div class="l25-acts"><button type="button" id="l25rev">Отменить новым коммитом</button><button type="button" id="l25res">Перемотать назад</button><button type="button" id="l25reset">Сначала</button></div>
+      <div class="l25-snap">
+        <span class="eyebrow" id="l25cap"></span>
+        <div class="scroll"><table id="l25tab"></table></div>
+        <p class="out" id="l25chk"></p>
+        <p class="why" id="l25mix"></p>
+      </div>
       <p class="try-note">Данные условные. Проверка — как в уроке 19: значения в разумных пределах и контрольный вопрос «сколько ферментов с оптимумом не ниже 60 °C» (по источникам — 3).</p>
     </div>
     <div class="callout fact"><span class="lbl">Разгадка</span><p>Три превратилось в пять в коммите «Агент привёл единицы»: температуры стали кельвинами, а подпись столбца осталась «°C». Отмена новым коммитом вернула три и сохранила новый фермент; перемотка его потеряла.</p></div>
@@ -80,10 +101,12 @@
 
   <div class="stack"><h2>Ветка — черновик</h2>
     <p>Откат чинит случившееся; ветка не пускает ошибку в чистовик. <b>Ветка</b> — отдельная линия снимков, отходящая от основной. Основную обычно зовут <span class="mono">main</span> — это чистовик. Рискованное изменение делают в ветке. Получилось — ветку <b>сливают</b> с основной, и её коммиты входят в чистовик. Не получилось — ветку бросают, чистовик не тронут.</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 472" width="340" height="472" role="img" aria-label="Линия времени: коммиты основной линии main, ветка «единицы» с двумя коммитами отходит и сливается обратно; неудачный коммит «Пересчёт единиц активности» отменён новым коммитом">
-      <text class="sm" x="4" y="14">сплошная — main (чистовик)</text>
-      <text class="sm" x="4" y="30">пунктир — ветка «единицы» (черновик)</text>
+      <g class="l25-leg">
+        <path d="M6 10H30" style="stroke:var(--accent);stroke-width:3"/><text class="sm" x="38" y="14">main — чистовик</text>
+        <path d="M168 10H192" style="stroke:var(--accent);stroke-width:2.5;stroke-dasharray:6 4"/><text class="sm" x="200" y="14">ветка — черновик</text>
+      </g>
       <path d="M24 50V428" style="stroke:var(--accent);stroke-width:3;fill:none"/>
       <path d="M24 104C24 135 70 127 70 158V266C70 297 24 289 24 320" style="stroke:var(--accent);stroke-width:2.5;fill:none;stroke-dasharray:6 4"/>
       <g>
@@ -110,7 +133,7 @@
         <text x="96" y="317" font-size="13" font-weight="600">Ветка «единицы» слита</text>
         <text class="sm" x="96" y="333">a95c0d8 · черновик вошёл в чистовик</text>
         <text x="96" y="371" font-size="13" font-weight="600">Пересчёт единиц активности</text>
-        <text class="sm" x="96" y="387">3c8f1e6 · неудачно: задет pH</text>
+        <text class="sm" x="96" y="387" style="fill:var(--signal)">3c8f1e6 · неудачно: задет pH</text>
         <text x="96" y="425" font-size="13" font-weight="600">Отмена пересчёта</text>
         <text class="sm" x="96" y="441">e07b4d9 · откат новым коммитом</text>
       </g>
@@ -221,11 +244,13 @@ function draw(){
   var box=$('l25log'); box.textContent='';
   log.forEach(function(c,i){
     var b=el('button'); b.type='button';
-    b.appendChild(el('span','mono',String(i+1))); b.appendChild(el('span',null,c.m+' · '+c.h));
+    b.appendChild(el('span','l25-n',String(i+1)));
+    var t=el('span','l25-t'); t.appendChild(el('span',null,c.m)); t.appendChild(el('small',null,c.h)); b.appendChild(t);
     var ok=sane(c);
-    b.appendChild(el('span','l25-mark',seen[c.h]?(ok?'✓':'✕'):''));
+    var mk=el('span','l25-mark',seen[c.h]?(ok?'✓':'✕'):''); mk.setAttribute('aria-label',seen[c.h]?(ok?'проверка проходит':'проверка не проходит'):''); b.appendChild(mk);
     if(seen[c.h])b.classList.add(ok?'l25-good':'l25-bad');
-    if(c.fix)b.classList.add('l25-new'); if(i===view)b.classList.add('primary');
+    if(c.fix){b.classList.add('l25-new'); if(c.fix===1){b.classList.add('is-new'); c.fix=2;}}
+    if(i===view){b.classList.add('l25-cur'); b.setAttribute('aria-current','true');}
     b.addEventListener('click',function(){
       view=i; seen[c.h]=1;
       if(!done){
@@ -240,12 +265,13 @@ function draw(){
   var c=log[view], tb=$('l25tab'); tb.textContent='';
   $('l25cap').textContent='Снимок после коммита '+(view+1)+(view===log.length-1?' (последний)':'');
   var tr=el('tr'); tr.appendChild(el('th',null,'фермент')); tr.appendChild(el('th',null,'оптимум, °C')); tb.appendChild(tr);
-  c.r.forEach(function(x){var t=el('tr'); t.appendChild(el('td',null,x[0])); var v=el('td',null,String(x[1])); if(x[1]>150)v.style.color='var(--bad)'; t.appendChild(v); tb.appendChild(t);});
+  c.r.forEach(function(x){var t=el('tr'); t.appendChild(el('td',null,x[0])); var v=el('td',null,String(x[1])+(x[1]>150?' ✕':'')); if(x[1]>150)v.className='l25-k'; t.appendChild(v); tb.appendChild(t);});
   var s=sane(c), hot=c.r.filter(function(x){return x[1]>=60;}).length;
+  $('l25chk').className='out '+(s&&hot===3?'l25-pass':(s?'':'l25-fail'));
   $('l25chk').textContent='Значения от 0 до 100 °C: '+(s?'да':'нет')+' · ферментов не ниже 60 °C: '+hot+(s&&hot===3?' — сходится с источниками ✓':(s?' (в этом снимке ещё не все ферменты)':' — проверка не пройдена ✕'));
   var mixed=c.r.some(function(x){return x[1]>150;})&&c.r.some(function(x){return x[1]<=100;});
   $('l25mix').textContent=mixed?'В этом снимке новая строка PHL7 записана в °C, а старые — в кельвинах: в одном столбце две единицы. Счёт «не ниже 60» даёт 5, потому что 303 тоже больше 60.':'';
-  var w=$('l25why'); w.className='verdict'+(kind?' '+kind:''); w.textContent=msg;
+  var w=$('l25why'); w.className='verdict '+(kind||'l25-hint'); w.textContent=msg;
   $('l25rev').disabled=done||!found; $('l25res').disabled=done||!found;
 }
 $('l25rev').addEventListener('click',function(){

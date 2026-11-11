@@ -1,7 +1,31 @@
   <style>
-    .l27-opts button{white-space:normal}
     .l27-log{font-family:var(--f-mono);font-size:.82rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;margin:0}
-    .l27-map{margin:0;padding-left:1.5rem;display:flex;flex-direction:column;gap:4px}
+    .l27-map{list-style:none;margin:0;padding:0;counter-reset:l27;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .l27-map>li{counter-increment:l27;display:flex;flex-direction:column;gap:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-weight:500;line-height:1.35}
+    .l27-map>li::before{content:"Привычка " counter(l27);font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:500}
+    .l27-map>li{border-top:3px solid var(--accent)}
+    @media (min-width:760px){.l27-map{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    .panel.l27-restore{border:1.5px solid var(--signal);border-left-width:5px;border-radius:4px 10px 10px 4px}
+    .panel.l27-restore>.eyebrow:first-child{font-family:var(--f-display);font-size:1.12rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
+    .l27-rs{list-style:none;margin:0;padding:0;counter-reset:l27r;display:grid;gap:4px}
+    .l27-rs>li{counter-increment:l27r;position:relative;padding:8px 10px 8px 3rem;border-radius:8px;min-height:2.6rem}
+    .l27-rs>li::before{position:absolute;left:8px;top:.45rem;content:counter(l27r);display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;border:1.5px solid var(--signal);color:var(--signal);font-family:var(--f-mono);font-size:.85rem;font-weight:600;background:var(--surface)}
+    .l27-rs>li.l27-danger{background:var(--signal-soft)}
+    .l27-rs>li.l27-danger::before{background:var(--signal);color:var(--signal-soft)}
+    .l27-rs>li+li{border-top:1px dashed var(--line);border-radius:0}
+    .l27-rs>li.l27-danger,.l27-rs>li.l27-danger+li{border-top-color:transparent;border-radius:8px}
+    .l27-num{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0;font-family:var(--f-mono);font-size:.8rem;color:var(--accent)}
+    .l27-dots{display:inline-flex;gap:6px}
+    .l27-dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+    .l27-dots i.done{background:var(--accent)}
+    .l27-dots i.cur{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .l27-sit{margin:0;padding:12px 14px;background:var(--bg);border-left:3px solid var(--signal);border-radius:0 8px 8px 0;font-family:var(--f-display);font-size:1.04rem;line-height:1.45}
+    .l27-q{margin:0;font-weight:500;font-size:.95rem}
+    .l27-opts button{white-space:normal;min-height:48px;padding:10px 14px}
+    .l27-opts button:disabled{opacity:1}
+    .l27-opts button.l27-alt{background:transparent;border-style:dashed}
+    .l27-opts button.l27-dim{opacity:.55}
+    @media (hover:hover){.l27-opts button:not(:disabled):hover{border-color:var(--accent);background:var(--accent-soft)}}
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 6 · Урок 27 из 31 · 25 минут</span>
@@ -23,37 +47,41 @@
     <p><b>Боевая</b> среда — то, чем пользуются по-настоящему: рабочая база, страница. <b>Тестовая</b> — её копия, которую можно ломать. Как в лаборатории: со стоковым раствором не экспериментируют — отбирают аликвоту, малую порцию. Испортили — отобрали новую. Тестовая база — аликвота ваших данных.</p>
     <p>Опаснее всего <b>массовая операция</b> — изменение многих строк одной командой: пересчитать единицы, удалить дубликаты, переименовать параметр. Ошибка в условии — и вместо 60 дубликатов уходит 600 строк. Поэтому любая массовая операция идёт одним путём:</p>
     <p><span class="hl">агент написал файл SQL → проверил его на тестовой базе своим ключом → вы вставили файл в SQL Editor рабочей базы и запустили.</span></p>
-    <figure class="fig">
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 470" width="340" height="470" role="img" aria-label="Боевая среда наверху, секретный ключ только в панели; стрелка «выгрузка» к резервной копии вне папки проекта, стрелка «развернуть копию» вниз к тестовой среде; от тестовой стрелка «ошибки» к журналу и стрелка обратно к боевой: файл SQL, проверенный на тестовой базе, вы вставляете в SQL Editor рабочей">
-      <rect class="box" x="6" y="6" width="300" height="88" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Боевая среда наверху, секретный ключ только в панели. Слева путь копии: выгрузка, затем развернуть копию в тестовой среде. Справа путь изменений: агент проверяет файл SQL на тестовой базе, вы запускаете его в SQL Editor рабочей. Ошибки из тестовой среды — в journal.md">
+      <rect class="box" x="6" y="6" width="300" height="68" rx="6"/>
       <text x="18" y="30" font-size="14" font-weight="600">Боевая среда</text>
       <text class="sm" x="18" y="50">рабочая база и страница</text>
-      <text class="sm" x="18" y="66">ими пользуются по-настоящему</text>
-      <text class="sm" x="18" y="82">секретный ключ — только в панели</text>
-      <rect class="box" x="6" y="160" width="130" height="76" rx="6"/>
-      <text x="16" y="182" font-size="13" font-weight="600">Выгрузка</text>
-      <text class="sm" x="16" y="204">файл с датой,</text>
-      <text class="sm" x="16" y="220">вне папки проекта</text>
-      <rect class="box" x="176" y="160" width="130" height="76" rx="6"/>
-      <text x="186" y="182" font-size="13" font-weight="600">journal.md</text>
-      <text class="sm" x="186" y="204">запись «ошибка»:</text>
-      <text class="sm" x="186" y="220">как не повторить</text>
-      <rect class="box" x="6" y="306" width="300" height="88" rx="6" style="stroke-dasharray:6 4"/>
-      <text x="18" y="330" font-size="14" font-weight="600">Тестовая среда</text>
-      <text class="sm" x="18" y="350">копия базы: можно ломать</text>
-      <text class="sm" x="18" y="366">агент пробует файлы SQL и скрипты</text>
-      <text class="sm" x="18" y="382">ключ у агента — только отсюда</text>
-      <path class="arr" d="M50 94V152"/><path class="head" d="M50 160l-5-9h10z"/>
-      <text class="sm" x="56" y="128">выгрузка</text>
-      <path class="arr" d="M110 236V298"/><path class="head" d="M110 306l-5-9h10z"/>
-      <text class="sm" x="116" y="262">развернуть</text>
-      <text class="sm" x="116" y="276">копию</text>
-      <path class="arr" d="M240 306V244"/><path class="head" d="M240 236l-5 9h10z"/>
-      <text class="sm" x="246" y="270">ошибки</text>
-      <path class="arr" d="M306 350H328V50H314"/><path class="head" d="M306 50l9-5v10z"/>
-      <text class="sm" x="6" y="420">справа: файл SQL, проверенный агентом</text>
-      <text class="sm" x="6" y="438">на тестовой базе, вы сами вставляете</text>
-      <text class="sm" x="6" y="456">в SQL Editor рабочей и запускаете</text>
+      <text class="sm" x="18" y="66">секретный ключ — только в панели</text>
+      <rect class="box" x="6" y="148" width="132" height="62" rx="6"/>
+      <text x="16" y="170" font-size="13" font-weight="600">Выгрузка</text>
+      <text class="sm" x="16" y="186">файл с датой, вне</text>
+      <text class="sm" x="16" y="201">папки проекта</text>
+      <rect class="box" x="174" y="148" width="132" height="62" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+      <text x="184" y="170" font-size="13" font-weight="600">Файл SQL</text>
+      <text class="sm" x="184" y="186">проверен агентом</text>
+      <text class="sm" x="184" y="201">на тестовой базе</text>
+      <rect class="box" x="6" y="284" width="300" height="68" rx="6" style="stroke-dasharray:6 4"/>
+      <text x="18" y="308" font-size="14" font-weight="600">Тестовая среда</text>
+      <text class="sm" x="18" y="328">копия базы: можно ломать</text>
+      <text class="sm" x="18" y="344">ключ у агента — только отсюда</text>
+      <rect class="box" x="174" y="398" width="132" height="48" rx="6"/>
+      <text x="184" y="419" font-size="13" font-weight="600">journal.md</text>
+      <text class="sm" x="184" y="436">запись «ошибка»</text>
+      <path d="M50 74V140" style="stroke:var(--muted);stroke-width:2;fill:none"/><path d="M50 148l-5-9h10z" style="fill:var(--muted)"/>
+      <text class="sm" x="58" y="112">выгрузить</text>
+      <path d="M50 210V276" style="stroke:var(--muted);stroke-width:2;fill:none"/><path d="M50 284l-5-9h10z" style="fill:var(--muted)"/>
+      <text class="sm" x="58" y="244">развернуть</text>
+      <text class="sm" x="58" y="259">копию</text>
+      <path class="arr" d="M240 284V218"/><path class="head" d="M240 210l-5 9h10z"/>
+      <text class="sm" x="248" y="244" style="fill:var(--accent)">агент</text>
+      <text class="sm" x="248" y="259" style="fill:var(--accent)">проверил</text>
+      <path class="arr" d="M240 148V82"/><path class="head" d="M240 74l-5 9h10z"/>
+      <text class="sm" x="248" y="104" style="fill:var(--accent)">запускаете</text>
+      <text class="sm" x="248" y="119" style="fill:var(--accent)">вы, в SQL</text>
+      <text class="sm" x="248" y="134" style="fill:var(--accent)">Editor</text>
+      <path d="M120 352V422H166" style="stroke:var(--muted);stroke-width:2;fill:none"/><path d="M174 422l-9-5v10z" style="fill:var(--muted)"/>
+      <text class="sm" x="128" y="390">ошибки</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Вверху рабочая база, внизу тестовая. Слева — путь копии: выгрузку разворачивают в тестовой базе. Стрелка справа — путь изменений: файл SQL, проверенный на тестовой базе, в рабочей запускаете вы сами. Про выгрузку и журнал — привычки 3 и 4.</figcaption>
     </figure>
@@ -88,11 +116,11 @@ SUPABASE_SECRET_KEY=sb_secret_ВАШ_КЛЮЧ</pre>
     <p>Сразу проверьте копию: пусть агент посчитает строки в файлах. Ключ для этого не нужен; на чтение папки вне проекта он попросит разовое разрешение (урок 14). В примере измерений — 180.</p>
     <p class="pull">Копия, из которой ни разу не восстанавливали, — надежда, а не копия.</p>
     <p>Поэтому раз в месяц выгрузку <b>разворачивают</b>: загружают в пустую тестовую базу и сравнивают числа строк<sup class="fn" data-fn="7">7</sup>. А если беда случилась с рабочей базой — порядок такой:</p>
-    <div class="panel"><span class="eyebrow">Вернуть рабочую базу из копии: четыре шага</span>
+    <div class="panel l27-restore"><span class="eyebrow">Вернуть рабочую базу из копии: четыре шага</span>
       <div class="callout warn"><span class="lbl">Осторожно</span><p>Шаг 2 стирает строки. Сначала убедитесь, что копия цела: числа строк в файлах сошлись.</p></div>
-      <ol>
+      <ol class="l27-rs">
         <li><b>Проверьте структуру.</b> CSV хранит только строки. Таблицы, связи и правила доступа записаны в файлах папки <span class="mono">sql/</span>, а они лежат в истории (урок 25). Таблицы на месте — сразу шаг 2; пропали — сначала запустите файлы из <span class="mono">sql/</span>.</li>
-        <li><b>Очистите таблицы</b> в обратном порядке: измерения, затем источники и ферменты. Без очистки уцелевшие строки задвоятся — или база откажет из-за повторных номеров.</li>
+        <li class="l27-danger"><b>Очистите таблицы</b> в обратном порядке: измерения, затем источники и ферменты. Без очистки уцелевшие строки задвоятся — или база откажет из-за повторных номеров.</li>
         <li><b>Загрузите CSV</b> в прямом порядке: ферменты, источники, измерения.</li>
         <li><b>Сверьте</b> числа строк (180) и контрольные вопросы.</li>
       </ol>
@@ -112,8 +140,9 @@ SUPABASE_SECRET_KEY=sb_secret_ВАШ_КЛЮЧ</pre>
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Пять ситуаций. Какая из четырёх привычек вернула бы данные или не дала бы беде случиться?</p>
-      <p class="mono" id="l27num"></p>
-      <p id="l27sit"></p>
+      <p class="l27-num"><span id="l27num"></span><span class="l27-dots" id="l27dots" aria-hidden="true"></span></p>
+      <p class="l27-sit" id="l27sit"></p>
+      <p class="l27-q">Какая привычка помогла бы? Нажмите одну.</p>
       <div class="opts l27-opts" id="l27opts"></div>
       <p class="verdict" id="l27why"></p>
       <div class="row"><button type="button" class="primary" id="l27next">Дальше</button><button type="button" id="l27again">Сначала</button></div>
@@ -178,12 +207,12 @@ SUPABASE_SECRET_KEY=sb_secret_ВАШ_КЛЮЧ</pre>
       <li>Попросите агента посчитать строки в файлах: в измерениях — 180.</li>
     </ol>
     <h3>Тестовая база</h3>
-    <ol class="steps">
+    <ol class="steps" start="4">
       <li>В учебном проекте из урока 26 удалите учебную таблицу и запустите <span class="mono">sql/schema.sql</span>.</li>
       <li>Загрузите CSV из копии: ферменты, источники, измерения. Сверьте: в измерениях снова 180.</li>
     </ol>
     <h3>Ключ</h3>
-    <ol class="steps">
+    <ol class="steps" start="6">
       <li>Создайте файл <span class="mono">.env</span> в папке проекта сами, без чата: в нём две строки из урока.
         <details class="more">
           <summary>Если у вас Windows: как создать файл .env</summary>
@@ -234,6 +263,7 @@ var pos=0, btns=[];
 function show(){
   var s=S[pos], box=$('l27opts'); box.textContent=''; btns=[];
   $('l27num').textContent='Ситуация '+(pos+1)+' из '+S.length;
+  var d=$('l27dots'); d.textContent=''; S.forEach(function(x,k){d.appendChild(el('i',k<pos?'done':(k===pos?'cur':null)));});
   $('l27sit').textContent=s[0];
   OPT.forEach(function(t,j){var b=el('button',null,t); b.type='button'; b.addEventListener('click',function(){pick(j);}); box.appendChild(b); btns.push(b);});
   var w=$('l27why'); w.className='verdict'; w.textContent='';
@@ -241,14 +271,15 @@ function show(){
 }
 function pick(j){
   var s=S[pos], ok=s[1].indexOf(j)>-1, w=$('l27why');
-  btns.forEach(function(b,k){b.disabled=true; if(s[1].indexOf(k)>-1)b.classList.add('right');});
-  if(!ok)btns[j].classList.add('wrong');
+  btns.forEach(function(b,k){b.disabled=true; var r=s[1].indexOf(k)>-1;
+    if(k===j)b.classList.add(r?'right':'wrong'); else if(r)b.classList.add('right','l27-alt'); else b.classList.add('l27-dim');});
   var nm=s[1].map(function(k){return '«'+OPT[k]+'»';});
   var names=nm.length>1?nm.slice(0,-1).join(', ')+' и '+nm[nm.length-1]:nm[0];
   w.className='verdict '+(ok?'ok':'no');
   w.textContent='Вы выбрали «'+OPT[j]+'»'+(ok?' — подходит. ':' — здесь это не помогло бы. '+(nm.length>1?'Помогли бы ':'Помогла бы ')+names+'. ')+s[2];
   if(pos<S.length-1)$('l27next').hidden=false;
   else $('l27num').textContent='Ситуация '+S.length+' из '+S.length+' · последняя';
+  setTimeout(function(){var r=$('l27again').getBoundingClientRect(); if(r.bottom>innerHeight-8)window.scrollBy({top:r.bottom-innerHeight+24,behavior:'smooth'});},60);
 }
 $('l27next').addEventListener('click',function(){ if(pos<S.length-1){pos++; show();} });
 $('l27again').addEventListener('click',function(){ pos=0; show(); });

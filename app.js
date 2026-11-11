@@ -363,7 +363,9 @@
   function steps(n, box) {
     var mem = lsGet(stepsKey()) || {}, mine = mem[n] || {}, idx = 0;
     box.querySelectorAll('ol.steps').forEach(function (ol) {
-      var panel = ol.closest('.panel'), kind = (panel && panel.getAttribute('data-note')) || 'text', num = (+ol.getAttribute('start') || 1);
+      // нумерация сквозная в пределах панели: второй и третий список шага продолжают счёт (start в разметке — приоритетнее)
+      var panel = ol.closest('.panel'), kind = (panel && panel.getAttribute('data-note')) || 'text';
+      var num = +ol.getAttribute('start') || (panel && panel._stepNext) || 1;
       ol.classList.add('is-live');
       [].forEach.call(ol.children, function (li) {
         if (li.tagName !== 'LI') return;
@@ -371,6 +373,7 @@
         while (li.firstChild) body.appendChild(li.firstChild);
         cb.type = 'checkbox'; cb.checked = !!mine[id]; cb.setAttribute('aria-label', 'Пункт ' + k + ' сделан'); face.setAttribute('aria-hidden', 'true');
         lab.appendChild(cb); lab.appendChild(face); li.appendChild(lab); li.appendChild(body);
+        if (panel) panel._stepNext = num;
         li.classList.toggle('is-done', cb.checked);
         cb.addEventListener('change', function () {
           var all = lsGet(stepsKey()) || {}, cur = all[n] || (all[n] = {});
@@ -409,6 +412,7 @@
           show('is-fail'); try { var r = document.createRange(); r.selectNodeContents(q); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
         });
       });
+      if (!q.hasAttribute('data-label')) q.setAttribute('data-label', 'Запрос');   // подпись рамки; своя — data-label="ТЗ для файла"
       q.classList.add('is-live'); q.appendChild(b);
     });
   }
@@ -478,15 +482,26 @@
       if (ro) ro.observe(sc); check(sc);
     });
   }
+  // докрутить к только что показанному разбору, если он ушёл за нижний край экрана
+  window.AI.reveal = function (e) {
+    if (!e || !e.getBoundingClientRect) return;
+    var r = e.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 16 || r.top < 0) e.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: r.height > window.innerHeight * .8 ? 'start' : 'nearest' });
+  };
   window.AI.refresh = function () { var b = $('v-lesson'); if (!b.hidden) safe(function () { prompts(b); decorate(b, false); }); };
 
   // А3. Полоска чтения (до кнопки «пройден»; справочная часть не считается) и кнопка «наверх»
-  var readBar = null, topBtn = null, ticking = false;
+  var readBar = null, topBtn = null, ticking = false, lastY = 0;
   function readProgress() {
     ticking = false;
     if (!readBar) return;
     var box = $('v-lesson'), on = !box.hidden, end = on && box.querySelector('.done-panel');
-    readBar.hidden = !end; topBtn.hidden = !end || window.scrollY < window.innerHeight * 1.5;
+    // кнопка «наверх» — только когда ученик сам листает вверх: при чтении вниз она не закрывает край содержимого
+    var y = window.scrollY, up = y < lastY - 2, down = y > lastY + 2; lastY = y;
+    if (!end || y < window.innerHeight * 1.5) topBtn.hidden = true;
+    else if (up) topBtn.hidden = false;
+    else if (down) topBtn.hidden = true;
+    readBar.hidden = !end;
     if (!end) return;
     var max = end.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
     var pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1;
@@ -523,7 +538,7 @@
       pbar(bar, course, isDone, false, n); more.appendChild(bar);
       var a = el('a', 'btn primary next-big');
       if (nx && nx.file) { a.href = '#lesson-' + nx.n; a.appendChild(el('small', null, 'Дальше')); a.appendChild(document.createTextNode('Урок ' + nx.n + ' — ' + nx.title + ' →')); }
-      else { a.href = '#map'; a.appendChild(el('small', null, 'Дальше')); a.appendChild(document.createTextNode('К карте курса →')); }
+      else { a.href = '#map'; a.appendChild(el('small', null, nx ? 'Дальше' : 'Последний урок курса')); a.appendChild(document.createTextNode('К карте курса →')); }
       more.appendChild(a);
     }
     b.addEventListener('click', function () {

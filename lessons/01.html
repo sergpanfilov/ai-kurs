@@ -1,15 +1,21 @@
 <style>
 .l01-list{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
-.l01-toks{line-height:2.1}
-.l01-toks .tok{font-size:1rem;padding:3px 7px;margin:0 3px 0 0;box-shadow:inset 0 -2px 0 var(--accent)}
-.l01-toks .tok.l01-w{margin-left:.8rem}
-.l01-toks small{display:block;font-family:var(--f-mono);font-size:.76rem;line-height:1.4;color:var(--muted);margin-top:2px}
+.l01-toks{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 14px;line-height:1.3}
+.l01-word{display:inline-flex;gap:2px;padding-bottom:5px;border-bottom:2px solid var(--muted);white-space:nowrap}
+.l01-toks .tok{font-size:1rem;padding:4px 7px;margin:0;border-radius:4px}
+.l01-toks .tok:nth-child(even){background:color-mix(in srgb,var(--accent) 32%,var(--surface))}
+.l01-toks small{flex-basis:100%;font-family:var(--f-mono);font-size:.78rem;line-height:1.4;color:var(--muted)}
+.l01-do{font-size:.95rem;font-weight:500;color:var(--accent);margin:0}
+.l01-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 10px}
+.l01-ctl input{grid-column:1/-1}
+.l01-ctl b{font-family:var(--f-mono);font-size:1.05rem;font-weight:600;color:var(--accent)}
+.l01-ends{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
 .l01-roll{display:flex;flex-direction:column;gap:10px}
 .l01-roll button{align-self:flex-start}
 .l01-count{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:2.1rem;font-family:var(--f-body);font-size:.92rem;color:var(--muted)}
 .l01-count .tok{margin:0;padding:3px 8px;color:var(--ink)}
 .l01-count .tok b{font-weight:600;color:var(--accent)}
-.l01-pick>span:first-child{box-shadow:inset 0 -2px 0 var(--signal)}
+.l01-pick>span:first-child{color:var(--accent);font-weight:600}
 </style>
   <div class="stack"><span class="eyebrow">Модуль 1 · Урок 1 из 31 · 25 минут</span>
     <h1>Токены и предсказание</h1>
@@ -35,7 +41,7 @@
 
   <div class="stack"><h2>Модель не видит слов</h2>
     <p>Сначала текст режется на <b>токены</b><sup class="fn" data-fn="1">1</sup> — кусочки длиной от одной буквы до целого слова. Частые слова становятся одним токеном, редкие и длинные делятся на части. Примерно так:</p>
-    <p class="l01-toks"><span class="tok">Фер</span><span class="tok">мент</span><span class="tok l01-w">уск</span><span class="tok">оря</span><span class="tok">ет</span><span class="tok l01-w">реак</span><span class="tok">цию</span><small>3 слова → 7 токенов</small></p>
+    <p class="l01-toks"><span class="l01-word"><span class="tok">Фер</span><span class="tok">мент</span></span><span class="l01-word"><span class="tok">уск</span><span class="tok">оря</span><span class="tok">ет</span></span><span class="l01-word"><span class="tok">реак</span><span class="tok">цию</span></span><small>3 слова (черта снизу) → 7 токенов (плашки)</small></p>
     <p>Набор возможных кусочков у каждой модели свой и неизменный. Это её <b>словарь</b>: порядка 100–200 тысяч токенов<sup class="fn" data-fn="2">2</sup>, у каждого свой номер. Дальше модель работает уже с номерами, а не с буквами.</p>
     <p>В английском тексте токен в среднем — от половины до трёх четвертей слова, смотря по модели. Русские и польские слова режутся мельче, поэтому тот же по смыслу текст занимает заметно больше токенов<sup class="fn" data-fn="3">3</sup>. В курсе считаем грубо, по странице.</p>
     <div class="callout fact"><span class="lbl">Запомните</span><p>Лимиты, цена и то, сколько текста модель видит сразу, считаются <b>в токенах</b>, а не в словах или страницах (уроки 5 и 7). Одна и та же статья на русском обходится дороже, чем на английском.</p></div>
@@ -55,12 +61,14 @@
     </details>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
+      <p class="l01-do">→ Подвиньте ползунок и нажмите кнопку несколько раз.</p>
       <p class="mono">Фермент ускоряет реакцию, потому что снижает энергию&nbsp;…</p>
       <div id="l1bars" class="stack" style="gap:6px"></div>
-      <label for="l1temp">Температура: <span id="l1tv" class="mono">1,0</span></label>
+      <div class="l01-ctl"><label for="l1temp">Температура</label><b id="l1tv">1,0</b>
       <input type="range" id="l1temp" min="0" max="2.5" step="0.1" value="1">
+      <span class="l01-ends" aria-hidden="true"><span>0 · предсказуемо</span><span>2,5 · разнообразно</span></span></div>
       <div class="l01-roll"><button id="l1go" type="button" class="primary">Выбрать слово 10 раз</button><div class="l01-count" id="l1out" aria-live="polite">Здесь появится, что выпало.</div></div>
-      <p class="try-note">Подвиньте ползунок и нажмите кнопку несколько раз. Вероятности условные, формула пересчёта настоящая.</p>
+      <p class="try-note">Вероятности условные, формула пересчёта настоящая.</p>
     </div>
     <p><b>Что вы увидели.</b> Влево — почти всегда «активации», а при 0 — только оно. Вправо — начинают попадаться «Гиббса» и «системы». Таблица одна, а строки разные.</p>
     <p><b>Разгадка.</b> Три разных ответа на один вопрос — это три серии бросков по одной и той же таблице. В чате температуру выбирают за вас: так, чтобы два одинаковых вопроса давали похожие, но не одинаковые ответы. Менять её можно только в программах для разработчиков (урок 7).</p>
@@ -68,7 +76,7 @@
 
   <div class="stack"><h2>Цикл: токен за токеном</h2>
     <p class="recap"><b>Привал.</b> Текст режется на токены, модель выдаёт таблицу вероятностей, из таблицы выбирают один токен. Осталось замкнуть это в цикл.</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 388" width="340" height="388" role="img" aria-label="Цикл: текст, токены, модель, вероятности, выбор; выбранный токен дописывается к тексту и всё повторяется">
       <g>
         <rect class="box" x="6" y="6" width="280" height="54" rx="6"/>
@@ -80,7 +88,7 @@
         <rect class="box" x="6" y="166" width="280" height="54" rx="6" style="stroke:var(--muted);stroke-dasharray:5 4"/>
         <text x="18" y="188" font-size="14" font-weight="600">Модель</text>
         <text class="sm" x="18" y="207">чёрный ящик — откроем в уроке 2</text>
-        <rect class="box" x="6" y="246" width="280" height="54" rx="6"/>
+        <rect class="box" x="6" y="246" width="280" height="54" rx="6" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="268" font-size="14" font-weight="600">Вероятности</text>
         <text class="sm" x="18" y="287">активации 88% · связи 5% · …</text>
         <rect class="box" x="6" y="326" width="280" height="54" rx="6"/>
@@ -96,7 +104,7 @@
         <text class="sm" x="329" y="193" text-anchor="middle" transform="rotate(-90 329 193)" style="fill:var(--accent)">токен дописан — шаг повторяется</text>
       </g>
     </svg></div>
-    <figcaption><b>Как читать.</b> Сверху вниз — один шаг угадывания. Стрелка справа возвращает наверх: выбранный токен дописан к тексту, и шаг повторяется.</figcaption>
+    <figcaption><b>Как читать.</b> Сверху вниз — один шаг угадывания; главное — в рамке: на выходе таблица, а не слово. Стрелка справа возвращает наверх: выбранный токен дописан к тексту, и шаг повторяется.</figcaption>
     </figure>
     <p>Когда цикл останавливается? В словаре есть служебный токен <b>«конец ответа»</b>. Модель выбирает его так же, как любой другой, — когда по смыслу ответ закончен. Кроме того, программа обрывает ответ, если он превысил лимит длины.</p>
     <p>Отсюда два следствия.</p>

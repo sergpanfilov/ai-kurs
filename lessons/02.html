@@ -5,9 +5,15 @@
 .l02-text span{border-radius:4px;padding:2px 3px}
 .l02-text b{border-radius:4px;padding:2px 5px;box-shadow:inset 0 0 0 2px var(--accent)}
 .l02-att{min-height:8.7rem}
-.l02-out{font-size:.97rem;line-height:1.5;padding:10px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0;min-height:4.2em}
-.l02-kb{font-size:.9rem;line-height:1.5;color:var(--muted);min-height:4.4em}
-.l02-kb b{color:var(--ink);font-weight:600}
+.l02-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 10px}
+.l02-ctl input{grid-column:1/-1}
+.l02-ctl b{font-family:var(--f-mono);font-size:1.05rem;font-weight:600;color:var(--accent)}
+.l02-ends{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.l02-box{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.l02-res{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border:2px solid var(--accent);border-radius:8px}
+.l02-k{margin:0;font-size:.9rem;font-weight:600;line-height:1.35;color:var(--ink)}
+.l02-out{font-size:.97rem;line-height:1.5;margin:0;padding:8px 10px;background:var(--accent-soft);border-radius:6px;min-height:3.3em}
+.l02-kb{font-size:.93rem;line-height:1.5;margin:0;min-height:3em}
 </style>
   <div class="stack"><span class="eyebrow">Модуль 1 · Урок 2 из 31 · 25 минут</span>
     <h1>Что происходит внутри</h1>
@@ -21,7 +27,7 @@
     <div class="callout fact"><span class="lbl">Запомните</span><p>У слова «раствор» вектор <b>один</b>. И в «буферном растворе», и в «цементном» модель начинает с одних и тех же чисел. Различать их она учится по соседним словам. Это и есть работа слоёв.</p></div></div>
 
   <div class="stack"><h2>Путь фразы через модель</h2>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 556" width="340" height="556" role="img" aria-label="Шесть шагов: токены, номера, наборы чисел, слои, вероятности, выбор; выбранный токен дописывается и всё повторяется">
       <g>
         <rect class="box" x="6" y="6" width="284" height="62" rx="6"/>
@@ -71,14 +77,16 @@
       <p>Слово «раствор» в трёх фразах. Выберите фразу и двигайте номер слоя — число пройденных раундов.</p>
       <div class="row l02-ph" id="l2ph"></div>
       <p class="l02-text" id="l2text"></p>
-      <label for="l2layer">Слой: <span id="l2lv" class="mono">0</span> из 12</label>
+      <div class="l02-ctl"><label for="l2layer">Слой</label><b><span id="l2lv">0</span> из 12</b>
       <input type="range" id="l2layer" min="0" max="12" step="1" value="0">
-      <span class="eyebrow">Действие 1 · у кого «раствор» берёт сведения</span>
-      <div id="l2att" class="stack l02-att" style="gap:6px"></div>
-      <span class="eyebrow" id="l2mh">Как модель понимает «раствор»</span>
+      <span class="l02-ends" aria-hidden="true"><span>0 · словарное значение</span><span>12 · последний слой</span></span></div>
+      <div class="l02-box"><p class="l02-k">Действие 1 · у кого «раствор» берёт сведения</p>
+      <div id="l2att" class="stack l02-att" style="gap:6px"></div></div>
+      <div class="l02-box"><p class="l02-k" id="l2kh">Действие 2 · справочник</p>
+      <p class="l02-kb" id="l2kb"></p></div>
+      <div class="l02-res"><p class="l02-k" id="l2mh">Как модель понимает «раствор»</p>
       <div id="l2mean" class="stack" style="gap:6px"></div>
-      <p class="l02-out" id="l2out" aria-live="polite"></p>
-      <p class="l02-kb" id="l2kb"></p>
+      <p class="l02-out" id="l2out" aria-live="polite"></p></div>
       <p class="try-note">Числа условные. Упрощение: на деле смысл не раскладывается по трём подписанным графам.</p>
     </div>
     <div class="callout fact"><span class="lbl">Разгадка</span><p>Номер и стартовый вектор у «раствора» во всех трёх фразах одни и те же. Различие раунд за раундом дописывают слои: сведения от соседей плюс поправки справочника. <span class="hl">Смысл слова — это не то, что в словаре, а то, что оказалось в блокноте к последнему слою.</span></p></div></div>
@@ -93,7 +101,7 @@
       <li><b>«что у меня есть»</b> — её читают те, кто стоит после него.</li>
     </ul>
     <p>Записку «ищу» токена «энергию» сравнивают с записками «есть» всех предыдущих токенов. <span class="hl">Чем лучше «есть» соседа отвечает на «ищу», тем больше его доля.</span></p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 36 340 196" width="340" height="196" role="img" aria-label="Токен «энергию» на одном слое берёт 40% внимания у «Фермент», 25% у «реакцию», 25% у «снижает», 10% у «ускоряет»">
       <path class="arr" style="stroke-width:7" d="M307 172Q171 -92 35 172"/>
       <path class="arr" style="stroke-width:2;opacity:.6" d="M307 172Q205 -16 103 172"/>
@@ -118,7 +126,7 @@
     <h3>Действие 2: свериться со справочником</h3>
     <p>Справочник из образа называют <b>блоком знаний</b>. У каждого слоя он свой и общий для всех токенов этого слоя. Каждый токен проходит его отдельно, со своим блокнотом.</p>
     <p>Внутри блока тысячи «детекторов». Работа каждого — три шага:</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 222" width="340" height="222" role="img" aria-label="Детектор блока знаний: блокнот токена сравнивается с выученным образцом; если образец совпал, в блокнот добавляется поправка">
       <g>
         <rect class="box" x="6" y="6" width="328" height="54" rx="6"/>
@@ -276,9 +284,10 @@ function draw(){
     : L<=2 ? 'Слой '+L+': внимание смотрит в основном на ближайших соседей, смысл только начинает сдвигаться.'
     : (best[1]>85 ? 'Слой '+L+': модель уверена — это «раствор» из области «'+best[0]+'».' : 'Слой '+L+': смысл уточняется, ближе всего «'+best[0]+'».');
   var kb=$('l2kb'); kb.textContent='';
-  if(L>0){ kb.appendChild(el('b',null,'Действие 2 · справочник на слое '+L+'. '));
-    kb.appendChild(document.createTextNode(L<5 ? 'Пока подходят простые записи — «это существительное», «перед ним прилагательное» (условный пример).'
-    : 'Подошла запись «'+p.k[0]+'» → в блокнот добавлено «'+p.k[1]+'» (условный пример).')); }
+  $('l2kh').textContent= L===0 ? 'Действие 2 · справочник' : 'Действие 2 · справочник на слое '+L;
+  kb.textContent= L===0 ? 'До первого слоя справочник ещё не открывали.'
+    : L<5 ? 'Пока подходят простые записи — «это существительное», «перед ним прилагательное» (условный пример).'
+    : 'Подошла запись «'+p.k[0]+'» → в блокнот добавлено «'+p.k[1]+'» (условный пример).';
   Array.prototype.forEach.call($('l2ph').children,function(x,i){x.classList.toggle('primary',i===cur);});
 }
 PH.forEach(function(p,i){var b=el('button',null,p.b); b.type='button'; b.addEventListener('click',function(){cur=i; draw();}); $('l2ph').appendChild(b);});

@@ -1,18 +1,27 @@
   <style>
     .l30-conf td,.l30-conf th{font-size:.88rem;padding:6px}
     .l30-tol td,.l30-tol th{font-size:.9rem;padding:5px 6px}
-    .l30-hi{color:var(--good);font-weight:600} .l30-mid{color:var(--ink);font-weight:600} .l30-lo{color:var(--bad);font-weight:600}
+    .l30-hi{color:var(--accent);font-weight:600} .l30-mid{color:var(--ink);font-weight:600} .l30-lo{color:var(--signal);font-weight:600}
+    .l30-conf i{display:block;font-style:normal;font-size:.8rem;letter-spacing:.12em;line-height:1.1}
+    .l30-conf td:first-child{color:var(--ink)}
     .l30-rules{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:8px}
     .l30-cand{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
-    .l30-cand li{font-size:.92rem;border-left:3px solid var(--line);padding:2px 0 2px 8px}
-    .l30-cand li.l30-pass{border-left-color:var(--good)}
-    .l30-cand li.l30-fail{color:var(--muted)}
+    .l30-cand li{position:relative;font-size:.92rem;border-left:3px solid var(--line);border-radius:0 8px 8px 0;padding:6px 10px 6px 2.1rem}
+    .l30-cand li::before{position:absolute;left:.65rem;top:.35rem;font-weight:700;font-size:1rem}
+    .l30-cand li.l30-pass{border-left-color:var(--good);background:var(--good-soft)} .l30-cand li.l30-pass::before{content:"✓";color:var(--good)}
+    .l30-cand li.l30-fail{color:var(--muted)} .l30-cand li.l30-fail::before{content:"✕";color:var(--bad)}
+    .l30-cand li.l30-fail b{color:var(--ink)}
+    .l30-ctl{display:flex;flex-direction:column;gap:4px}
+    .l30-ctl>span:first-child{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+    .l30-ctl b{color:var(--accent);font-size:1.05rem}
+    #l30tolout,#l30out{margin:0;padding:4px 8px;border-radius:6px}
+    .l30-cand li span.is-new{padding-left:6px;border-radius:4px}
     .l30-cand li span{display:block;font-size:.86rem;color:var(--muted)}
     .l30-cand li span.l30-far{color:var(--signal)}
     .l30-dist{display:flex;height:30px;border-radius:6px;overflow:hidden;font-family:var(--f-mono);font-size:.8rem;line-height:30px}
     .l30-dist span{padding:0 8px;white-space:nowrap;overflow:hidden}
     .l30-dist .l30-d1{flex:9;background:var(--accent);color:var(--surface)}
-    .l30-dist .l30-d2{flex:14;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0}
+    .l30-dist .l30-d2{flex:14;background:var(--signal-soft);color:var(--ink)}
     .l30-distcap{font-size:.86rem;color:var(--muted);margin:0}
   </style>
 
@@ -47,9 +56,9 @@
     <p>Один источник — уверенность всегда низкая: сравнить не с чем. Для двух и больше:</p>
     <div class="scroll"><table class="l30-conf">
       <tr><th>Источники между собой</th><th>2–3 источника</th><th>4 и больше</th></tr>
-      <tr><td>сходятся</td><td class="l30-mid">средняя</td><td class="l30-hi">высокая</td></tr>
-      <tr><td>детали расходятся</td><td class="l30-mid">средняя</td><td class="l30-mid">средняя</td></tr>
-      <tr><td>противоречат</td><td class="l30-lo">низкая</td><td class="l30-lo">низкая</td></tr>
+      <tr><td>сходятся</td><td class="l30-mid"><i aria-hidden="true">●●○</i>средняя</td><td class="l30-hi"><i aria-hidden="true">●●●</i>высокая</td></tr>
+      <tr><td>детали расходятся</td><td class="l30-mid"><i aria-hidden="true">●●○</i>средняя</td><td class="l30-mid"><i aria-hidden="true">●●○</i>средняя</td></tr>
+      <tr><td>противоречат</td><td class="l30-lo"><i aria-hidden="true">●○○</i>низкая</td><td class="l30-lo"><i aria-hidden="true">●○○</i>низкая</td></tr>
     </table></div>
     <p><span class="hl">Высокая — только когда источников много и они сходятся.</span> Пороги можно сдвинуть под свою тему, но тоже до анализа<sup class="fn" data-fn="2">2</sup>.</p></div>
 
@@ -73,7 +82,7 @@
 
   <div class="stack"><h2>График: увидеть всё сразу</h2>
     <p>Расхождения и непроверенные строки на графике видны разом. Видна и уверенность: один заполненный кружок в строке — один подтверждённый источник, то есть низкая.</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
       <div class="scroll"><svg class="fit-w" viewBox="0 0 340 318" width="340" height="318" role="img" aria-label="Точечный график: по вертикали семь ферментов, по горизонтали температура оптимума от 30 до 80 градусов. Полоса 60–70 градусов выделена. Заполненные кружки — подтверждённые значения, пустые — не подтверждённые, они не участвуют. У LCC-ICCG две подтверждённые точки, 65 и 72 градуса, помечены как расхождение: 7 градусов больше допуска">
       <text class="sm" x="8" y="14">оптимум температуры по источникам, °C</text>
       <rect x="238" y="36" width="46" height="222" style="fill:var(--accent-soft);stroke:none"/>
@@ -91,13 +100,15 @@
       <g style="fill:var(--accent);stroke:var(--accent);stroke-width:1.5">
         <circle cx="100" cy="52" r="5"/><circle cx="192" cy="108" r="5"/>
         <circle cx="238" cy="136" r="5"/><circle cx="261" cy="136" r="5"/>
-        <circle cx="284" cy="164" r="5"/><circle cx="284" cy="192" r="5"/>
+        <circle cx="284" cy="164" r="5"/><circle cx="284" cy="196" r="5"/>
         <circle cx="261" cy="220" r="5"/><circle cx="293" cy="220" r="5"/>
       </g>
-      <g style="fill:var(--surface);stroke:var(--muted);stroke-width:1.5">
+      <g style="fill:var(--surface);stroke:var(--muted);stroke-width:2">
         <circle cx="146" cy="52" r="5"/><circle cx="146" cy="80" r="5"/>
-        <circle cx="238" cy="164" r="5"/><circle cx="272" cy="192" r="5"/>
+        <circle cx="238" cy="164" r="5"/><circle cx="270" cy="188" r="5"/>
       </g>
+      <path d="M261 211V206H284V211" style="fill:none;stroke:var(--ink);stroke-width:1.5"/>
+      <text class="sm" x="255" y="210" text-anchor="end">допуск 5 °C</text>
       <path d="M266 220H288" style="stroke:var(--signal);stroke-width:2.5"/>
       <text class="sm" x="330" y="243" text-anchor="end" style="fill:var(--signal)">расхождение: 7 °C</text>
       <path class="ax" d="M100 258H330"/>
@@ -105,10 +116,10 @@
       <text class="sm" x="100" y="277" text-anchor="middle">30</text><text class="sm" x="146" y="277" text-anchor="middle">40</text><text class="sm" x="192" y="277" text-anchor="middle">50</text><text class="sm" x="238" y="277" text-anchor="middle">60</text><text class="sm" x="284" y="277" text-anchor="middle">70</text><text class="sm" x="326" y="277" text-anchor="middle">80</text>
       <circle cx="14" cy="302" r="5" style="fill:var(--accent);stroke:var(--accent);stroke-width:1.5"/>
       <text class="sm" x="24" y="306">подтверждено</text>
-      <circle cx="132" cy="302" r="5" style="fill:var(--surface);stroke:var(--muted);stroke-width:1.5"/>
+      <circle cx="132" cy="302" r="5" style="fill:var(--surface);stroke:var(--muted);stroke-width:2"/>
       <text class="sm" x="142" y="306">не подтверждено — не в счёт</text>
     </svg></div>
-      <figcaption><b>Как читать.</b> Строка — фермент, точка — одно измерение из одного источника. Заполненный кружок — строка подтверждена; пустой — нет, и в выводах она не участвует. Полоса — наш диапазон; оранжевая черта у LCC-ICCG — две точки дальше допуска друг от друга.</figcaption>
+      <figcaption><b>Как читать.</b> Строка — фермент, точка — одно измерение из одного источника. Заполненный кружок — строка подтверждена; пустой — нет, и в выводах она не участвует. Полоса — наш диапазон; скобка над LCC-ICCG — допуск 5&nbsp;°C, оранжевая черта — две точки дальше допуска друг от друга.</figcaption>
     </figure>
     <p>Это точечный график «фермент × температура» на мини-базе урока 29 (данные условные). Пустые кружки нужны, иначе картинка делает непроверенное число таким же убедительным<sup class="fn" data-fn="3">3</sup>.</p>
     <p>Свой график вы получите файлом: агент строит его кодом из сохранённого ответа и кладёт картинку в папку проекта. Откройте её двойным щелчком.</p></div>
@@ -131,7 +142,7 @@
       <p class="out" id="l30out"></p>
       <p class="why" id="l30why"></p>
       <ul class="l30-cand" id="l30cand"></ul>
-      <label style="display:flex;flex-direction:column;gap:4px">Допуск для температуры:<span style="display:flex;align-items:center;gap:10px"><input type="range" id="l30tol" min="2" max="10" step="1" value="5" style="flex:1"> <b><span id="l30tv">5</span> °C</b></span></label>
+      <label class="l30-ctl"><span>Допуск для температуры <b><span id="l30tv">5</span> °C</b></span><input type="range" id="l30tol" min="2" max="10" step="1" value="5"></label>
       <p class="why" id="l30tolout"></p>
       <div class="row"><button type="button" id="l30reset">Сначала</button></div>
       <p class="try-note">Данные условные: названия ферментов настоящие, температуры близки к опубликованным по порядку величин, форма ПЭТ, источники и лаборатории придуманы для упражнения.</p></div>
@@ -223,7 +234,8 @@ var C=[
  {name:'ThermoPETase', rows:[[60,'S4','модельное']], lab:{S4:'L5'}, opt:[]}
 ];
 var CR=[['real','на настоящем ПЭТ (плёнка, порошок), не на модельном веществе'],['two','не меньше двух независимых источников']];
-var crit={real:true,two:true};
+var crit={real:true,two:true}, prevFar=null, prevOut=null;
+function flash(x){ if(!x) return; x.classList.remove('is-new'); void x.offsetWidth; x.classList.add('is-new'); }
 function ist(n){var d=n%10,h=n%100; return (d===1&&h!==11)?'источник':((d>=2&&d<=4&&(h<12||h>14))?'источника':'источников');}
 function draw(){
   var tol=parseInt($('l30tol').value,10); $('l30tv').textContent=String(tol);
@@ -267,6 +279,9 @@ function draw(){
   $('l30out').textContent=out; $('l30why').textContent=why;
   var lc=C[1], dd=Math.abs(lc.opt[1]-lc.opt[0]);
   $('l30tolout').textContent='Оптимумы LCC-ICCG, '+lc.opt[0]+' и '+lc.opt[1]+' °C, различаются на '+dd+' °C: при допуске '+tol+' °C это '+(dd>tol?'расхождение — в отчёт.':'«сходятся». Список кандидатов от допуска не зависит: он меняет то, что вы назовёте спором.');
+  // только что изменившееся
+  var far=dd>tol; if(prevFar!==null && far!==prevFar){ flash($('l30tolout')); flash(ul.children[1] && ul.children[1].querySelector('span:last-child')); } prevFar=far;
+  if(prevOut!==null && out!==prevOut) flash($('l30out')); prevOut=out;
 }
 function buildCrit(){
   var box=$('l30crit'); box.textContent='';

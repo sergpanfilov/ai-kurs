@@ -1,14 +1,54 @@
   <style>
     .l20-file{margin:0;font-family:var(--f-mono);font-size:.8rem;line-height:1.5;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
     .l20-file b{color:var(--accent);font-weight:600}
-    .l20-soft{border-color:var(--accent) !important}
-    .l20-way{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface)}
+    .l20-way{border:1px solid var(--line);border-radius:10px;padding:12px 14px 14px;background:var(--surface);display:flex;flex-direction:column;gap:10px}
     .l20-way b{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:500}
-    .l20-way ol{list-style:none;margin:8px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 5px;align-items:center}
-    .l20-way li{font-family:var(--f-mono);font-size:.8rem;border:1px solid var(--line);border-radius:6px;padding:4px 8px;color:var(--muted)}
-    .l20-way li.l20-ar{border:0;padding:0}
-    .l20-way li.l20-now{border:2px solid var(--accent);color:var(--ink);font-weight:600}
+    .l20-way ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;counter-reset:l20w}
+    .l20-way li{counter-increment:l20w;position:relative;display:flex;flex-direction:column;justify-content:center;min-height:46px;font-family:var(--f-mono);font-size:.76rem;line-height:1.3;border:1px solid var(--line);border-radius:6px;padding:5px 7px;color:var(--muted)}
+    .l20-way li::before{content:counter(l20w);font-size:.68rem;line-height:1.2}
+    .l20-way li:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);font-size:.8rem;color:var(--muted)}
+    .l20-way li.l20-now{border:2px solid var(--accent);background:var(--accent-soft);color:var(--ink);font-weight:600}
+    .l20-way li.l20-now::before{color:var(--accent)}
     .l20-way p{margin:0;font-size:.9rem;line-height:1.45;color:var(--muted)}
+    @media (max-width:759px){.l20-way li:nth-child(3)::after{content:none}}
+    @media (min-width:760px){.l20-way ol{grid-template-columns:repeat(6,minmax(0,1fr))}}
+    .l20-tag{display:inline-block;margin-right:6px;padding:1px 8px;border-radius:999px;font-family:var(--f-mono);font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;vertical-align:.08em;background:var(--accent);color:var(--surface);border:1.5px solid var(--accent)}
+    .l20-vs-ask .l20-tag,.l20-req .l20-tag{background:transparent;color:var(--signal);border:1.5px dashed var(--signal)}
+    .l20-vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .l20-vs>div{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:12px;border-radius:10px;background:var(--surface);line-height:1.4}
+    .l20-vs-lock{border:2px solid var(--accent);background:var(--accent-soft) !important}
+    .l20-vs-ask{border:2px dashed var(--signal)}
+    .l20-vs b{font-size:.98rem}
+    .l20-vs .mono{font-size:.76rem;color:var(--muted);overflow-wrap:anywhere}
+    .l20-vs p{margin:0;font-size:.9rem}
+    @media (max-width:600px){
+      table.cards.l20-lock>tbody>tr:not(.cards-head){padding:9px 12px}
+      table.cards.l20-lock>tbody>tr+tr{margin-top:8px}
+      table.cards.l20-lock>tbody>tr.l20-req{border-style:dashed;border-color:var(--signal)}
+      table.cards.l20-lock td:nth-child(2)::before{content:none}
+      table.cards.l20-lock td.l20-none{display:none}
+      table.cards.l20-lock td:nth-child(3){font-size:.88rem;color:var(--muted)}
+      table.cards.l20-lock td:nth-child(3)::before{display:inline;margin-right:6px}
+    }
+    .l20-seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .l20-seg button{padding-inline:8px;line-height:1.25}
+    .l20-seg button small{display:block;font-family:var(--f-mono);font-size:.72rem;font-weight:400;opacity:.85}
+    .l20-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .l20-nav span{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin-left:4px}
+    .l20-nav button{width:44px;min-width:44px;padding:0;font-family:var(--f-mono);font-weight:600}
+    .l20-nav button.l20-done{border-color:var(--good);color:var(--good)}
+    .l20-nav button.l20-miss{border-color:var(--bad);color:var(--bad)}
+    .l20-nav button.l20-cur{box-shadow:0 0 0 3px var(--accent-soft);border-width:2px;border-color:var(--accent)}
+    .l20-field{margin:0;font-family:var(--f-display);font-size:1.08rem;font-weight:600}
+    .l20-opts button{white-space:normal;min-height:48px;padding:10px 14px;line-height:1.45}
+    .l20-opts button.l20-soft{border-color:var(--accent);color:var(--ink);background:var(--accent-soft)}
+    .l20-opts button.l20-soft::before{content:"✓ ";font-weight:600;color:var(--accent)}
+    .l20-opts button.l20-dim{opacity:.6}
+    .l20-sum{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+    .l20-sum li{display:grid;grid-template-columns:1.6rem minmax(0,1fr);gap:2px 6px;padding:8px 10px;border-radius:8px;background:var(--bg);font-size:.9rem;line-height:1.4}
+    .l20-sum li i{grid-row:span 2;font-style:normal;font-weight:700}
+    .l20-sum li.ok i{color:var(--good)} .l20-sum li.no i{color:var(--bad)}
+    .l20-sum li b{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 5 · Урок 20 из 31 · 30 минут</span>
     <h1>Анатомия агента</h1>
@@ -19,11 +59,11 @@
     <div class="l20-way" role="group" aria-label="Конвейер модуля 5: сборщик, склейка кодом, чистильщик, критик, ваша выборка, принятые таблицы. Сегодня — карточки сборщика и критика">
       <b>Конвейер модуля · вы здесь</b>
       <ol>
-        <li class="l20-now">сборщик</li><li class="l20-ar" aria-hidden="true">→</li>
-        <li>склейка кодом</li><li class="l20-ar" aria-hidden="true">→</li>
-        <li>чистильщик</li><li class="l20-ar" aria-hidden="true">→</li>
-        <li class="l20-now">критик</li><li class="l20-ar" aria-hidden="true">→</li>
-        <li>ваша выборка</li><li class="l20-ar" aria-hidden="true">→</li>
+        <li class="l20-now">сборщик</li>
+        <li>склейка кодом</li>
+        <li>чистильщик</li>
+        <li class="l20-now">критик</li>
+        <li>ваша выборка</li>
         <li>принятые таблицы</li>
       </ol>
       <p>За пять уроков вы соберёте этот конвейер в Claude Code, в папке проекта. Сегодня — карточки для двух обведённых звеньев. Остальные слова объяснят уроки 21–23.</p>
@@ -125,7 +165,10 @@ model: sonnet
   <div class="stack"><h2>Права: замок и просьба</h2>
     <p><b>Права</b> отвечают на вопрос «что агент делает сам, что — после вашего „да“, а что запрещено совсем». Общую строгость задаёт режим (урок 14). Точнее работают <b>правила прав</b> — три списка: запретить, спросить, разрешить. Они лежат в файле <span class="mono">.claude/settings.json</span> проекта, там же, где запрет из урока 14. Дописывает их агент по вашей просьбе (в терминале есть и команда <span class="mono">/permissions</span>). В примере — два списка из трёх:</p>
     <pre class="l20-file">"deny": ["Read(./.env)"],
-"ask":  ["Edit(./data/measurements.csv)", "Bash(rm *)"]</pre>
+"ask":  [
+  "Edit(./data/measurements.csv)",
+  "Bash(rm *)"
+]</pre>
     <ul class="plain">
       <li><span class="mono">deny</span> — запретить. <span class="mono">Read(./.env)</span> — чтение файла с секретами.</li>
       <li><span class="mono">ask</span> — спросить. <span class="mono">Edit(./data/measurements.csv)</span> — любая правка или перезапись принятой таблицы: только после вашего «да».</li>
@@ -133,11 +176,10 @@ model: sonnet
     </ul>
     <p>Порядок проверки — на схеме урока 14: запрет первым, «спросить» срабатывает в любом режиме.</p>
     <p>Теперь осторожно со словом «правила»: в проекте есть два разных файла, и работают они по-разному.</p>
-    <div class="scroll"><table class="cards">
-      <tr><th>Что это</th><th>Где лежит</th><th>Замок или просьба</th></tr>
-      <tr><td>Правила прав</td><td><span class="mono">.claude/settings.json</span></td><td><b>замок:</b> программа не даст сделать запрещённое</td></tr>
-      <tr><td>Файл правил и инструкция агента</td><td><span class="mono">CLAUDE.md</span>, текст роли</td><td><b>просьба:</b> текст в окне; агент обычно выполняет, но это не гарантия</td></tr>
-    </table></div>
+    <div class="l20-vs" role="group" aria-label="Два разных файла: правила прав — замок, файл правил и инструкция — просьба">
+      <div class="l20-vs-lock"><span class="l20-tag">замок</span><b>Правила прав</b><span class="mono">.claude/<wbr>settings.json</span><p>программа не даст сделать запрещённое</p></div>
+      <div class="l20-vs-ask"><span class="l20-tag">просьба</span><b>Файл правил и инструкция агента</b><span class="mono">CLAUDE.md, текст роли</span><p>текст в окне; агент обычно выполняет, но это не гарантия</p></div>
+    </div>
     <p>Главное ограничение правил прав: их нельзя написать «только для сборщика». <span class="hl">Они действуют на всех агентов проекта</span> — и на главного, и на субагентов<sup class="fn" data-fn="5">5</sup>.</p>
     <p>Различают агентов две вещи. <b>Замок</b> — список инструментов в карточке: у критика нет инструмента правки, и никакая инструкция его не добавит. <b>Просьба</b> — текст инструкции: «пиши только в свой файл». Документация Claude Code прямо называет такой текст контекстом, а не принудительной настройкой.</p>
     <details class="ask">
@@ -145,14 +187,14 @@ model: sonnet
       <p>Просьба: правилом прав запереть на один файл можно только всех агентов сразу. Подстраховка — порядок работы: ошибка сборщика останется в черновике, а дальше её ждут критик и ваша выборка.</p>
     </details>
     <div class="panel"><span class="eyebrow">Замок или просьба: таблица проекта</span>
-    <div class="scroll"><table class="cards">
+    <div class="scroll"><table class="cards l20-lock">
       <tr><th>Что нужно</th><th>Чем держится</th><th>Подстраховка</th></tr>
-      <tr><td>Критик не правит файлы</td><td><b>замок:</b> в <span class="mono">tools</span> только Read и Grep</td><td>—</td></tr>
-      <tr><td>Аналитик только читает</td><td><b>замок:</b> Read, Grep, Glob</td><td>—</td></tr>
-      <tr><td>Принятую таблицу не меняют без «да»</td><td><b>замок:</b> правило «спросить»</td><td>история изменений (урок 25)</td></tr>
-      <tr><td>Файлы не удаляют без «да»</td><td><b>замок:</b> правило «спросить»; у субагентов нет Bash</td><td>история изменений</td></tr>
-      <tr><td>Сборщик пишет только свой файл</td><td><b>просьба</b></td><td>ошибка останется в черновике: дальше критик и ваша выборка</td></tr>
-      <tr><td>Чистильщик не стирает строки</td><td><b>просьба</b></td><td>число строк до и после сверяет код</td></tr>
+      <tr><td>Критик не правит файлы</td><td><span class="l20-tag">замок</span> в <span class="mono">tools</span> только Read и Grep</td><td class="l20-none">—</td></tr>
+      <tr><td>Аналитик только читает</td><td><span class="l20-tag">замок</span> Read, Grep, Glob</td><td class="l20-none">—</td></tr>
+      <tr><td>Принятую таблицу не меняют без «да»</td><td><span class="l20-tag">замок</span> правило «спросить»</td><td>история изменений (урок 25)</td></tr>
+      <tr><td>Файлы не удаляют без «да»</td><td><span class="l20-tag">замок</span> правило «спросить»; у субагентов нет Bash</td><td>история изменений</td></tr>
+      <tr class="l20-req"><td>Сборщик пишет только свой файл</td><td><span class="l20-tag">просьба</span></td><td>ошибка останется в черновике: дальше критик и ваша выборка</td></tr>
+      <tr class="l20-req"><td>Чистильщик не стирает строки</td><td><span class="l20-tag">просьба</span></td><td>число строк до и после сверяет код</td></tr>
     </table></div></div>
     <p>Правила прав — надёжный замок для обычных действий. Обойти их может программа, которую агент напишет и запустит сам. Поэтому у субагентов проекта в списке нет Bash, а запуск программы главным агентом в режиме Accept edits требует вашего «да»<sup class="fn" data-fn="6">6</sup>.</p>
     <p>Когда правила прав записаны, правило «только Manual» из урока 14 заканчивается: переходите в Accept edits. Выигрыш — не жать «да» на каждой записи черновика. Плата — правку вы увидите уже сделанной.</p>
@@ -166,9 +208,10 @@ model: sonnet
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Заполните карточки сборщика и критика для проекта ферментов. Неверные варианты здесь не глупые: у каждого есть своё удобство. Выберите вариант — разбор под ним назовёт цену этого удобства. Ответ можно поменять.</p>
-      <div class="row" id="l20tabs"></div>
-      <div id="l20card" class="stack" style="gap:16px"></div>
-      <div class="row"><button type="button" id="l20reset">Сначала</button><span class="out" id="l20out"></span></div>
+      <div class="l20-seg" id="l20tabs"></div>
+      <div class="l20-nav" id="l20nav"></div>
+      <div id="l20card" class="stack" style="gap:10px" aria-live="polite"></div>
+      <div class="row"><button type="button" id="l20reset">Сначала</button></div>
       <p class="try-note">Варианты условные. Разбор — мнение автора курса: где годятся два варианта, приняты оба. «Сначала» очищает открытую карточку.</p>
     </div>
     <p><b>Что вы увидели.</b> У каждого лишнего права или лишнего знания есть удобство — и цена. Карточку заполняют от задачи: что агенту нужно, чтобы её сделать, и ничего сверх.</p>
@@ -305,33 +348,59 @@ var CARDS=[
   ],1,0]
  ]}
 ];
-var cur=0, ans=[{},{}];
+var cur=0, fld=[0,0], ans=[{},{}];
 function good(f,a){return a===f[2]||a===f[3];}
+function filled(i){var n=0; CARDS[i].fields.forEach(function(f,fi){if(ans[i][fi]!==undefined) n++;}); return n;}
 function draw(){
   var tabs=$('l20tabs'); tabs.textContent='';
-  CARDS.forEach(function(c,i){var b=el('button',i===cur?'primary':null,'Карточка: '+c.name); b.type='button'; b.addEventListener('click',function(){cur=i; draw();}); tabs.appendChild(b);});
-  var box=$('l20card'); box.textContent='';
-  CARDS[cur].fields.forEach(function(f,fi){
-    var wrap=el('div','stack'); wrap.style.gap='6px';
-    wrap.appendChild(el('span','eyebrow',(fi+1)+'. '+f[0]));
-    var opts=el('div','opts'), a=ans[cur][fi];
-    f[1].forEach(function(o,oi){
-      var b=el('button',null,o[0]); b.type='button';
-      if(a===oi) b.classList.add(oi===f[2]?'right':(oi===f[3]?'l20-soft':'wrong'));
-      b.addEventListener('click',function(){ans[cur][fi]=oi; draw();});
-      opts.appendChild(b);
-    });
-    wrap.appendChild(opts);
-    if(a!==undefined){
-      var head=a===f[2]?'Лучший вариант. ':(a===f[3]?'Тоже годится. ':'Не лучший выбор. ');
-      wrap.appendChild(el('div','verdict '+(good(f,a)?'ok':'no'),head+f[1][a][1]+(good(f,a)?'':' Попробуйте другой вариант.')));
-    }
-    box.appendChild(wrap);
+  CARDS.forEach(function(c,i){
+    var n=filled(i), b=el('button',i===cur?'primary':null,c.name); b.type='button';
+    b.setAttribute('aria-pressed',i===cur?'true':'false');
+    b.appendChild(el('small',null,n?('заполнено '+n+' из 4'):'не начата'));
+    b.addEventListener('click',function(){cur=i; draw();}); tabs.appendChild(b);
   });
-  var parts=CARDS.map(function(c,i){var n=0; c.fields.forEach(function(f,fi){if(ans[i][fi]!==undefined) n++;}); return c.name+': '+(n?'заполнено полей — '+n+' из 4':'не начата');});
-  $('l20out').textContent=parts.join(' · ');
+  var card=CARDS[cur], fi=fld[cur], f=card.fields[fi], a=ans[cur][fi];
+  var nav=$('l20nav'); nav.textContent='';
+  card.fields.forEach(function(g,gi){
+    var x=ans[cur][gi], b=el('button',null,String(gi+1)); b.type='button';
+    b.setAttribute('aria-label','Поле '+(gi+1)+': '+g[0]+(x===undefined?'':(good(g,x)?', годится':', не лучший выбор')));
+    if(x!==undefined) b.classList.add(good(g,x)?'l20-done':'l20-miss');
+    if(gi===fi){ b.classList.add('l20-cur'); b.setAttribute('aria-current','step'); }
+    b.addEventListener('click',function(){fld[cur]=gi; draw();});
+    nav.appendChild(b);
+  });
+  nav.appendChild(el('span',null,'поле '+(fi+1)+' из 4'));
+  var box=$('l20card'); box.textContent='';
+  box.appendChild(el('p','l20-field',f[0]));
+  var opts=el('div','opts l20-opts');
+  f[1].forEach(function(o,oi){
+    var b=el('button',null,o[0]); b.type='button';
+    if(a===oi) b.classList.add(oi===f[2]?'right':(oi===f[3]?'l20-soft':'wrong'));
+    else if(a!==undefined) b.classList.add('l20-dim');
+    b.addEventListener('click',function(){ans[cur][fi]=oi; draw();});
+    opts.appendChild(b);
+  });
+  box.appendChild(opts);
+  if(a!==undefined){
+    var head=a===f[2]?'Лучший вариант. ':(a===f[3]?'Тоже годится. ':'Не лучший выбор. ');
+    var v=el('div','verdict '+(good(f,a)?'ok':'no')); v.appendChild(el('b',null,head)); v.appendChild(document.createTextNode(f[1][a][1]+(good(f,a)?'':' Попробуйте другой вариант.')));
+    box.appendChild(v);
+    var nx=-1; for(var k=1;k<=4;k++){var j=(fi+k)%4; if(ans[cur][j]===undefined){nx=j;break;}}
+    if(nx>=0){
+      var go=el('button','primary','Дальше: поле '+(nx+1)+' — '+card.fields[nx][0]+' →'); go.type='button';
+      go.addEventListener('click',function(){fld[cur]=nx; draw(); $('l20nav').scrollIntoView({block:'nearest',behavior:'smooth'});});
+      box.appendChild(go);
+    } else {
+      box.appendChild(el('span','eyebrow','Карточка «'+card.name+'» собрана'));
+      var ul=el('ul','l20-sum');
+      card.fields.forEach(function(g,gi){var x=ans[cur][gi], li=el('li',good(g,x)?'ok':'no'); li.appendChild(el('i',null,good(g,x)?'✓':'✕')); li.appendChild(el('b',null,(gi+1)+'. '+g[0])); li.appendChild(el('span',null,g[1][x][0])); ul.appendChild(li);});
+      box.appendChild(ul);
+      var other=1-cur;
+      if(filled(other)<4){var ob=el('button','primary','Теперь карточка: '+CARDS[other].name+' →'); ob.type='button'; ob.addEventListener('click',function(){cur=other; draw(); $('l20tabs').scrollIntoView({block:'nearest',behavior:'smooth'});}); box.appendChild(ob);}
+    }
+  }
 }
-$('l20reset').addEventListener('click',function(){ans[cur]={}; draw();});
+$('l20reset').addEventListener('click',function(){ans[cur]={}; fld[cur]=0; draw();});
 draw();
 })();
 </script>

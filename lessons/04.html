@@ -12,7 +12,8 @@
 .l04-pips span{margin-left:6px}
 .l04-q{font-family:var(--f-display);font-size:1.1rem;line-height:1.4;font-weight:500;min-height:2.8em}
 .l04-ans{display:block;width:100%;text-align:left;white-space:normal;line-height:1.4;padding:12px 14px;border-color:var(--line);color:var(--ink);min-height:52px}
-.l04-ans:hover{background:var(--surface);border-color:var(--accent)}
+.l04-ans:hover{background:var(--surface)}
+@media (hover:hover){.l04-ans:hover:not(:disabled){border-color:var(--accent)}}
 .l04-ans:disabled{opacity:.45}
 .l04-ans.l04-picked,.l04-ans.l04-picked:disabled{opacity:1;border:2px solid var(--accent);background:var(--accent-soft);padding:11px 13px}
 .l04-ans.l04-picked::after{content:"принято";float:right;margin-left:10px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
@@ -35,7 +36,7 @@
   <div class="stack"><h2>Угадыватель текста ещё не помощник</h2>
     <p>Из урока 3: после <b>предобучения</b> модель хорошо угадывает следующий токен любого текста. Но спросите такую модель «Как очистить фермент от примесей белка?» — и она, скорее всего, продолжит <i>списком похожих вопросов</i>: «Как хранить фермент? Как измерить активность?…» На форумах за вопросом часто идут другие вопросы, и это самое правдоподобное продолжение.</p>
     <p>Чтобы получить помощника, готовую модель <b>дообучают</b>. <span class="hl">Механизм тот же — градиентный спуск, меняются данные и то, что считается ошибкой.</span> Этапов обычно три, и у каждого есть своя польза и свой побочный эффект. Схема — оглавление урока.</p>
-    <figure class="fig wide">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 438" width="340" height="438" role="img" aria-label="Четыре этапа сверху вниз: предобучение, образцы, предпочтения, проверяемая награда. У каждого — что подают, чему модель учится и какой побочный эффект">
       <g>
         <rect class="box" x="6" y="6" width="328" height="84" rx="6"/>
@@ -214,7 +215,7 @@ var P=[
 function pips(){
   var box=$('l4pips'); box.textContent='';
   P.forEach(function(p,i){ box.appendChild(el('i', i<pick.length?'l04-on':(i===cur?'l04-cur':''))); });
-  box.appendChild(el('span',null, cur<P.length ? 'пара '+(cur+1)+' из '+P.length : 'оценены все '+P.length));
+  box.appendChild(el('span',null, cur<P.length ? 'пара '+(cur+1)+' из '+P.length+(pick.length>cur?' · принято':'') : 'оценены все '+P.length));
 }
 function draw(){
   var done=cur>=P.length;

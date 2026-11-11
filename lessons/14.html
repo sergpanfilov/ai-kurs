@@ -1,17 +1,40 @@
   <style>
-    .l14-scr{font-family:var(--f-mono);font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
-    .l14-scr b{color:var(--accent);font-weight:600}
-    .l14-scr i{color:var(--muted);font-style:normal}
-    .l14-modes{display:flex;flex-wrap:wrap;gap:6px}
-    .l14-card{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
-    .l14-card:first-child{border-top:0}
+    /* три просьбы: части экрана подписаны — инструмент, что именно, ответы */
+    .l14-scr{font-family:var(--f-mono);font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:6px}
+    .l14-scr .what::before{display:block;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--signal);margin-bottom:1px}
+    .l14-scr .tl b{color:var(--accent);font-weight:600}
+    .l14-scr .what{white-space:pre-wrap;border-left:3px solid var(--signal);background:var(--surface);padding:4px 8px;border-radius:0 4px 4px 0}
+    .l14-scr .what::before{content:"что именно — читайте это"}
+    .l14-scr .what i{color:var(--muted);font-style:normal}
+    .l14-scr .ans{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+    .l14-scr .ans span:not(.pr){border:1px solid var(--line);background:var(--surface);border-radius:5px;padding:1px 7px}
+    .l14-scr .ans .pr{color:var(--muted)}
+    pre.l14-scr{display:block;white-space:pre-wrap}
+    pre.l14-scr::before{content:none}
+    /* шаги запуска: номера в кружках на одной линии */
+    .l14-steps{list-style:none;margin:0;padding:0;counter-reset:l14s;display:flex;flex-direction:column;gap:10px}
+    .l14-steps>li{counter-increment:l14s;position:relative;padding-left:2.5rem;min-height:1.8rem}
+    .l14-steps>li::before{content:counter(l14s);position:absolute;left:0;top:.05em;width:1.7rem;height:1.7rem;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);background:var(--bg);font:600 .82rem/1 var(--f-mono);display:grid;place-items:center;z-index:1}
+    .l14-steps>li:not(:last-child)::after{content:"";position:absolute;left:calc(.85rem - 1px);top:1.7rem;bottom:-12px;width:2px;background:var(--line)}
+    /* интерактив: режим — запрет — сводка — карточки */
+    .l14-k{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+    .l14-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .l14-modes button{padding-inline:6px;text-align:center}
+    #v-lesson .l14-denyl{display:flex;gap:10px;align-items:center;min-height:52px;padding:8px 12px;border:1.5px dashed var(--signal);border-radius:8px;background:var(--signal-soft);font-size:.92rem;line-height:1.4}
+    .l14-denyl:has(input:checked){border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+    .l14-sum{margin:0;font-family:var(--f-mono);font-size:.86rem;padding:6px 10px;border-radius:6px;background:var(--bg)}
+    #l14list{display:flex;flex-direction:column;gap:8px}
+    .l14-card{display:flex;flex-direction:column;gap:6px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+    .l14-card.ask{border-color:var(--accent)}
     .l14-card .l14-req{font-family:var(--f-mono);font-size:.84rem;overflow-wrap:anywhere}
-    .l14-card .l14-st{font-size:.86rem;color:var(--muted)}
-    .l14-card .row{gap:6px}
-    .l14-card button{padding:5px 10px;font-size:.86rem}
-    .l14-ok,.l14-card .l14-st.l14-ok{color:var(--good)} .l14-bad,.l14-card .l14-st.l14-bad{color:var(--bad)}
-    .l14-denyl{display:flex;gap:8px;align-items:center;min-height:36px;font-size:.92rem}
-    .l14-steps{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:4px}
+    .l14-card .l14-req b{color:var(--accent);font-weight:600;margin-right:.5em}
+    .l14-card .l14-st{font-size:.88rem;color:var(--muted);line-height:1.45}
+    .l14-card .l14-st.ask{color:var(--accent);font-weight:500}
+    .l14-card .l14-ans{display:flex;gap:6px}
+    .l14-card .l14-ans button{flex:1 1 auto;padding:6px 8px;min-height:40px;text-align:center;font-size:.9rem;white-space:nowrap}
+    .l14-card .l14-ans button:last-child{flex-grow:2}
+    .l14-card .l14-ans button:disabled{opacity:.4}
+    .l14-card .verdict{font-size:.9rem}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 3 · Урок 14 из 31 · 30 минут</span>
     <h1>Агент в папке: запуск и разрешения</h1>
@@ -44,23 +67,14 @@
     <p>Просьб три вида. В каждой сверху — название инструмента, ниже — <b>что именно</b> агент хочет сделать, внизу — ваши ответы: <span class="mono">Yes</span> — да, <span class="mono">Yes, and don't ask again…</span> — да, и больше не спрашивать, <span class="mono">No</span> — нет.</p>
     <div class="panel"><span class="eyebrow">Три просьбы — как на экране</span>
       <p><b>1. Правка файла</b> — инструмент <span class="mono">Write</span>, «записать файл». Смотрите: тот ли файл и то ли содержимое.</p>
-      <pre class="l14-scr"><b>Write</b>  hello.md
-<i># База ферментов
+      <div class="l14-scr"><div class="tl"><b>Write</b>  hello.md</div><div class="what"><i># База ферментов
 - собрать записи из открытых баз
-- проверить каждую по источнику</i>
-Do you want to create hello.md?
-› Yes · Yes, allow all edits during this session · No</pre>
+- проверить каждую по источнику</i></div><div class="l14-q">Do you want to create hello.md?</div><div class="ans"><span class="pr" aria-hidden="true">›</span><span>Yes</span><span>Yes, allow all edits during this session</span><span>No</span></div></div>
       <p><b>2. Команда</b> — инструмент <span class="mono">Bash</span>, «запустить команду». Первое слово — что делается, дальше — с чем: <span class="mono">mkdir</span> — создать папку, <span class="mono">mv</span> — переместить, <span class="mono">cp</span> — скопировать, <span class="mono">rm</span> — <b>удалить</b>, <span class="mono">python …</span> — запустить программу.</p>
-      <pre class="l14-scr"><b>Bash command</b>
-mkdir data
-<i>Create the data folder</i>
-Do you want to proceed?
-› Yes · Yes, and don't ask again for: mkdir * · No</pre>
+      <div class="l14-scr"><div class="tl"><b>Bash command</b></div><div class="what">mkdir data
+<i>Create the data folder</i></div><div class="l14-q">Do you want to proceed?</div><div class="ans"><span class="pr" aria-hidden="true">›</span><span>Yes</span><span>Yes, and don't ask again for: mkdir *</span><span>No</span></div></div>
       <p><b>3. Обращение к адресу</b> — инструмент <span class="mono">Fetch</span>, «открыть адрес». Смотрите на имя сайта до первой косой черты: это тот сайт, которого вы ждали?</p>
-      <pre class="l14-scr"><b>Fetch</b>
-https://rest.uniprot.org/uniprotkb/G9BY57.json
-Claude wants to fetch content from rest.uniprot.org
-› Yes · Yes, and don't ask again for rest.uniprot.org · No</pre>
+      <div class="l14-scr"><div class="tl"><b>Fetch</b></div><div class="what">https://rest.uniprot.org/uniprotkb/G9BY57.json</div><div class="l14-q">Claude wants to fetch content from rest.uniprot.org</div><div class="ans"><span class="pr" aria-hidden="true">›</span><span>Yes</span><span>Yes, and don't ask again for rest.uniprot.org</span><span>No</span></div></div>
       <p class="why">Формулировки — по документации и терминальной версии Claude Code, ноябрь 2026. В приложении те же три части показаны карточкой с кнопками; надписи на кнопках меняются от версии к версии.</p>
     </div>
     <p><span class="hl">Не понимаете строку — ответьте «нет» и напишите: «объясни эту команду по частям».</span> После «нет» агент останавливается и ждёт вашего слова; объяснит — попросит снова.</p>
@@ -84,52 +98,56 @@ Claude wants to fetch content from rest.uniprot.org
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
       <p>Шесть действий агента в учебной папке. Выберите режим — и увидите, о каких из них вас вообще спросят. На каждую просьбу ответьте сами.</p>
+      <span class="l14-k">1. Режим разрешений</span>
       <div class="l14-modes" id="l14modes"></div>
+      <span class="l14-k">2. Правило запрета — половина смысла интерактива</span>
       <label class="l14-denyl"><input type="checkbox" id="l14deny"> <span>поставить запрет на чтение <span class="mono">.env</span> — правило <span class="mono">Read(./.env)</span></span></label>
+      <p class="l14-sum" id="l14out" aria-live="polite"></p>
       <div id="l14list"></div>
-      <div class="row"><span class="out" id="l14out"></span><button id="l14reset" type="button">Сначала</button></div>
+      <div class="row"><button id="l14reset" type="button">Сначала</button></div>
       <p class="try-note">Действия условные, формулировки просьб настоящие; режимы — по документации Claude Code, ноябрь 2026. Что решит классификатор в Auto, заранее знать нельзя — показано самое вероятное.</p>
     </div>
     <p><b>Что вы увидели.</b> Режим меняет число вопросов, но не всё: чтение в папке проходит без вопроса в любом режиме, а запрет останавливает действие тоже в любом. Так получается потому, что перед каждым действием обвязка проходит одну и ту же цепочку:</p>
     <figure class="fig">
       <div class="scroll"><svg class="fit-w" viewBox="0 0 340 402" width="340" height="402" role="img" aria-label="Что происходит, когда агент хочет действовать. Агент пишет вызов. Первые ворота: есть ли правило «запретить»? Да — отказ. Вторые ворота: есть ли правило «спросить»? Да — вопрос вам. Третьи ворота: разрешает ли режим? Да — обвязка выполняет без вопроса; нет — вопрос вам. На вопрос вы отвечаете «да» — выполнение, «нет» — агент останавливается.">
         <g>
-          <rect class="box" x="6" y="6" width="200" height="52" rx="6"/>
+          <rect class="box" x="6" y="6" width="210" height="52" rx="6"/>
           <text x="16" y="28" font-size="14" font-weight="600">Агент пишет вызов</text>
           <text class="sm" x="16" y="46">правка · команда · адрес</text>
-          <rect class="box" x="6" y="90" width="200" height="52" rx="6"/>
+          <rect class="box" x="6" y="90" width="210" height="52" rx="6" style="stroke:var(--accent);stroke-width:2;fill:var(--accent-soft)"/>
           <text x="16" y="112" font-size="14" font-weight="600">1. Запрещено?</text>
-          <text class="sm" x="16" y="130">правило «запретить»: .env</text>
-          <rect class="box" x="6" y="174" width="200" height="52" rx="6"/>
+          <text class="sm" x="16" y="130" style="fill:var(--ink)">правило «запретить»: .env</text>
+          <rect class="box" x="6" y="174" width="210" height="52" rx="6"/>
           <text x="16" y="196" font-size="14" font-weight="600">2. Велено спросить?</text>
           <text class="sm" x="16" y="214">правило «спросить»: удаление</text>
-          <rect class="box" x="6" y="258" width="200" height="52" rx="6"/>
+          <rect class="box" x="6" y="258" width="210" height="52" rx="6"/>
           <text x="16" y="280" font-size="14" font-weight="600">3. Режим разрешает?</text>
           <text class="sm" x="16" y="298">Manual · Accept edits · Auto</text>
-          <rect class="box" x="6" y="342" width="200" height="52" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+          <rect class="box" x="6" y="342" width="210" height="52" rx="6"/>
           <text x="16" y="364" font-size="14" font-weight="600">Обвязка выполняет</text>
           <text class="sm" x="16" y="382">без вопроса</text>
-          <rect class="box" x="236" y="90" width="98" height="52" rx="6" style="stroke:var(--bad)"/>
-          <text x="285" y="121" font-size="14" font-weight="600" text-anchor="middle">Отказ</text>
-          <rect class="box" x="236" y="174" width="98" height="136" rx="6" style="stroke:var(--accent);stroke-width:2"/>
-          <text x="285" y="222" font-size="14" font-weight="600" text-anchor="middle">Вопрос вам</text>
-          <text class="sm" x="285" y="246" text-anchor="middle">да → выполнит</text>
-          <text class="sm" x="285" y="264" text-anchor="middle">нет → стоп</text>
+          <rect class="box" x="244" y="90" width="90" height="52" rx="6"/>
+          <text x="289" y="121" font-size="14" font-weight="600" text-anchor="middle">Отказ</text>
+          <rect class="box" x="244" y="174" width="90" height="136" rx="6"/>
+          <text x="289" y="216" font-size="14" font-weight="600" text-anchor="middle">Вопрос</text>
+          <text x="289" y="234" font-size="14" font-weight="600" text-anchor="middle">вам</text>
+          <text class="sm" x="289" y="262" text-anchor="middle">да → делает</text>
+          <text class="sm" x="289" y="280" text-anchor="middle">нет → стоп</text>
         </g>
         <g>
-          <path class="arr" d="M106 58V82"/><path class="head" d="M106 90l-5-9h10z"/>
-          <path class="arr" d="M106 142V166"/><path class="head" d="M106 174l-5-9h10z"/>
-          <text class="sm" x="115" y="160">нет</text>
-          <path class="arr" d="M106 226V250"/><path class="head" d="M106 258l-5-9h10z"/>
-          <text class="sm" x="115" y="244">нет</text>
-          <path class="arr" d="M106 310V334"/><path class="head" d="M106 342l-5-9h10z"/>
-          <text class="sm" x="115" y="328">да</text>
-          <path class="arr" d="M206 116H228"/><path class="head" d="M236 116l-9-5v10z"/>
-          <text class="sm" x="211" y="108">да</text>
-          <path class="arr" d="M206 200H228"/><path class="head" d="M236 200l-9-5v10z"/>
-          <text class="sm" x="211" y="192">да</text>
-          <path class="arr" d="M206 284H228"/><path class="head" d="M236 284l-9-5v10z"/>
-          <text class="sm" x="209" y="276">нет</text>
+          <path class="arr" d="M111 58V82"/><path class="head" d="M111 90l-5-9h10z"/>
+          <path class="arr" d="M111 142V166"/><path class="head" d="M111 174l-5-9h10z"/>
+          <text class="sm" x="120" y="160">нет</text>
+          <path class="arr" d="M111 226V250"/><path class="head" d="M111 258l-5-9h10z"/>
+          <text class="sm" x="120" y="244">нет</text>
+          <path class="arr" d="M111 310V334"/><path class="head" d="M111 342l-5-9h10z"/>
+          <text class="sm" x="120" y="328">да</text>
+          <path class="arr" style="stroke-width:2.5" d="M216 116H236"/><path class="head" d="M244 116l-9-5v10z"/>
+          <text class="sm" x="230" y="108" text-anchor="middle">да</text>
+          <path class="arr" d="M216 200H236"/><path class="head" d="M244 200l-9-5v10z"/>
+          <text class="sm" x="230" y="192" text-anchor="middle">да</text>
+          <path class="arr" d="M216 284H236"/><path class="head" d="M244 284l-9-5v10z"/>
+          <text class="sm" x="230" y="276" text-anchor="middle">нет</text>
         </g>
       </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз — трое ворот. Запрет сильнее всего: он действует в любом режиме. Если режим действие разрешает, вопроса не будет. В режиме Auto на «вопрос вам» вместо вас отвечает классификатор.</figcaption>
@@ -263,19 +281,19 @@ var Q=[
 var B=['Да','Нет','Спросить, зачем'];
 function draw(){
   var mb=$('l14modes'); mb.textContent='';
-  M.forEach(function(m){ var b=el('button',m[0]===mode?'primary':null,m[1]); b.type='button'; b.addEventListener('click',function(){mode=m[0]; ans={}; draw();}); mb.appendChild(b); });
+  M.forEach(function(m){ var b=el('button',m[0]===mode?'primary':null,m[1]); b.type='button'; b.setAttribute('aria-pressed',m[0]===mode?'true':'false'); b.addEventListener('click',function(){mode=m[0]; ans={}; draw();}); mb.appendChild(b); });
   $('l14deny').checked=deny;
   var box=$('l14list'); box.textContent=''; var asked=0, done=0, good=0;
   Q.forEach(function(q,i){
     var d=el('div','l14-card');
-    var h=el('div','l14-req'); h.appendChild(el('b',null,q.tool)); h.appendChild(document.createTextNode('  '+q.text)); d.appendChild(h);
+    var h=el('div','l14-req'); h.appendChild(el('b',null,q.tool)); h.appendChild(document.createTextNode(q.text)); d.appendChild(h);
     if(q.env){
-      if(deny) d.appendChild(el('div','l14-st l14-ok','Отказ: правило запрета сработало раньше режима. Агент получит ответ «чтение запрещено» — в любом режиме.'));
-      else d.appendChild(el('div','l14-st l14-bad','Не спросит — даже в Manual: чтение в своей папке разрешено всегда. Если в файле ключ, он попадёт в окно и уйдёт к провайдеру. Поставьте галочку запрета.'));
+      if(deny) d.appendChild(el('div','verdict ok','Отказ: правило запрета сработало раньше режима. Агент получит ответ «чтение запрещено» — в любом режиме.'));
+      else d.appendChild(el('div','verdict no','Не спросит — даже в Manual: чтение в своей папке разрешено всегда. Если в файле ключ, он попадёт в окно и уйдёт к провайдеру. Поставьте галочку запрета.'));
     } else if(q.ask[mode]){
-      asked++;
-      d.appendChild(el('div','l14-st','Обвязка спрашивает вас. Что ответите?'));
-      var row=el('div','row');
+      asked++; d.className='l14-card ask';
+      d.appendChild(el('div','l14-st ask','Обвязка спрашивает вас. Что ответите?'));
+      var row=el('div','l14-ans');
       B.forEach(function(t,j){
         var b=el('button',ans[q.id]===j?'primary':null,t); b.type='button'; b.disabled=(ans[q.id]!==undefined&&ans[q.id]!==j);
         b.addEventListener('click',function(){ if(ans[q.id]===undefined){ans[q.id]=j; draw();} });
@@ -294,7 +312,7 @@ function draw(){
         d.appendChild(r);
       }
     } else {
-      d.appendChild(el('div','l14-st'+(q.id==='rm'&&mode==='edits'?' l14-bad':''),'Не спросит. '+q.quiet[mode]));
+      d.appendChild(el('div',q.id==='rm'&&mode==='edits'?'verdict no':'l14-st','Не спросит. '+q.quiet[mode]));
     }
     box.appendChild(d);
   });

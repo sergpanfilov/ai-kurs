@@ -1,8 +1,24 @@
   <style>
-    .l28-route{display:flex;flex-direction:column;gap:6px;counter-reset:l28}
-    .l28-route div{border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:6px 10px;font-size:.93rem}
-    .l28-route div::before{counter-increment:l28;content:counter(l28) ". ";font-family:var(--f-mono);color:var(--accent)}
-    .l28-pool button{white-space:normal;font-size:.92rem}
+    blockquote.prompt.l28-tz{font-family:var(--f-body);font-size:.92rem;line-height:1.5}
+    blockquote.prompt.l28-tz.is-live::before{content:"ТЗ для файла"}
+    .l28-at>b:first-child{color:var(--accent)}
+    .l28-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:var(--bg);border-radius:10px}
+    .l28-tabs button{border:1px solid transparent;background:transparent;color:var(--muted);min-height:48px;padding:6px 8px;white-space:normal;line-height:1.25;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;border-radius:7px}
+    .l28-tabs button b{font-family:var(--f-mono);font-size:.84rem;font-weight:500;color:var(--ink)}
+    .l28-tabs button small{font-size:.76rem}
+    .l28-tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .l28-tabs button[aria-selected="true"] b{color:var(--accent);font-weight:600}
+    @media (hover:hover){.l28-tabs button:hover{background:var(--surface)}}
+    @media (max-width:520px){.l28-tabs{grid-template-columns:1fr}.l28-tabs button{flex-direction:row;align-items:baseline;justify-content:flex-start;gap:8px;min-height:44px;padding:8px 12px}}
+    .l28-lbl{margin:0;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+    .l28-route{display:flex;flex-direction:column;gap:6px;counter-reset:l28;margin:0;padding:0;list-style:none}
+    .l28-route li{counter-increment:l28;border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:8px 10px 8px 2.6rem;font-size:.93rem;position:relative;min-height:40px}
+    .l28-route li::before{content:counter(l28);position:absolute;left:8px;top:7px;display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:var(--surface);font-family:var(--f-mono);font-size:.78rem}
+    .l28-route li.l28-slot{border:1.5px dashed var(--line);background:transparent;color:var(--muted)}
+    .l28-route li.l28-slot::before{background:transparent;border:1.5px dashed var(--muted);color:var(--muted)}
+    .l28-pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))}
+    .l28-pool button{white-space:normal;font-size:.92rem;min-height:48px;border-style:solid;box-shadow:0 1px 0 var(--line)}
+    .l28-terms{margin:0;padding-top:10px;border-top:1px dashed var(--line);font-size:.88rem}
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 6 · Урок 28 из 31 · 30 минут</span>
@@ -12,7 +28,7 @@
   <div class="stack"><h2>Страница поиска — тоже ТЗ</h2>
     <div class="callout story"><span class="lbl">Письмо из соседней лаборатории</span><p>«Говорят, у вас есть сводка по ферментам для ПЭТ. Какие работают при 65 °C?» Послать три файла CSV? Дать доступ к панели Supabase, где можно случайно удалить таблицу?</p></div>
     <p><b>Разгадка</b> — <b>ссылка</b>: коллега открывает страницу, вводит 65 и видит только проверенные строки с источниками. Пока в базу (урок 26) можно заглянуть только из панели. Нужна <b>страница поиска</b>: открыл адрес — нашёл фермент. Это отдельная задача агенту, и ставится она как задача на базу (урок 18): коротким ТЗ с приёмкой.</p>
-    <blockquote class="prompt">ТЗ: страница поиска
+    <blockquote class="prompt l28-tz">ТЗ: страница поиска
 1. Поле поиска по названию фермента.
 2. Фильтр «оптимум не ниже, °C».
 3. Таблица: фермент, значение, условия, источник (DOI-ссылка), статус.
@@ -35,17 +51,19 @@
 
   <div class="stack"><h2>Адрес: от имени к компьютеру</h2>
     <p>Гость открыл ссылку. Между его нажатием и таблицей на экране — пять шагов. Два последних вы уже знаете (урок 26), новые — второй и третий.</p>
-    <figure class="fig">
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 540" width="340" height="540" role="img" aria-label="Путь страницы поиска: браузер, DNS, GitHub Pages отдаёт файлы, страница в браузере просит строки у Supabase с публичным ключом, правило RLS отдаёт гостю только подтверждённые строки; ответ возвращается в браузер">
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 472" width="340" height="472" role="img" aria-label="Путь страницы поиска: браузер, DNS, GitHub Pages отдаёт файлы, страница в браузере просит строки у Supabase с публичным ключом, правило RLS отдаёт гостю только подтверждённые строки; ответ возвращается в браузер">
       <g>
         <rect class="box" x="6" y="6" width="300" height="62" rx="6"/>
         <text x="18" y="30" font-size="14" font-weight="600">1. Браузер</text>
         <text class="sm" x="18" y="52">гость открыл адрес страницы</text>
         <rect class="box" x="6" y="98" width="300" height="62" rx="6"/>
         <text x="18" y="122" font-size="14" font-weight="600">2. DNS</text>
+        <text class="sm" x="296" y="122" text-anchor="end" style="fill:var(--signal)">● новое</text>
         <text class="sm" x="18" y="144">имя → 185.199.108.153 (GitHub)</text>
         <rect class="box" x="6" y="190" width="300" height="62" rx="6"/>
         <text x="18" y="214" font-size="14" font-weight="600">3. GitHub Pages</text>
+        <text class="sm" x="296" y="214" text-anchor="end" style="fill:var(--signal)">● новое</text>
         <text class="sm" x="18" y="236">отдаёт файлы из открытого репозитория</text>
         <rect class="box" x="6" y="282" width="300" height="62" rx="6"/>
         <text x="18" y="306" font-size="14" font-weight="600">4. Страница в браузере</text>
@@ -61,16 +79,13 @@
         <path class="arr" d="M156 344V366"/><path class="head" d="M156 374l-5-9h10z"/>
         <path class="arr" style="stroke-dasharray:5 4" d="M306 405H326V313H314"/><path class="head" d="M306 313l9-5v10z"/>
       </g>
-      <text class="sm" x="6" y="464">пунктир — строки базы возвращаются</text>
-      <text class="sm" x="6" y="482">на страницу и встают в таблицу</text>
-      <text class="sm" x="6" y="506">выделено — где решается, что отдать;</text>
-      <text class="sm" x="6" y="524">GitHub данных базы не хранит</text>
+      <text class="sm" x="6" y="462">пунктир — строки базы идут на страницу</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз. На шаге 1 гость только ввёл адрес; на шаге 4 страница уже загрузилась и сама просит данные. Выделен шаг 5: там решается, что отдать.</figcaption>
     </figure>
-    <p><b>Шаг 2: от имени к адресу.</b> Каждый компьютер в интернете находится по числовому <b>IP-адресу</b>, например <span class="mono">185.199.108.153</span> — один из адресов GitHub Pages. Номера никто не помнит, поэтому есть <b>домен</b> — имя вроде <span class="mono">belhome.cc</span>. Имена в адреса переводит <b>DNS</b> — справочная служба интернета, как телефонная книга.</p>
+    <p class="l28-at"><b>Шаг 2: от имени к адресу.</b> Каждый компьютер в интернете находится по числовому <b>IP-адресу</b>, например <span class="mono">185.199.108.153</span> — один из адресов GitHub Pages. Номера никто не помнит, поэтому есть <b>домен</b> — имя вроде <span class="mono">belhome.cc</span>. Имена в адреса переводит <b>DNS</b> — справочная служба интернета, как телефонная книга.</p>
     <p>Записи в ней двух главных видов: <b>A</b> — «имя → числовой адрес» и <b>CNAME</b> — <span class="hl">«имя → другое имя», переадресация «спросите у такого-то»</span><sup class="fn" data-fn="1">1</sup>. У этого курса одна строка в DNS: <span class="mono">agent</span> → <span class="mono">sergpanfilov.github.io</span>. Имя слева от домена — <b>поддомен</b>.</p>
-    <p><b>Шаг 3: кто отдаёт файлы.</b> <b>GitHub Pages</b> — бесплатная публикация страниц прямо из репозитория. Адрес она даёт по имени репозитория: <span class="mono">имя.github.io/pet-enzymes-site</span>, так что свой домен не обязателен (его покупают у компании-регистратора на год, порядка 10–15 $). Одно условие: на бесплатном GitHub публикуют только из <b>открытого</b> репозитория<sup class="fn" data-fn="2">2</sup>. Вот зачем странице отдельная папка: история проекта остаётся закрытой.</p></div>
+    <p class="l28-at"><b>Шаг 3: кто отдаёт файлы.</b> <b>GitHub Pages</b> — бесплатная публикация страниц прямо из репозитория. Адрес она даёт по имени репозитория: <span class="mono">имя.github.io/pet-enzymes-site</span>, так что свой домен не обязателен (его покупают у компании-регистратора на год, порядка 10–15 $). Одно условие: на бесплатном GitHub публикуют только из <b>открытого</b> репозитория<sup class="fn" data-fn="2">2</sup>. Вот зачем странице отдельная папка: история проекта остаётся закрытой.</p></div>
 
   <div class="stack"><h2>Кому видна страница</h2>
     <p>У страницы на GitHub Pages варианта два: <b>открыта всем</b> или <b>не опубликована</b>. Входа нет: гость — это каждый, включая вас. Для нашей базы «открыта всем» годится: данные из опубликованных статей, непроверенное база не отдаёт. Решение запишите в журнал.</p>
@@ -87,14 +102,14 @@
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Соберите маршрут запроса. Выберите адрес, затем нажимайте блоки по порядку — от браузера до того, кто отдаёт данные. Лишние блоки в маршрут не входят.</p>
-      <p class="why">Адрес:</p>
-      <div class="row" id="l28sc"></div>
-      <div class="l28-route" id="l28route"></div>
-      <p class="out" id="l28out"></p>
+      <p class="l28-lbl" id="l28scl">1 · Выберите адрес</p>
+      <div class="l28-tabs" id="l28sc" role="tablist" aria-labelledby="l28scl"></div>
+      <p class="l28-lbl">2 · Маршрут · <span id="l28out"></span></p>
+      <ol class="l28-route" id="l28route"></ol>
       <p class="verdict" id="l28why"></p>
-      <div class="opts l28-pool" id="l28pool"></div>
+      <div class="opts l28-pool" id="l28pool" aria-label="Блоки"></div>
       <div class="row"><button type="button" class="primary" id="l28next">Следующий адрес</button><button type="button" id="l28reset">Сначала</button></div>
-      <p class="why">Три слова для лишних блоков и третьего адреса: Cloudflare — компания-посредник между гостем и сайтом; Access — её вход перед сайтом по списку адресов почты; туннель — линия, которую домашний сервер сам открыл к Cloudflare.</p>
+      <p class="why l28-terms">Три слова для лишних блоков и третьего адреса: Cloudflare — компания-посредник между гостем и сайтом; Access — её вход перед сайтом по списку адресов почты; туннель — линия, которую домашний сервер сам открыл к Cloudflare.</p>
       <p class="try-note">Маршруты упрощены, но устройство настоящее: так работают страницы на GitHub Pages и адреса Сергея (актуально на ноябрь 2026). Адрес страницы ферментов — условный.</p>
     </div>
     <div class="two">
@@ -153,7 +168,7 @@
       <li>Попросите агента сделать коммит.</li>
     </ol>
     <h3>Сегодня — страница у себя</h3>
-    <ol class="steps">
+    <ol class="steps" start="4">
       <li>Создайте рядом с проектом папку <span class="mono">pet-enzymes-site/</span> и положите в неё <span class="mono">TZ.md</span> с ТЗ страницы (6–8 строк, как в уроке).</li>
       <li>Откройте агента <b>в этой папке</b> — новой сессией. Дайте ему адрес рабочей базы и её публичный ключ (панель → Project Settings → API Keys).</li>
       <li>Поручите страницу:
@@ -161,7 +176,7 @@
       <li>Примите работу: в панели 180 измерений, на странице 140, строк «не проверено» нет. Ответы страницы на контрольные вопросы совпадают с запросом по подтверждённым строкам.</li>
     </ol>
     <h3>Можно в другой день — публикация</h3>
-    <ol class="steps">
+    <ol class="steps" start="8">
       <li>Поручите агенту открытый репозиторий <span class="mono">pet-enzymes-site</span> на GitHub и публикацию через GitHub Pages.</li>
       <li>Откройте адрес с телефона через мобильную сеть.</li>
       <li>Запишите в журнал проекта, тип «решение»: адрес страницы, кому она видна и почему.</li>
@@ -213,29 +228,33 @@ var SC=[
   extra:['GitHub Pages','Открытый порт в роутере'],
   done:'Маршрут собран. Чужой запрос остановился бы на шаге 3 и до дома не дошёл.'}
 ];
-var cur=0, step=0, pool, note='', bad='';
+var cur=0, step=0, pool, note='', bad='', just=false;
 function mix(a){return a.map(function(x,i){return [x,(i*5+3)%a.length];}).sort(function(p,q){return p[1]-q[1];}).map(function(p){return p[0];});}
 function start(i){cur=i; step=0; note=''; bad=''; var s=SC[cur]; pool=mix(s.ok.concat(s.extra)); draw();}
 function draw(){
   var s=SC[cur], r=$('l28route'), p=$('l28pool'), fin=step===s.ok.length, w=$('l28why'); r.textContent=''; p.textContent='';
-  s.ok.slice(0,step).forEach(function(t){r.appendChild(el('div',null,t));});
+  s.ok.slice(0,step).forEach(function(t,k){var li=el('li',null,t); if(k===step-1&&just)li.classList.add('is-new'); r.appendChild(li);});
+  if(!fin) r.appendChild(el('li','l28-slot','Шаг '+(step+1)+': нажмите блок ниже'));
+  just=false;
   if(!fin) pool.forEach(function(t){
     if(s.ok.indexOf(t)>-1 && s.ok.indexOf(t)<step) return;
     var b=el('button',null,t); b.type='button'; if(t===bad)b.classList.add('wrong');
     b.addEventListener('click',function(){
       var k=s.ok.indexOf(t);
-      if(k===step){step++; note=''; bad='';}
+      if(k===step){step++; note=''; bad=''; just=true;}
       else{bad=t; note= k<0 ? '«'+t+'» в этом маршруте не участвует.' : 'Рано: «'+t+'» в маршруте есть, но сначала идёт другой шаг.';}
       draw();
     });
     p.appendChild(b);
   });
-  $('l28out').textContent='Шагов собрано: '+step+' из '+s.ok.length;
+  $('l28out').textContent='собрано '+step+' из '+s.ok.length;
   w.className='verdict'+(fin?' ok':(note?' no':'')); w.textContent=fin?s.done:note;
   $('l28next').hidden=!fin||cur===SC.length-1;
-  Array.prototype.forEach.call($('l28sc').children,function(x,i){x.classList.toggle('primary',i===cur);});
+  Array.prototype.forEach.call($('l28sc').children,function(x,i){x.setAttribute('aria-selected',i===cur?'true':'false');});
 }
-SC.forEach(function(s,i){var b=el('button',null,s.b); b.type='button'; b.addEventListener('click',function(){start(i);}); $('l28sc').appendChild(b);});
+SC.forEach(function(s,i){var b=el('button'), parts=s.b.split(' · '); b.type='button'; b.setAttribute('role','tab');
+  b.appendChild(el('b',null,parts[0])); b.appendChild(el('small',null,parts.slice(1).join(' · ')||'GitHub Pages'));
+  b.addEventListener('click',function(){start(i);}); $('l28sc').appendChild(b);});
 $('l28next').addEventListener('click',function(){start(cur+1);});
 $('l28reset').addEventListener('click',function(){start(cur);});
 start(0);

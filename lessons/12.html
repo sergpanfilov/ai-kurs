@@ -1,8 +1,34 @@
   <style>
-    .l12-task{display:flex;flex-direction:column;gap:8px}
-    .l12-task .l12-opts{flex-direction:row;flex-wrap:wrap;gap:6px;align-items:center}
-    .l12-task .l12-opts .k{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);min-width:4.6rem}
-    .l12-task .l12-opts button{padding:5px 10px;font-size:.86rem;text-align:center}
+    .l12-parts{list-style:none;padding-left:0;counter-reset:l12p;display:flex;flex-direction:column;gap:6px}
+    .l12-parts>li{counter-increment:l12p;position:relative;padding-left:2.1rem}
+    .l12-parts>li::before{content:counter(l12p);position:absolute;left:0;top:.15em;width:1.5rem;height:1.5rem;border-radius:50%;display:grid;place-items:center;font:600 .74rem/1 var(--f-mono);color:var(--accent);border:1.5px solid var(--accent)}
+    .l12-parts>li:nth-child(even)::before{color:var(--signal);border-color:var(--signal)}
+    .l12-parts>li>.mono{background:var(--accent-soft);border-radius:4px;padding:0 4px}
+    .l12-parts>li:nth-child(even)>.mono{background:var(--signal-soft)}
+    .l12-url{margin:0;font-family:var(--f-mono);font-size:.84rem;line-height:2.3;overflow-wrap:break-word;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+    .l12-url span{border-radius:4px;padding:2px 3px;margin:0 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+    .l12-url .p1{white-space:nowrap}
+    .l12-url span::before{content:attr(data-n);font:600 .66rem/1 var(--f-mono);vertical-align:super;margin-right:2px}
+    .l12-url .p1{background:var(--accent-soft)} .l12-url .p1::before{color:var(--accent)}
+    .l12-url .p2{background:var(--signal-soft)} .l12-url .p2::before{color:var(--signal)}
+    /* интерактив «Что получится в конце»: две группы кнопок равной ширины */
+    .l12-task{display:flex;flex-direction:column;gap:12px}
+    .l12-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .l12-head .mono{color:var(--muted);font-size:.8rem}
+    .l12-dots{display:flex;gap:5px}
+    .l12-dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--line)}
+    .l12-dots i.done{background:var(--accent);border-color:var(--accent)}
+    .l12-dots i.cur{border-color:var(--accent)}
+    .l12-case{margin:0;font-family:var(--f-display);font-size:1.12rem;font-weight:600;line-height:1.35;border-left:3px solid var(--signal);padding:2px 0 2px 12px}
+    .l12-grp{display:flex;flex-direction:column;gap:6px}
+    .l12-grp .k{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+    .l12-grp.need .k{color:var(--accent);font-weight:600}
+    .l12-task .l12-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .l12-task .l12-opts button{text-align:center;padding-inline:6px}
+    .l12-task .l12-opts button.primary{color:var(--surface);border-color:var(--accent)}
+    .l12-task .l12-opts button:disabled{opacity:1}
+    .l12-task .l12-opts button.dim{opacity:.5}
+    .l12-hint{margin:0}
     .l12-log{font-family:var(--f-mono);font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
     .l12-log b{color:var(--accent);font-weight:600}
     .l12-parts .mono{overflow-wrap:anywhere}
@@ -25,37 +51,40 @@
 
   <div class="stack"><h2>Три типа продуктов</h2>
     <figure class="fig">
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 500" width="340" height="500" role="img" aria-label="Три типа продуктов. Чат: работает у провайдера, видит переписку, приложенные файлы и поиск, заканчивается ответом. Агент для документов: работает у провайдера от минут до часов (на вашем компьютере — запасной путь из урока 14), видит выбранные папки, сайты и подключённые сервисы, заканчивается файлом. У Anthropic оба — один Claude, который сам решает, ответить или взяться за задачу. Агент для кода: работает на компьютере, где его запустили, видит папку проекта и запускает команды, заканчивается изменёнными файлами.">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 512" width="340" height="512" role="img" aria-label="Три типа продуктов. Чат: работает у провайдера, видит переписку, приложенные файлы и поиск, заканчивается ответом. Агент для документов: работает у провайдера от минут до часов (на вашем компьютере — запасной путь из урока 14), видит выбранные папки, сайты и подключённые сервисы, заканчивается файлом. У Anthropic оба — один Claude, который сам решает, ответить или взяться за задачу. Агент для кода: работает на компьютере, где его запустили, видит папку проекта и запускает команды, заканчивается изменёнными файлами.">
       <g>
-        <rect class="box" x="6" y="6" width="328" height="132" rx="8"/>
+        <rect class="box" x="6" y="6" width="328" height="150" rx="8"/>
         <text x="18" y="30" font-size="14" font-weight="600">Чат</text>
-        <text class="sm" x="18" y="54">где: у провайдера, ответ за секунды</text>
-        <text class="sm" x="18" y="74">доступ: переписка, приложенные файлы,</text>
-        <text class="sm" x="18" y="92">поиск в интернете</text>
-        <text class="sm" x="18" y="112">итог: ответ в окне чата</text>
-        <text class="sm" x="18" y="130" style="fill:var(--accent)">Claude · ChatGPT Chat · Gemini</text>
-        <rect class="box" x="6" y="170" width="328" height="152" rx="8" style="stroke:var(--accent);stroke-width:2"/>
-        <text x="18" y="194" font-size="14" font-weight="600">Агент для документов</text>
-        <text class="sm" x="18" y="218">где: у провайдера, от минут до часов</text>
-        <text class="sm" x="18" y="236" style="fill:var(--muted)">(может работать и с папкой у вас)</text>
-        <text class="sm" x="18" y="256">доступ: папки, сайты, почта, сервисы</text>
-        <text class="sm" x="18" y="276">итог: файл — отчёт, таблица, слайды</text>
-        <text class="sm" x="18" y="304" style="fill:var(--accent)">Claude · ChatGPT Work</text>
-        <rect class="box" x="6" y="348" width="328" height="146" rx="8" style="stroke:var(--signal);stroke-width:2"/>
-        <text x="18" y="372" font-size="14" font-weight="600">Агент для кода</text>
-        <text class="sm" x="18" y="396">где: компьютер, где его запустили</text>
-        <text class="sm" x="18" y="416">доступ: папка проекта, команды</text>
-        <text class="sm" x="18" y="436">итог: изменённые файлы, программы</text>
-        <text class="sm" x="18" y="462" style="fill:var(--accent)">Claude Code · Codex · Antigravity</text>
-        <text class="sm" x="18" y="482" style="fill:var(--muted)">как открыть — урок 14</text>
+        <text class="sm" x="18" y="52">где: у провайдера, ответ за секунды</text>
+        <text class="sm" x="18" y="72">доступ: переписка, приложенные файлы,</text>
+        <text class="sm" x="18" y="90">поиск в интернете</text>
+        <text class="sm" x="18" y="112" style="fill:var(--ink);font-weight:600">итог: ответ в окне чата</text>
+        <path class="ax" d="M18 124H322"/>
+        <text class="sm" x="18" y="144" style="fill:var(--accent)">Claude · ChatGPT Chat · Gemini</text>
+        <rect class="box" x="6" y="190" width="328" height="144" rx="8"/>
+        <text x="18" y="214" font-size="14" font-weight="600">Агент для документов</text>
+        <text class="sm" x="18" y="236">где: у провайдера, от минут до часов</text>
+        <text class="sm" x="18" y="254">(может работать и с папкой у вас)</text>
+        <text class="sm" x="18" y="276">доступ: папки, сайты, почта, сервисы</text>
+        <text class="sm" x="18" y="296" style="fill:var(--ink);font-weight:600">итог: файл — отчёт, таблица, слайды</text>
+        <path class="ax" d="M18 308H322"/>
+        <text class="sm" x="18" y="326" style="fill:var(--accent)">Claude · ChatGPT Work</text>
+        <rect class="box" x="6" y="362" width="328" height="144" rx="8" style="stroke:var(--accent);stroke-width:2"/>
+        <text x="18" y="386" font-size="14" font-weight="600">Агент для кода</text>
+        <text class="sm" x="18" y="408">где: компьютер, где его запустили</text>
+        <text class="sm" x="18" y="428">доступ: папка проекта, команды</text>
+        <text class="sm" x="18" y="448" style="fill:var(--ink);font-weight:600">итог: изменённые файлы, программы</text>
+        <path class="ax" d="M18 460H322"/>
+        <text class="sm" x="18" y="478" style="fill:var(--accent)">Claude Code · Codex · Antigravity</text>
+        <text class="sm" x="18" y="496">как открыть — урок 14</text>
       </g>
       <g>
-        <path class="arr" style="stroke:var(--accent);stroke-dasharray:4 4" d="M170 138V170"/>
-        <rect x="52" y="145" width="236" height="18" rx="4" style="fill:var(--bg)"/>
-        <text class="sm" x="170" y="158" text-anchor="middle" style="fill:var(--accent)">один Claude: сам решает, чем быть</text>
+        <path class="arr" style="stroke-dasharray:4 4" d="M170 156V190"/>
+        <rect x="46" y="164" width="248" height="18" rx="4" style="fill:var(--bg)"/>
+        <text class="sm" x="170" y="177" text-anchor="middle" style="fill:var(--accent)">один Claude: сам решает, чем быть</text>
       </g>
     </svg></div>
-      <figcaption><b>Как читать.</b> Сверху вниз растут доступ и самостоятельность. Пунктир между верхними блоками: у Anthropic это один продукт.</figcaption>
+      <figcaption><b>Как читать.</b> Сверху вниз растут доступ и самостоятельность. Жирная строка «итог» — то, по чему выбирают. Пунктир между верхними блоками: у Anthropic это один продукт.</figcaption>
     </figure>
     <p>У Anthropic чат и агент для документов — <b>один Claude</b>: с сентября 2026 переключателя нет. На простой вопрос он отвечает сразу, а большую работу берёт как <b>задачу</b> — с планом, шагами и файлами в конце.</p>
     <p>Агент для документов часто работает в <b>песочнице</b> — отдельном временном компьютере у провайдера, где может запускать программы, не трогая ваш. Агент для кода запускает команды прямо на том компьютере, где его открыли, — <span class="hl">он может и починить, и сломать</span><sup class="fn" data-fn="2">2</sup>. Поэтому у него строже разрешения: что он делает сам, а о чём спрашивает. Первые настройки — в уроке 14, подробно — в уроке 20.</p>
@@ -105,6 +134,7 @@
   <div class="stack"><h2>Как агент на самом деле ходит в UniProt</h2>
     <p>В уроке 11 инструмент назывался условно: <span class="mono">uniprot_search</span>. Такого инструмента у Claude нет, и коннектора UniProt в каталоге коннекторов Claude на ноябрь 2026 тоже нет. На деле у агента для кода есть два общих инструмента — <b>«открыть адрес»</b> и <b>«запустить команду»</b>. Ими он и обращается к открытому API UniProt (урок 7).</p>
     <p>Запрос к API — это обычный адрес, как у страницы в браузере, только длиннее. Читается он по частям:</p>
+    <p class="l12-url" aria-label="rest.uniprot.org/uniprotkb/search?query=accession:G9BY57&amp;fields=accession,protein_name,temp_dependence&amp;format=tsv"><span class="p1" data-n="1">rest.uniprot.org</span><span class="p2" data-n="2">/uniprotkb/search?</span><span class="p1" data-n="3">query=accession:G9BY57</span>&amp;<span class="p2" data-n="4">fields=<wbr>accession,<wbr>protein_name,<wbr>temp_dependence</span>&amp;<span class="p1" data-n="5">format=tsv</span></p>
     <ul class="plain l12-parts">
       <li><span class="mono">rest.uniprot.org</span> — имя сайта: всё до первой косой черты;</li>
       <li><span class="mono">/uniprotkb/search?</span> — «найди в базе»; после знака вопроса — что именно нужно;</li>
@@ -226,19 +256,22 @@ function finish(){
 }
 function draw(){
   var box=$('l12card'), t=T[cur]; box.textContent='';
-  box.appendChild(el('span','mono','задача '+(cur+1)+' из '+T.length));
-  box.appendChild(el('b',null,t[0]));
-  var why=el('p','why'); why.hidden=true;
-  [['в конце',END],['чем',KIND]].forEach(function(g,gi){
-    var row=el('div','row opts l12-opts'); row.appendChild(el('span','k',g[0]));
+  var hd=el('div','l12-head'); hd.appendChild(el('span','mono','задача '+(cur+1)+' из '+T.length));
+  var dots=el('span','l12-dots'); for(var d=0;d<T.length;d++) dots.appendChild(el('i',d<cur||(d===cur&&fin)?'done':(d===cur?'cur':null)));
+  hd.appendChild(dots); box.appendChild(hd);
+  box.appendChild(el('p','l12-case',t[0]));
+  [['1. Что получится в конце?',END],['2. Чем делать?',KIND]].forEach(function(g,gi){
+    var grp=el('div','l12-grp'+(!fin&&pick[gi]===null?' need':'')); grp.appendChild(el('span','k',g[0]));
+    var row=el('div','opts l12-opts');
     g[1].forEach(function(k,j){
       var b=el('button',null,k); b.type='button';
       if(fin){
         b.disabled=true;
         var good= gi===0 ? j===t[1] : (j===t[2]||(t[4]!==undefined&&j===t[4]));
-        if(good) b.className='right'; else if(pick[gi]===j) b.className='wrong';
+        if(good) b.className='right'; else if(pick[gi]===j) b.className='wrong'; else b.className='dim';
       } else {
         if(pick[gi]===j) b.className='primary';
+        b.setAttribute('aria-pressed',pick[gi]===j?'true':'false');
         b.addEventListener('click',function(){
           pick[gi]=j;
           if(pick[0]!==null&&pick[1]!==null) finish();
@@ -247,18 +280,19 @@ function draw(){
       }
       row.appendChild(b);
     });
-    box.appendChild(row);
+    grp.appendChild(row); box.appendChild(grp);
   });
+  if(!fin){
+    var hint= pick[0]===null&&pick[1]===null ? 'Ответьте на оба вопроса — порядок любой.' : (pick[0]!==null ? 'В конце: '+ENDL[pick[0]]+'. Теперь выберите, чем делать.' : 'Чем: '+KIND[pick[1]].toLowerCase()+'. Теперь выберите, что получится в конце.');
+    box.appendChild(el('p','why l12-hint',hint));
+  }
   if(fin){
-    box.appendChild(el('div','verdict '+(fin.ok?'ok':'no'),fin.msg));
+    var v=el('div','verdict '+(fin.ok?'ok':'no'),fin.msg); box.appendChild(v);
     if(cur<T.length-1){
-      var nx=el('button','primary','Следующая задача'); nx.type='button';
-      nx.addEventListener('click',function(){cur++; pick=[null,null]; fin=false; draw();});
-      box.appendChild(nx);
+      var nx=el('button','primary','Следующая задача →'); nx.type='button';
+      nx.addEventListener('click',function(){cur++; pick=[null,null]; fin=false; draw(); var c=$('l12card'); if(c.getBoundingClientRect().top<0) c.scrollIntoView({block:'start'});});
+      var r=el('div','row'); r.appendChild(nx); box.appendChild(r);
     }
-  } else if(pick[0]!==null||pick[1]!==null){
-    why.textContent= pick[0]!==null ? 'В конце: '+ENDL[pick[0]]+'. Теперь выберите, чем делать.' : 'Чем: '+KIND[pick[1]].toLowerCase()+'. Теперь выберите, что получится в конце.';
-    why.hidden=false; box.appendChild(why);
   }
   var done=cur+(fin?1:0);
   $('l12out').textContent= done<T.length ? 'Разобрано: '+done+' из '+T.length : 'Все пять разобраны. Совпало с разбором: '+right+' из '+T.length+'.';

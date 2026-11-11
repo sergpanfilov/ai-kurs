@@ -1,28 +1,36 @@
   <style>
     .l29-sql{font-family:var(--f-mono);font-size:.8rem;line-height:1.55;background:var(--bg);border-radius:6px;padding:8px 10px;margin:0;white-space:pre-wrap;word-break:break-word}
     .l29-sql b{color:var(--accent)}
-    .l29-steps{display:flex;flex-wrap:wrap;gap:6px}
-    .l29-steps button{font-family:var(--f-mono);font-size:.82rem}
-    .l29-tr{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    .l29-tr button{font-size:.88rem;line-height:1.3;padding:8px 6px;text-align:left}
-    .l29-tr button small{display:block;font-size:.78rem;opacity:.85}
+    .stack>.l29-sql{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);padding:10px 12px}
+    .l29-tr{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg);border-radius:10px}
+    .l29-tr button{border:1px solid transparent;background:transparent;color:var(--muted);min-height:48px;font-size:.88rem;line-height:1.3;padding:6px 10px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;border-radius:7px;white-space:normal}
+    .l29-tr button b{font-weight:600;color:var(--ink)}
+    .l29-tr button small{display:block;font-size:.78rem}
+    .l29-tr button[aria-pressed="true"]{background:var(--surface);border-color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .l29-tr button[aria-pressed="true"] b{color:var(--accent)}
+    .l29-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;scroll-margin-top:14px}
+    .l29-steps button{font-family:var(--f-mono);font-size:.8rem;min-height:40px;padding:4px 6px;white-space:normal;line-height:1.2}
+    .l29-steps button.l29-done{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+    @media (min-width:600px){.l29-steps{grid-template-columns:repeat(6,minmax(0,1fr))}}
+    @media (hover:hover){.l29-tr button:hover{background:var(--surface)}}
     .l29-ok{color:var(--good)} .l29-bad{color:var(--bad)}
-    .l29-box{border:1px solid var(--line);border-radius:6px}
-    .l29-box{max-height:264px;overflow:auto}
-    #l29res th,#l29res td{padding:5px 2px 5px 4px;font-size:.8rem;white-space:nowrap}
-    #l29res th{font-size:.62rem;letter-spacing:0;text-transform:none}
+    .l29-box{border:1px solid var(--line);border-radius:6px;max-height:264px;overflow:auto}
+    #l29res th,#l29res td{padding:5px 3px 5px 4px;font-size:.8rem;white-space:nowrap}
+    #l29res th{font-size:.62rem;letter-spacing:0;text-transform:none;white-space:normal;line-height:1.2;vertical-align:bottom;position:sticky;top:0;background:var(--surface);z-index:1}
     .l29-thr{display:flex;flex-direction:column;gap:4px}
     .l29-thr div{display:flex;align-items:center;gap:10px}
     .l29-thr[hidden]{display:none}
-    .l29-steps{scroll-margin-top:14px}
-    .l29-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .l29-nav span{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+    #l29out{padding:4px 8px;border-radius:6px;margin:0}
+    .l29-nav{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+    .l29-nav span{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:center}
     .l29-card{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:4px}
-    #l29res td.l29-st{white-space:normal;min-width:5rem;font-size:.7rem;line-height:1.3}
+    #l29res td.l29-st{white-space:normal;font-size:.7rem;line-height:1.25}
     #l29res tr.l29-off td{color:var(--muted);text-decoration:line-through;opacity:.6}
     #l29res tr.l29-grey td{color:var(--muted);font-style:italic}
-    .l29-pass{font-size:.9rem;border-left:3px solid var(--accent);padding:2px 0 2px 10px;margin:0}
-    .l29-cmp{font-size:.9rem;border-left:3px solid var(--signal);padding:2px 0 2px 10px;margin:0}
+    .l29-pass,.l29-cmp{font-size:.9rem;line-height:1.45;margin:0;padding:8px 10px;border-radius:8px;background:var(--bg);border-left:3px solid var(--accent)}
+    .l29-cmp{border-left-color:var(--signal)}
+    .l29-pass b,.l29-cmp b{display:block;font-family:var(--f-mono);font-size:.74rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+    .l29-cmp b{color:var(--signal)}
     .l29-two td,.l29-two th{font-size:.88rem;padding:6px;vertical-align:top}
     .l29-parts td{font-size:.9rem;padding:5px 6px;vertical-align:top}
     .l29-ways{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:8px}
@@ -45,7 +53,7 @@
       <tr><td>А — основной</td><td>активность измерена при температуре опыта от 60 до 70&nbsp;°C</td><td class="mono">parameter = 'activity' and temp_c between 60 and 70</td><td>«измерено при 65&nbsp;°C»</td></tr>
       <tr><td>Б — для сверки</td><td>оптимум температуры не ниже 60&nbsp;°C</td><td class="mono">parameter = 't_opt' and value &gt;= 60</td><td>«оптимум 72&nbsp;°C»</td></tr>
     </table></div>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
       <div class="scroll"><svg class="fit-w" viewBox="0 0 340 396" width="340" height="396" role="img" aria-label="Один вопрос, два перевода. Перевод А: активность измерена при 60–70 градусах. Перевод Б: оптимум не ниже 60 градусов. Два запроса дают два ответа по четыре фермента, но списки разные: только в А — ThermoPETase, только в Б — TfCut2. Разница идёт в отчёт">
       <defs><marker id="l29ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0 0L10 5L0 10Z"/></marker></defs>
       <rect class="box" x="10" y="6" width="320" height="50" rx="6"/>
@@ -76,16 +84,16 @@
       <rect class="box" x="10" y="240" width="152" height="64" rx="6"/>
       <text x="20" y="261" font-size="14" font-weight="600">Ответ: 4</text>
       <text class="sm" x="20" y="278">HotPETase, LCC-ICCG,</text>
-      <text class="sm" x="20" y="293">PHL7, ThermoPETase</text>
+      <text class="sm" x="20" y="293">PHL7, <tspan style="fill:var(--signal);font-weight:600">ThermoPETase</tspan></text>
       <rect class="box" x="178" y="240" width="152" height="64" rx="6"/>
       <text x="188" y="261" font-size="14" font-weight="600">Ответ: 4</text>
       <text class="sm" x="188" y="278">HotPETase, LCC-ICCG,</text>
-      <text class="sm" x="188" y="293">PHL7, TfCut2</text>
+      <text class="sm" x="188" y="293">PHL7, <tspan style="fill:var(--signal);font-weight:600">TfCut2</tspan></text>
       <path class="arr" d="M86 304V322" marker-end="url(#l29ah)"/>
       <path class="arr" d="M254 304V322" marker-end="url(#l29ah)"/>
       <rect x="10" y="324" width="320" height="64" rx="6" style="fill:var(--accent-soft);stroke:none"/>
       <text x="22" y="345" font-size="14" font-weight="600">Разница — находка</text>
-      <text class="sm" x="22" y="362">только в А: ThermoPETase · в Б: TfCut2</text>
+      <text class="sm" x="22" y="362">только в А: <tspan style="fill:var(--signal);font-weight:600">ThermoPETase</tspan> · в Б: <tspan style="fill:var(--signal);font-weight:600">TfCut2</tspan></text>
       <text class="sm" x="22" y="377">→ в «Пробелы» отчёта (урок 31)</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз, две колонки — два перевода одного вопроса. В каждом ответе четыре фермента, но списки разные: смотрите нижний блок.</figcaption>
@@ -267,7 +275,8 @@ var M=[['E1','t_opt',30,null,'S1',K],['E1','t_opt',40,null,'S2',N],['E2','t_opt'
  ['E5','activity',33,68,'S6',K],['E5','activity',30,65,'S12',N],['E6','activity',6,75,'S10',H],['E7','activity',3,60,'S4',K]];
 var STEPS=['1 · from','2 · where','3 · статус','4 · join','5 · group by','6 · having'];
 var TR=[['A','Перевод А','измерено при 60–70 °C'],['B','Перевод Б','оптимум не ниже порога']];
-var cur=0, tr='A';
+var cur=0, tr='A', last=null;
+function flash(x){x.classList.remove('is-new'); void x.offsetWidth; x.classList.add('is-new');}
 function isOk(m){return /^подтверждено/.test(m[5]);}
 function par(m,w){return m[1]===(w==='A'?'activity':'t_opt');}
 function inT(m,w,t){return w==='A' ? (m[3]>=60&&m[3]<=70) : m[2]>=t;}
@@ -303,7 +312,7 @@ function draw(){
   sqlLines(cur,t).forEach(function(l,i){ if(i) pre.appendChild(document.createTextNode('\n')); if(l[1]) pre.appendChild(el('b',null,l[0])); else pre.appendChild(document.createTextNode(l[0])); });
   pre.appendChild(document.createTextNode(';'));
   var tb=$('l29res'); tb.textContent='';
-  function head(a){var r=el('tr'); a.forEach(function(c){r.appendChild(el('th',null,c));}); tb.appendChild(r);}
+  function head(a){var r=el('tr'); a.forEach(function(c){var th=el('th'); c.split('_').forEach(function(x,i){ if(i){th.appendChild(document.createTextNode('_')); th.appendChild(el('wbr'));} th.appendChild(document.createTextNode(x)); }); r.appendChild(th);}); tb.appendChild(r);}
   function fullRow(m,cls,note){var r=el('tr',cls||null); cell(r,m[0]); if(cur===0) cell(r,m[1]); cell(r,m[2]); cell(r,dash(m[3])); cell(r,m[4]); cell(r,m[5]+(note||''),cls?'l29-st':stCls(m[5])); tb.appendChild(r);}
   var mine=M.filter(function(m){return par(m,tr);});
   var on=mine.filter(function(m){return inT(m,tr,t);});
@@ -350,38 +359,42 @@ function draw(){
   $('l29out').textContent=out; $('l29why').textContent=why;
   // паспорт ответа
   var ps=$('l29pass');
-  if(cur<2){ ps.textContent='Паспорт ответа появится на шаге 3, когда в запросе будет условие на статус.'; }
+  ps.textContent=''; ps.appendChild(el('b',null,'Паспорт ответа'));
+  if(cur<2){ ps.appendChild(document.createTextNode('Появится на шаге 3, когда в запросе будет условие на статус.')); }
   else {
     var by={}; on.forEach(function(m){ if(!isOk(m)) by[m[5]]=(by[m[5]]||0)+1; });
     var parts=Object.keys(by).map(function(k){return '«'+k+'» — '+by[k];});
     var okE={}; ok.forEach(function(m){okE[m[0]]=1;});
-    ps.textContent='Паспорт ответа (отдельный запрос): прошло отбор по температуре — '+on.length+' '+plural(on.length,'строка','строки','строк')+'; подтверждено и идёт в ответ — '+ok.length+'; за бортом из-за статуса — '+(on.length-ok.length)+(parts.length?' ('+parts.join(', ')+')':'')+'; ферментов в ответе — '+Object.keys(okE).length+'.';
+    ps.appendChild(document.createTextNode('Отдельный запрос: прошло отбор по температуре — '+on.length+' '+plural(on.length,'строка','строки','строк')+'; подтверждено и идёт в ответ — '+ok.length+'; за бортом из-за статуса — '+(on.length-ok.length)+(parts.length?' ('+parts.join(', ')+')':'')+'; ферментов в ответе — '+Object.keys(okE).length+'.'));
   }
   // сверка переводов
   var cm=$('l29cmp');
-  if(cur<4){ cm.textContent='Сверка двух переводов появится на шаге 5, когда строка ответа станет ферментом.'; }
+  cm.textContent=''; cm.appendChild(el('b',null,'Сверка двух переводов'));
+  if(cur<4){ cm.appendChild(document.createTextNode('Появится на шаге 5, когда строка ответа станет ферментом.')); }
   else {
     var gA=groups('A',t,cur>=5).filter(function(x){return x.pass;}).map(function(x){return x.k;});
     var gB=groups('B',t,cur>=5).filter(function(x){return x.pass;}).map(function(x){return x.k;});
     var onlyA=gA.filter(function(k){return gB.indexOf(k)<0;}), onlyB=gB.filter(function(k){return gA.indexOf(k)<0;});
-    var s='Сверка: перевод А — '+names(gA)+'. Перевод Б (порог '+t+' °C) — '+names(gB)+'. ';
+    var s='Перевод А — '+names(gA)+'. Перевод Б (порог '+t+' °C) — '+names(gB)+'. ';
     if(!onlyA.length && !onlyB.length) s+='Списки совпали.';
     else {
       s+='Только в А: '+names(onlyA)+'. Только в Б: '+names(onlyB)+'. ';
       if(cur===4 && t===60) s+='ThermoPETase мерили при 60 °C, но подтверждённого оптимума не ниже 60 у него нет. У TfCut2 оптимум 70 °C, а подтверждённых измерений активности при 60–70 °C нет: мерили при 75. Обе строки — в «Пробелы» отчёта.';
       else s+='Каждое несовпадение разберите: это находка или ошибка запроса.';
     }
-    cm.textContent=s;
+    cm.appendChild(document.createTextNode(s));
   }
   $('l29pos').textContent='шаг '+(cur+1)+' из '+STEPS.length; $('l29prev').disabled=cur===0; $('l29next').disabled=cur===STEPS.length-1;
   AI.refresh();
-  Array.prototype.forEach.call($('l29steps').children,function(b,i){b.classList.toggle('primary',i===cur);});
-  Array.prototype.forEach.call($('l29tr').children,function(b,i){b.classList.toggle('primary',TR[i][0]===tr);});
+  Array.prototype.forEach.call($('l29steps').children,function(b,i){b.classList.toggle('primary',i===cur); b.classList.toggle('l29-done',i<cur);});
+  Array.prototype.forEach.call($('l29tr').children,function(b,i){b.setAttribute('aria-pressed',TR[i][0]===tr?'true':'false');});
+  // только что изменившееся — при смене шага или перевода
+  var sig=cur+tr; if(sig!==last){ if(last!==null) flash($('l29out')); if(last!==null && cur>=4 && +last.charAt(0)<4) flash(cm); last=sig; }
 }
-TR.forEach(function(x){var b=el('button'); b.type='button'; b.appendChild(document.createTextNode(x[1])); b.appendChild(el('small',null,x[2])); b.addEventListener('click',function(){tr=x[0]; draw();}); $('l29tr').appendChild(b);});
+TR.forEach(function(x){var b=el('button'); b.type='button'; b.appendChild(el('b',null,x[1])); b.appendChild(el('small',null,x[2])); b.addEventListener('click',function(){tr=x[0]; draw();}); $('l29tr').appendChild(b);});
 STEPS.forEach(function(s,i){var b=el('button',null,s); b.type='button'; b.addEventListener('click',function(){cur=i; draw();}); $('l29steps').appendChild(b);});
 $('l29thr').addEventListener('input',draw);
-function go(d){ cur=Math.max(0,Math.min(STEPS.length-1,cur+d)); draw(); try{ $('l29steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+function go(d){ cur=Math.max(0,Math.min(STEPS.length-1,cur+d)); draw(); try{ var st=$('l29steps'); if(st.getBoundingClientRect().top<0) st.scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 $('l29prev').addEventListener('click',function(){go(-1);});
 $('l29next').addEventListener('click',function(){go(1);});
 $('l29reset').addEventListener('click',function(){cur=0; tr='A'; $('l29thr').value=60; draw();});

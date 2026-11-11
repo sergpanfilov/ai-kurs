@@ -28,7 +28,7 @@
       <li><b>Сессия 1 — только план.</b> Режим Plan включают тем же переключателем, что и Manual (урок 14): агент читает и предлагает план, но ничего не меняет. Вы правите, одобряете и первым делом просите: «запиши план в <span class="mono">notes/plan.md</span> и остановись».</li>
       <li><b>Сессии 2, 3, 4 — по одному шагу.</b> «Прочитай <span class="mono">notes/plan.md</span>, сделай шаг 2, отметь его в плане». После каждой — ваша проверка и запись в журнал.</li>
     </ul>
-    <figure class="fig"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 500" width="340" height="500" role="img" aria-label="Лента большой задачи: первая сессия пишет только план, план сохраняется в файл notes/plan.md, следующие сессии читают план и делают по одному шагу, итог каждой записывается в journal.md. Внизу: то, что в окне, исчезает вместе с сессией; то, что в файлах, остаётся">
+    <figure class="fig" style="align-items:start"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 500" width="340" height="500" role="img" aria-label="Лента большой задачи: первая сессия пишет только план, план сохраняется в файл notes/plan.md, следующие сессии читают план и делают по одному шагу, итог каждой записывается в journal.md. Внизу: то, что в окне, исчезает вместе с сессией; то, что в файлах, остаётся">
       <g>
         <rect class="box" x="6" y="6" width="328" height="56" rx="6"/>
         <text x="16" y="28" font-size="14" font-weight="600">Сессия 1 · только план</text>
@@ -53,26 +53,26 @@
         <text class="sm" x="54" y="286">итог сессии</text>
       </g>
       <g>
-        <rect class="box" x="6" y="378" width="158" height="100" rx="6" style="stroke:var(--signal)"/>
+        <rect class="box" x="6" y="378" width="158" height="100" rx="6" style="stroke:var(--signal);stroke-width:1.5;stroke-dasharray:5 4"/>
         <text x="16" y="400" font-size="14" font-weight="600">В окне</text>
         <text class="sm" x="16" y="420">ход разговора</text>
         <text class="sm" x="16" y="438">ваши поправки</text>
         <text class="sm" x="16" y="456">устные уговоры</text>
-        <rect class="box" x="176" y="378" width="158" height="100" rx="6" style="stroke:var(--accent)"/>
+        <rect class="box" x="176" y="378" width="158" height="100" rx="6" style="stroke:var(--accent);stroke-width:2;fill:var(--accent-soft)"/>
         <text x="186" y="400" font-size="14" font-weight="600">В файлах</text>
         <text class="sm" x="186" y="420">CLAUDE.md</text>
         <text class="sm" x="186" y="438">notes/plan.md</text>
         <text class="sm" x="186" y="456">journal.md, data/</text>
       </g>
       <text class="sm" x="6" y="494" style="fill:var(--signal)">исчезает с сессией</text>
-      <text class="sm" x="176" y="494" style="fill:var(--accent)">остаётся</text>
+      <text class="sm" x="176" y="494" font-weight="600" style="fill:var(--accent)">остаётся</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз — одна большая задача: сессии сменяются, а между ними план и итоги передают два файла (в бирюзовой рамке). Внизу — главное различие урока: что исчезнет вместе с сессией и что останется.</figcaption></figure>
     <p class="recap"><b>Привал.</b> Два ответа из четырёх есть: правила — в файл правил, план — в файл плана. Оба о том, что должно пережить сессию. Оставшиеся два — о самом окне: как за ним следить и когда его бросить.</p></div>
 
   <div class="stack"><h2>Ответ 3. Окно сессии — под контролем</h2>
     <p>Три команды Claude Code (актуально на ноябрь 2026). Их набирают в поле ввода вместо сообщения.</p>
-    <div class="scroll"><table class="cards">
+    <div class="scroll"><table class="cards l17-cmd">
       <tr><th>Команда</th><th>Что делает</th><th>Когда</th></tr>
       <tr><td class="mono">/context</td><td>показывает, чем и насколько занято окно</td><td>разговор стал длинным</td></tr>
       <tr><td class="mono">/compact</td><td>заменяет историю разговора кратким пересказом</td><td>задача не закончена, а окно заполнено</td></tr>
@@ -97,9 +97,10 @@
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
       <p><b>Что пошло не так?</b> Пять ситуаций из работы над базой ферментов, по одной; порядок каждый раз новый. Выберите, что делать, — разбор появится сразу под кнопками.</p>
-      <p class="mono" id="l17num"></p>
-      <p id="l17sit"></p>
-      <div class="opts" id="l17opts"></div>
+      <p class="l17-num" id="l17num"></p>
+      <p class="l17-sit" id="l17sit"></p>
+      <span class="eyebrow">Что делать?</span>
+      <div class="opts l17-opts" id="l17opts"></div>
       <p class="verdict" id="l17why"></p>
       <div class="row"><button type="button" class="primary" id="l17next">Дальше</button><button type="button" id="l17reset">Сначала</button></div>
       <p class="try-note">Ситуации условные, но типичные. Где подходят два действия, верны оба. Оценок нет: можно нажать другой вариант и прочитать его разбор.</p>
@@ -192,7 +193,22 @@
     </ul></div>
 
 
-<style>.l17-opts button{white-space:normal}</style>
+<style>
+.l17-opts button{white-space:normal;min-height:48px;padding:10px 14px}
+.l17-opts button.l17-alt{background:transparent;border-style:dashed}
+.l17-opts button.l17-dim{opacity:.6}
+.l17-num{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0;font-family:var(--f-mono);font-size:.8rem;color:var(--accent)}
+.l17-dots{display:inline-flex;gap:6px}
+.l17-dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.l17-dots i.done{background:var(--accent)}
+.l17-dots i.cur{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.l17-sit{margin:0;padding:12px 14px;background:var(--bg);border-left:3px solid var(--signal);border-radius:0 8px 8px 0;font-family:var(--f-display);font-size:1.06rem;line-height:1.45}
+table.cards.l17-cmd>tbody>tr>td:first-child{font-family:var(--f-mono);color:var(--accent);font-weight:600}
+@media (max-width:600px){
+  table.cards.l17-cmd>tbody>tr{padding:8px 12px}
+  table.cards.l17-cmd>tbody>tr+tr{margin-top:8px}
+}
+</style>
 <script>
 (function(){
 var $=AI.$, el=AI.el;
@@ -209,22 +225,25 @@ var order=S.map(function(_,i){return i;}), pos=0, btns=[];
 function shuffle(){ for(var i=order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=order[i]; order[i]=order[j]; order[j]=t; } }
 function pick(j){
   var e=S[order[pos]], ok=e[1].indexOf(j)>=0, w=$('l17why');
-  btns.forEach(function(b,i){ b.className = i===j ? (ok?'right':'wrong') : (!ok && e[1].indexOf(i)>=0 ? 'right' : ''); });
+  btns.forEach(function(b,i){ b.className = i===j ? (ok?'right':'wrong') : (e[1].indexOf(i)>=0 ? 'right l17-alt' : 'l17-dim'); b.setAttribute('aria-pressed',i===j?'true':'false'); });
   w.className='verdict '+(ok?'ok':'no');
   w.textContent=(ok ? '' : 'Здесь поможет другое: «'+C[e[1][0]]+'». ')+e[2];
   $('l17next').hidden = pos>=S.length-1;
-  if(pos>=S.length-1) $('l17num').textContent='Ситуация '+S.length+' из '+S.length+' · последняя. «Сначала» — в новом порядке.';
+  if(pos>=S.length-1) num('Ситуация '+S.length+' из '+S.length+' · последняя. «Сначала» — в новом порядке.');
+  if(w.getBoundingClientRect().bottom>innerHeight) $('l17next').scrollIntoView({block:'nearest',behavior:'smooth'});
 }
+function num(t){ var p=$('l17num'), d=el('span','l17-dots'); p.textContent='';
+  S.forEach(function(_,i){ d.appendChild(el('i',i<pos?'done':(i===pos?'cur':''))); });
+  p.appendChild(d); p.appendChild(el('span',null,t)); }
 function show(){
   var e=S[order[pos]];
-  $('l17num').textContent='Ситуация '+(pos+1)+' из '+S.length;
+  num('Ситуация '+(pos+1)+' из '+S.length);
   $('l17sit').textContent=e[0];
   var box=$('l17opts'); box.textContent=''; btns=[];
   C.forEach(function(c,j){ var b=el('button',null,c); b.type='button'; b.addEventListener('click',function(){pick(j);}); box.appendChild(b); btns.push(b); });
   $('l17why').className='verdict'; $('l17why').textContent='';
   $('l17next').hidden=true;
 }
-$('l17opts').classList.add('l17-opts');
 $('l17next').addEventListener('click',function(){ if(pos<S.length-1){ pos++; show(); } });
 $('l17reset').addEventListener('click',function(){ shuffle(); pos=0; show(); });
 shuffle(); show();

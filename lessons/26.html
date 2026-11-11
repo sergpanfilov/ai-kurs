@@ -3,11 +3,44 @@
     .l26-sql b{color:var(--accent)}
     .l26-nolig{font-variant-ligatures:none}
     .l26-ok{color:var(--good)} .l26-bad{color:var(--bad)}
-    #l26res th,#l26res td{padding:6px 5px;font-size:.84rem;white-space:nowrap}
+    .l26-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 10px}
+    .l26-ctl label{font-weight:500}
+    .l26-ctl output{font-family:var(--f-display);font-size:1.5rem;font-weight:600;color:var(--accent);line-height:1}
+    .l26-ctl input{grid-column:1/-1}
+    .l26-ends{grid-column:1/-1;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);margin-top:-2px}
+    .l26-who{display:flex;gap:12px;align-items:center;min-height:52px;cursor:pointer;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+    .l26-who:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+    .l26-who input{flex:none}
+    .l26-res{border-top:1px solid var(--line);padding-top:4px}
+    #l26res th,#l26res td{padding:4px 5px;font-size:.84rem;white-space:nowrap}
     #l26res tr.l26-off td{color:var(--muted);text-decoration:line-through;opacity:.75}
     #l26res tr.l26-on td{font-weight:600}
-    .l26-who{display:flex;gap:10px;align-items:center;min-height:40px;cursor:pointer}
-    .l26-grid th,.l26-grid td{font-size:.9rem;vertical-align:top}
+    #l26res tr.l26-on td:first-child{box-shadow:inset 3px 0 0 var(--accent);padding-left:8px}
+    .l26-three{list-style:none;margin:0;padding:0;counter-reset:l26;display:grid;gap:10px}
+    .l26-three>li{counter-increment:l26;position:relative;padding-left:2.6rem;min-height:1.8rem}
+    .l26-three>li::before{position:absolute;left:0;top:.05rem;content:counter(l26);display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:.85rem;font-weight:600}
+    .l26-three>li:nth-child(n+2)::before{background:var(--accent);color:var(--surface)}
+    table.l26-grid{table-layout:fixed;border-collapse:separate;border-spacing:6px;margin:-6px}
+    .l26-grid th,.l26-grid td{font-size:.9rem;vertical-align:top;border:0;padding:8px 10px;line-height:1.4}
+    .l26-grid tr:first-child th{font-family:var(--f-mono);font-size:.74rem;padding:2px 10px;text-align:left}
+    .l26-grid tr:first-child th:first-child{width:28%}
+    .l26-grid tr+tr th{font-family:var(--f-body);font-size:.86rem;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600;padding-left:0}
+    .l26-grid td{border-radius:8px;background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--muted)}
+    .l26-grid td b{color:var(--ink)}
+    .l26-grid td.l26-yes{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent);color:var(--ink)}
+    .l26-grid td.l26-leak{background:var(--signal-soft);box-shadow:inset 0 0 0 2px var(--signal);color:var(--ink)}
+    .l26-mk{display:inline-grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:50%;font-size:.8rem;font-weight:700;margin-right:5px;vertical-align:.05em}
+    .l26-yes .l26-mk{background:var(--accent);color:var(--surface)}
+    .l26-leak .l26-mk{background:var(--signal);color:var(--signal-soft)}
+    @media (max-width:520px){
+      table.l26-grid,table.l26-grid>tbody{display:block;margin:0}
+      table.l26-grid tr{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+      table.l26-grid tr+tr{margin-top:8px}
+      table.l26-grid tr:first-child th:first-child{display:none}
+      table.l26-grid tr:first-child th{padding:0 2px;width:auto}
+      table.l26-grid tr+tr th{grid-column:1/-1;padding:4px 0 0}
+      table.l26-grid td{display:block;padding:8px 10px;font-size:.88rem}
+    }
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 6 · Урок 26 из 31 · 25 минут</span>
@@ -37,13 +70,16 @@
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Таблица измерений учебной мини-базы: 12 строк — тот самый запрос из текста. Двигайте порог: меняется условие, и база отбирает строки. Потом поставьте флажок и задайте тот же вопрос от имени гостя.</p>
-      <label for="l26thr">Оптимум не ниже: <span id="l26tv" class="mono">60</span> °C</label>
-      <input type="range" id="l26thr" min="30" max="75" step="5" value="60">
+      <div class="l26-ctl">
+        <label for="l26thr">Оптимум не ниже</label><output for="l26thr"><span id="l26tv">60</span> °C</output>
+        <input type="range" id="l26thr" min="30" max="75" step="5" value="60">
+        <span class="l26-ends" aria-hidden="true"><span>30 °C</span><span>75 °C</span></span>
+      </div>
       <label class="l26-who"><input type="checkbox" id="l26guest"> Спрашивает гость со страницы, а не вы в панели</label>
       <p class="l26-sql" id="l26sql"></p>
       <p class="out" id="l26out"></p>
       <p class="why" id="l26why"></p>
-      <div class="scroll"><table id="l26res"></table></div>
+      <div class="scroll l26-res"><table id="l26res"></table></div>
       <details class="more">
         <summary>Справка: какой фермент под каким номером</summary>
         <p>E1 IsPETase, E2 FAST-PETase, E3 HotPETase, E4 LCC-ICCG, E5 PHL7, E6 TfCut2, E7 ThermoPETase. «Подтв.» в таблице — «подтверждено».</p>
@@ -54,8 +90,8 @@
   <div class="stack"><h2>Вход и путь запроса</h2>
     <p>Чтобы база знала, кто пришёл, нужен <b>вход</b>. В этом курсе он через Google: вы нажимаете «Войти», Google подтверждает почту, и Supabase выдаёт странице <b>пропуск</b> — запись «это такой-то», подписанную самим Supabase. Подделать её нельзя — как нельзя подменить имя коммита (урок 25).</p>
     <p>Запросы к базе отправляет встроенная в страницу маленькая программа — <b>помощник Supabase</b>. К каждому запросу он прикладывает две вещи: <b>публичный ключ</b> — он один на всех и говорит лишь «я страница этого проекта» — и пропуск, который говорит, кто вы. Вот что происходит, когда вы отмечаете урок пройденным:</p>
-    <figure class="fig">
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 630" width="340" height="630" role="img" aria-label="Путь запроса: в браузере — страница курса и программа-помощник Supabase с публичным ключом и пропуском; интернет по https; в облаке Supabase — API, правило доступа по строкам и таблица ai_progress; ответ возвращается на страницу">
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 578" width="340" height="578" role="img" aria-label="Путь запроса: в браузере — страница курса и программа-помощник Supabase с публичным ключом и пропуском; интернет по https; в облаке Supabase — API, правило доступа по строкам и таблица ai_progress; ответ возвращается на страницу">
       <rect x="2" y="2" width="310" height="178" rx="8" style="fill:none;stroke:var(--muted);stroke-dasharray:4 4"/>
       <text class="sm" x="306" y="16" text-anchor="end">ваш браузер</text>
       <rect x="2" y="286" width="310" height="286" rx="8" style="fill:none;stroke:var(--muted);stroke-dasharray:4 4"/>
@@ -88,9 +124,8 @@
         <path class="arr" d="M156 370V388"/><path class="head" d="M156 396l-5-9h10z"/>
         <path class="arr" d="M156 458V476"/><path class="head" d="M156 484l-5-9h10z"/>
         <path class="arr" style="stroke-dasharray:5 4" d="M302 524H326V55H310"/><path class="head" d="M302 55l9-5v10z"/>
+        <text class="sm" x="0" y="0" transform="translate(337 290) rotate(-90)" text-anchor="middle" style="fill:var(--accent)">ответ «записано»</text>
       </g>
-      <text class="sm" x="6" y="596">пунктир справа — ответ «записано»;</text>
-      <text class="sm" x="6" y="614">урок отмечается пройденным</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Сверху вниз — путь одного нажатия. Выделен шаг 5: там база решает, записать строку или отказать. Пунктир справа — ответ «записано» возвращается на страницу.</figcaption>
     </figure>
@@ -107,7 +142,7 @@
     </details>
     <p>Есть и секретный ключ, который правила обходит, — урок 27.</p>
     <p>Слово «правило» в базе значит три разные вещи:</p>
-    <ol>
+    <ol class="l26-three">
       <li><b>Проверка значения</b> — что можно записать в клетку: «температура — число от −20 до 150». Действует и на вас.</li>
       <li><b>Доступ к таблице</b> — может ли страница вообще к ней обращаться. В новых проектах он закрыт, пока его не выдали явно, отдельно на чтение и на запись<sup class="fn" data-fn="5">5</sup>.</li>
       <li><b>Правило по строкам (RLS)</b> — какие строки увидит тот, кого к таблице пустили.</li>
@@ -115,7 +150,7 @@
     <p>Второе и третье — два слоя защиты, <span class="hl">нужны оба</span>. Что получит гость со страницы в каждом из четырёх случаев:</p>
     <div class="scroll"><table class="l26-grid">
       <tr><th></th><th>RLS включён</th><th>RLS выключен</th></tr>
-      <tr><th>Доступ к таблице выдан</th><td><b>140 из 180</b> — только строки, прошедшие правило. Так и нужно</td><td><b>все 180</b> — и непроверенные тоже</td></tr>
+      <tr><th>Доступ к таблице выдан</th><td class="l26-yes"><span class="l26-mk" aria-hidden="true">✓</span><b>140 из 180</b> — только строки, прошедшие правило. Так и нужно</td><td class="l26-leak"><span class="l26-mk" aria-hidden="true">!</span><b>все 180</b> — и непроверенные тоже</td></tr>
       <tr><th>Доступ не выдан</th><td><b>отказ</b>, ни одной строки</td><td><b>отказ</b> — но защита держится на одном слое</td></tr>
     </table></div>
     <p>RLS включён, а самих правил нет — страница тоже получит ноль строк. Вас в панели, владельца, правила по строкам не ограничивают.</p>
@@ -176,7 +211,7 @@
       <li>Решите, чем станут слова «нет данных» — «искали, в источнике нет» (урок 15). Числовое поле базы их не примет: они становятся <b>пустым значением</b>, а в ТЗ появляется строка «в принятой базе пусто значит „в источнике нет“». Это честно: черновик приняли без пустых клеток (урок 18).</li>
     </ol>
     <h3>Делаете вы в панели</h3>
-    <ol class="steps">
+    <ol class="steps" start="4">
       <li>Создайте второй, <b>рабочий</b> проект.</li>
       <li>Откройте SQL Editor, вставьте файл схемы и запустите.</li>
       <li>Загрузите CSV: Table Editor → Insert → Import data from CSV. Сначала ферменты и источники, потом измерения — они ссылаются на первые две.
@@ -186,7 +221,7 @@
         </details></li>
     </ol>
     <h3>Сверка</h3>
-    <ol class="steps">
+    <ol class="steps" start="7">
       <li>Сравните числа строк: 180 в файле измерений — 180 в таблице (у вас свои).</li>
       <li>Сверьте три случайные строки по исходнику.</li>
       <li>Запустите в SQL Editor контрольные вопросы из ТЗ: запросы пишет агент, запускаете вы. Они будут длиннее примера из урока — в них соединяются таблицы (урок 29); пока сверяйте только ответ с ожидаемым.</li>

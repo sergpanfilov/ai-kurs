@@ -6,7 +6,7 @@
     <p>Агент пишет: «Готово: 80 ферментов, всё проверено». Верить? Это заявление, а не доказательство. Документация Claude Code прямо говорит: агент останавливается, когда работа <i>выглядит</i> законченной<sup class="fn" data-fn="1">1</sup>.</p>
     <p><b>Приёмка</b> — сверка результата с критериями готовности из ТЗ (урок 18). Читать код не нужно. Вы не разбираете спектрофотометр, чтобы ему поверить, а ставите в него раствор известной концентрации и смотрите, что он покажет.</p>
     <p>С базой то же самое. <span class="hl">Задайте вопрос, ответ на который знаете заранее</span>, подсуньте неудобный случай, сверьте несколько строк с источником. Проверок пять — от дешёвых к дорогим.</p>
-    <figure class="fig"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Пять проверок от дешёвых к дорогим по вашему времени: показать проверку, контрольные вопросы, граничные случаи, критик (независимый проверяющий), выборочная сверка">
+    <figure class="fig" style="align-items:start"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Пять проверок от дешёвых к дорогим по вашему времени: показать проверку, контрольные вопросы, граничные случаи, критик (независимый проверяющий), выборочная сверка">
       <text class="sm" x="6" y="14">от дешёвых к дорогим ↓  полоска — ваше время</text>
       <g>
         <rect class="box" x="6" y="24" width="328" height="70" rx="6"/>
@@ -44,7 +44,7 @@
       <p><b>Контрольный вопрос</b> — вопрос с заранее известным ответом. Вы знаете, что у IsPETase в UniProt номер A0A0K8P6T7. Не нашёл — сломан сбор или поиск, дальше можно не проверять. (В запросе <span class="mono">*.csv</span> — «все файлы CSV в папке».)</p>
       <blockquote class="prompt">Ответь на мой контрольный вопрос по файлам data/*.csv: какой номер UniProt у IsPETase? Покажи строки.</blockquote>
       <p>Рядом живёт <b>счётчик</b>. Оба бывают про ноль, но ноль у них разный:</p>
-      <div class="scroll"><table class="cards">
+      <div class="scroll"><table class="cards l19-zero">
         <tr><th>Что это</th><th>Откуда ответ</th><th>Пример</th><th>Что значит ноль</th></tr>
         <tr><td>Контрольный вопрос</td><td>вы знаете его сами: из источника или из природы вещей</td><td>«строк с температурой 0 °C — ноль»: при нуле никто не мерил</td><td>так должно быть всегда; не ноль — ошибка в данных</td></tr>
         <tr><td>Счётчик</td><td>до подсчёта не знает никто; записано, что с ним делать</td><td>«строк без источника — должно быть 0»; «строк „не проверено“ — число в отчёт»</td><td>цель: в черновике 12, к приёмке 0; не ноль — работа не закончена</td></tr>
@@ -76,7 +76,7 @@
       <p>Пока неизвестно. Одна ошибка из 30 — это от 0,6 до 17&nbsp;% во всей базе: верхний край выше порога. Строк мало — добирают ещё 30, найденное идёт в общий счёт.</p>
     </details>
     <p>Все исходы записаны в ТЗ заранее — это <b>лестница выборки</b>:</p>
-    <div class="scroll"><table class="cards">
+    <div class="scroll"><table class="cards l19-ladder">
       <tr><th>Нашли ошибок</th><th>Верхняя граница</th><th>Что делать</th></tr>
       <tr><td>0 из 30</td><td>≈ 11&nbsp;%</td><td>принято</td></tr>
       <tr><td>1–3 из 30</td><td>17–26&nbsp;%</td><td>строк мало: добрать ещё 30</td></tr>
@@ -87,9 +87,10 @@
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
       <p><b>Какой проверкой ловить?</b> Пять ошибок, которые агент мог допустить в базе, по одной; набор и порядок каждый раз новые. Выберите самую дешёвую проверку из тех, что поймают ошибку надёжно, — разбор появится сразу под кнопками.</p>
-      <p class="mono" id="l19num"></p>
-      <p id="l19sit"></p>
-      <div class="opts" id="l19opts"></div>
+      <p class="l19-num" id="l19num"></p>
+      <p class="l19-sit" id="l19sit"></p>
+      <span class="eyebrow">Какой проверкой?</span>
+      <div class="opts l19-opts" id="l19opts"></div>
       <p class="verdict" id="l19why"></p>
       <div class="row"><button type="button" class="primary" id="l19next">Дальше</button><button type="button" id="l19reset">Сначала</button></div>
       <p class="try-note">Ошибки условные, но типичные для автоматического сбора данных из статей. Где подходят две проверки, верны обе. Оценок нет: можно нажать другой вариант и прочитать его разбор.</p>
@@ -200,7 +201,30 @@
     </ul></div>
 
 
-<style>.l19-opts button{white-space:normal}.l19-meta{font-size:.93rem;color:var(--muted)}.l19-check{gap:10px}</style>
+<style>
+.l19-check{gap:10px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px 10px 10px 4px}
+.l19-check>h3{font-size:1.08rem}
+@media (max-width:480px){.l19-check{padding:12px 12px 14px 13px}}
+.l19-meta{margin:0;padding:7px 10px;background:var(--bg);border-radius:6px;font-size:.9rem;line-height:1.5;color:var(--ink)}
+.l19-meta b{font-family:var(--f-mono);font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.l19-check blockquote.prompt{background:var(--bg)}
+table.l19-zero td:last-child{background:var(--accent-soft);border-radius:6px;padding:6px 10px;font-weight:500}
+@media (max-width:600px){
+  table.cards.l19-zero>tbody>tr>td:last-child{margin-top:8px;padding:6px 10px}
+  table.cards.l19-ladder>tbody>tr:not(.cards-head){display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:12px;padding:8px 12px}
+  table.cards.l19-ladder>tbody>tr+tr{margin-top:8px}
+  table.cards.l19-ladder>tbody>tr>td:first-child{grid-column:1/-1;padding-bottom:0}
+}
+.l19-opts button{white-space:normal;min-height:48px;padding:10px 14px}
+.l19-opts button.l19-alt{background:transparent;border-style:dashed}
+.l19-opts button.l19-dim{opacity:.6}
+.l19-num{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0;font-family:var(--f-mono);font-size:.8rem;color:var(--accent)}
+.l19-dots{display:inline-flex;gap:6px}
+.l19-dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.l19-dots i.done{background:var(--accent)}
+.l19-dots i.cur{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.l19-sit{margin:0;padding:12px 14px;background:var(--bg);border-left:3px solid var(--signal);border-radius:0 8px 8px 0;font-family:var(--f-display);font-size:1.06rem;line-height:1.45}
+</style>
 <script>
 (function(){
 var $=AI.$, el=AI.el;
@@ -221,22 +245,25 @@ function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random
 function deal(){ order=shuffle([0,1,shuffle([2,3,4])[0],5,6]); pos=0; }
 function pick(j){
   var e=E[order[pos]], ok=e[1].indexOf(j)>=0, w=$('l19why');
-  btns.forEach(function(b,i){ b.className = i===j ? (ok?'right':'wrong') : (!ok && e[1].indexOf(i)>=0 ? 'right' : ''); });
+  btns.forEach(function(b,i){ b.className = i===j ? (ok?'right':'wrong') : (e[1].indexOf(i)>=0 ? 'right l19-alt' : 'l19-dim'); b.setAttribute('aria-pressed',i===j?'true':'false'); });
   w.className='verdict '+(ok?'ok':'no');
   w.textContent=(ok ? '' : 'Здесь лучше — «'+C[e[1][0]]+'». ')+e[2];
   $('l19next').hidden = pos>=N-1;
-  if(pos>=N-1) $('l19num').textContent='Ошибка '+N+' из '+N+' · последняя. «Сначала» — новый набор.';
+  if(pos>=N-1) num('Ошибка '+N+' из '+N+' · последняя. «Сначала» — новый набор.');
+  if(w.getBoundingClientRect().bottom>innerHeight) $('l19next').scrollIntoView({block:'nearest',behavior:'smooth'});
 }
+function num(t){ var p=$('l19num'), d=el('span','l19-dots'); p.textContent='';
+  for(var i=0;i<N;i++) d.appendChild(el('i',i<pos?'done':(i===pos?'cur':'')));
+  p.appendChild(d); p.appendChild(el('span',null,t)); }
 function show(){
   var e=E[order[pos]];
-  $('l19num').textContent='Ошибка '+(pos+1)+' из '+N;
+  num('Ошибка '+(pos+1)+' из '+N);
   $('l19sit').textContent=e[0];
   var box=$('l19opts'); box.textContent=''; btns=[];
   C.forEach(function(c,j){ var b=el('button',null,c); b.type='button'; b.addEventListener('click',function(){pick(j);}); box.appendChild(b); btns.push(b); });
   $('l19why').className='verdict'; $('l19why').textContent='';
   $('l19next').hidden=true;
 }
-$('l19opts').classList.add('l19-opts');
 $('l19next').addEventListener('click',function(){ if(pos<N-1){ pos++; show(); } });
 $('l19reset').addEventListener('click',function(){ deal(); show(); });
 deal(); show();

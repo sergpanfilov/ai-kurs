@@ -19,8 +19,8 @@
 .l05-c2{background:var(--signal)}
 .l05-c3{background:color-mix(in srgb,var(--accent) 45%,var(--surface))}
 .l05-c4{background:repeating-linear-gradient(135deg,var(--muted) 0 3px,var(--surface) 3px 6px)}
-.l05-bar em{position:absolute;top:0;bottom:0;right:0;background:color-mix(in srgb,var(--bad) 22%,transparent);border-left:2.5px solid var(--bad)}
-.l05-lim{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+.l05-bar em{position:absolute;top:0;bottom:0;right:0;background:repeating-linear-gradient(135deg,var(--bad) 0 2px,transparent 2px 8px);border-left:3px solid var(--bad)}
+.l05-lim{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 8px;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
 .l05-lim b{font-weight:500;color:var(--bad)}
 .l05-out{font-size:.95rem;line-height:1.45;min-height:4.4em}
 .l05-out b{font-weight:600}
@@ -57,7 +57,7 @@
 
   <div class="stack"><h2>Как окно заполняется и сжимается</h2>
     <p>Когда окно почти заполнено, продукт может сделать <b>сжатие</b>: попросить модель написать <b>пересказ</b> ранних частей разговора и заменить их этим пересказом. Файл, приложенный в начале, тоже уходит в пересказ; понадобится снова — приложите заново. <span class="hl">Пересказ теряет мелочи</span> — ровно те, которые вы сказали один раз и больше не повторяли. Пишет его та же модель, так что он может и ошибиться (урок 6).</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 372" width="340" height="372" role="img" aria-label="Два окна рядом. Слева окно почти заполнено: инструкции, правила, длинный разговор, статья, вопрос. Справа после сжатия: инструкции и правила целиком, ранний разговор заменён коротким пересказом, много свободного места">
       <text x="6" y="15" font-size="13" font-weight="600">До сжатия</text>
       <text x="184" y="15" font-size="13" font-weight="600">После сжатия</text>
@@ -235,9 +235,8 @@ function l5draw(){
   ITEMS.forEach(function(it,i){ if(!$('l5c'+i).checked) return; var sgm=el('i','l05-c'+it[4]); sgm.style.width=(it[1]/full*100)+'%'; sgm.title=it[0]; bar.appendChild(sgm); });
   if(over){ var red=el('em'); red.style.left=(LIM/full*100)+'%'; bar.appendChild(red); }
   var lim=$('l5lim'); lim.textContent='';
-  lim.appendChild(el('span',null,'0'));
-  if(over) lim.appendChild(el('b',null,'красная зона — не влезло: '+fmt(tot-LIM)));
-  lim.appendChild(el('span',null,over?fmt(tot):'окно '+fmt(LIM)));
+  if(over){ lim.appendChild(el('span',null,'до красной черты — окно '+fmt(LIM))); lim.appendChild(el('b',null,'штриховка — не влезло: '+fmt(tot-LIM))); }
+  else { lim.appendChild(el('span',null,'0')); lim.appendChild(el('span',null,'окно '+fmt(LIM))); }
   var out=$('l5out'); out.textContent=''; out.classList.toggle('l05-over',over);
   out.appendChild(el('b',null,'Занято '+fmt(tot)+' из '+fmt(LIM)+' токенов ('+Math.round(pc)+'%). '));
   var s2;

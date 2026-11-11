@@ -3,7 +3,17 @@
     .l23-pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .l23-pick span{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);flex-basis:100%}
     .l23-pick button{flex:1 1 0;min-width:0;padding-inline:6px}
-    .l23-num{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+    .l23-ctl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.95rem;margin-bottom:-6px}
+    .l23-ctl label{min-height:32px;display:inline-flex;align-items:center}
+    .l23-ctl b{font-family:var(--f-mono);font-size:1rem;color:var(--accent);white-space:nowrap}
+    .l23-one{margin:0;font-family:var(--f-mono);font-size:.9rem;line-height:1.5}
+    .l23-one b{font-size:1.05rem;color:var(--accent)}
+    .l23-res{padding:10px 14px;border:2px solid var(--accent);border-radius:10px;background:var(--accent-soft);font-size:.98rem;line-height:1.5;font-weight:500}
+    #l23bars .bar-row{grid-template-columns:4.6rem minmax(0,1fr) auto}
+    #l23bars .num{white-space:nowrap}
+    .l23-num{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;counter-reset:l23n}
+    .l23-num>li{position:relative;padding-left:36px;counter-increment:l23n}
+    .l23-num>li::before{content:counter(l23n);position:absolute;left:0;top:.1em;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:.8rem;font-weight:600}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 5 · Урок 23 из 31 · 30 минут</span>
     <h1>Команда агентов и её цена</h1>
@@ -23,55 +33,58 @@
       <li><b>Передача через файлы.</b> Черновик, журнал и карточки лежат в папке проекта. Агент читает их сам, а не со слов главного: пересказ теряет детали.</li>
     </ol>
     <p>Весь конвейер проекта:</p>
-    <figure class="fig wide">
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 606" width="340" height="606" role="img" aria-label="Конвейер проекта сверху вниз: вы задаёте вопросы и критерии; сборщики пишут каждый свой файл по одной статье; файлы склеивает код; чистильщик заполняет приведённые поля, не трогая исходные; критик сверяет исходные поля с цитатой; вы проверяете 30–60 строк и решаете — принять или вернуть; принятые строки раскладываются по трём таблицам базы; аналитик отвечает на вопросы к базе; вы формулируете вывод. Справа — главный агент, который раздаёт задания. Слева — стрелка назад от вашей выборки к сборщикам: править инструкцию и запускать новый прогон">
-      <g>
-        <rect class="box" x="36" y="6" width="236" height="48" rx="6" style="stroke:var(--signal);stroke-width:2"/>
-        <text x="48" y="26" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
-        <text class="sm" x="48" y="44">вопросы к базе, критерии статей</text>
-        <rect class="box" x="36" y="76" width="236" height="48" rx="6"/>
-        <text x="48" y="96" font-size="14" font-weight="600">Сборщики</text>
-        <text class="sm" x="48" y="114">одна статья — один свой файл</text>
-        <rect class="box" x="36" y="146" width="236" height="64" rx="6"/>
-        <text x="48" y="166" font-size="14" font-weight="600">Чистильщик</text>
-        <text class="sm" x="48" y="184">заполняет приведённые поля,</text>
-        <text class="sm" x="48" y="200">исходные не трогает; метит дубли</text>
-        <rect class="box" x="36" y="232" width="236" height="48" rx="6"/>
-        <text x="48" y="252" font-size="14" font-weight="600">Критик</text>
-        <text class="sm" x="48" y="270">сверяет исходные поля с цитатой</text>
-        <rect class="box" x="36" y="302" width="236" height="48" rx="6" style="stroke:var(--signal);stroke-width:2"/>
-        <text x="48" y="322" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
-        <text class="sm" x="48" y="340">30–60 строк: принять или вернуть</text>
-        <rect class="box" x="36" y="372" width="236" height="48" rx="6" style="stroke:var(--accent);stroke-width:2"/>
-        <text x="48" y="392" font-size="14" font-weight="600" style="fill:var(--accent)">База</text>
-        <text class="sm" x="48" y="410">принятые строки → три таблицы</text>
-        <rect class="box" x="36" y="442" width="236" height="48" rx="6"/>
-        <text x="48" y="462" font-size="14" font-weight="600">Аналитик</text>
-        <text class="sm" x="48" y="480">вопросы к базе (урок 29)</text>
-        <rect class="box" x="36" y="512" width="236" height="48" rx="6" style="stroke:var(--signal);stroke-width:2"/>
-        <text x="48" y="532" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
-        <text class="sm" x="48" y="550">вывод и оговорки</text>
-      </g>
-      <g>
-        <path class="arr" d="M154 54V68"/><path class="head" d="M154 76l-5-8h10z"/>
-        <path class="arr" d="M154 124V138"/><path class="head" d="M154 146l-5-8h10z"/>
-        <text class="sm" x="164" y="139">склейка кодом</text>
-        <path class="arr" d="M154 210V224"/><path class="head" d="M154 232l-5-8h10z"/>
-        <path class="arr" d="M154 280V294"/><path class="head" d="M154 302l-5-8h10z"/>
-        <path class="arr" d="M154 350V364"/><path class="head" d="M154 372l-5-8h10z"/>
-        <text class="sm" x="164" y="365">ваше «да»</text>
-        <path class="arr" d="M154 420V434"/><path class="head" d="M154 442l-5-8h10z"/>
-        <path class="arr" d="M154 490V504"/><path class="head" d="M154 512l-5-8h10z"/>
-      </g>
-      <path d="M36 326H10V100H27" style="stroke:var(--signal);stroke-width:2;fill:none"/>
-      <path d="M36 100l-9-5v10z" style="fill:var(--signal)"/>
-      <text class="sm" x="27" y="213" text-anchor="middle" transform="rotate(-90 27 213)" style="fill:var(--signal)">править инструкцию → новый прогон</text>
-      <rect x="280" y="76" width="56" height="414" rx="8" style="fill:var(--accent-soft);stroke:var(--accent)"/>
-      <text x="303" y="283" font-size="13" font-weight="600" text-anchor="middle" transform="rotate(-90 303 283)">главный агент</text>
-      <text class="sm" x="321" y="283" text-anchor="middle" transform="rotate(-90 321 283)">раздаёт задания, запускает код</text>
-      <path d="M280 100H272M280 178H272M280 256H272M280 396H272M280 466H272" style="stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3 3"/>
-      <text class="sm" x="4" y="582">рыжим — точки, где решаете вы,</text>
-      <text class="sm" x="4" y="598">и возврат на новый прогон</text>
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 662" width="340" height="662" role="img" aria-label="Конвейер проекта сверху вниз: вы задаёте вопросы и критерии; сборщики пишут каждый свой файл по одной статье; файлы склеивает код; чистильщик заполняет приведённые поля, не трогая исходные; критик сверяет исходные поля с цитатой; вы проверяете 30–60 строк и решаете — принять или вернуть; принятые строки раскладываются по трём таблицам базы; аналитик отвечает на вопросы к базе; вы формулируете вывод. Справа — главный агент, который раздаёт задания. Слева — стрелка назад от вашей выборки к сборщикам: править инструкцию и запускать новый прогон">
+      <rect class="box" x="36" y="6" width="220" height="48" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+      <text x="48" y="26" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
+      <text class="sm" x="48" y="44">вопросы, критерии статей</text>
+      <text class="sm" x="4" y="74" style="fill:var(--signal)">править инструкцию</text>
+      <text class="sm" x="4" y="90" style="fill:var(--signal)">→ новый прогон</text>
+      <path class="arr" d="M146 54V88"/><path class="head" d="M146 96l-5-8h10z"/>
+      <rect class="box" x="36" y="96" width="220" height="48" rx="6"/>
+      <text x="48" y="116" font-size="14" font-weight="600">Сборщики</text>
+      <text class="sm" x="48" y="134">одна статья — один свой файл</text>
+      <path class="arr" d="M146 144V158"/><path class="head" d="M146 166l-5-8h10z"/>
+      <text class="sm" x="156" y="160">склейка кодом</text>
+      <rect class="box" x="36" y="166" width="220" height="80" rx="6"/>
+      <text x="48" y="186" font-size="14" font-weight="600">Чистильщик</text>
+      <text class="sm" x="48" y="204">заполняет приведённые поля,</text>
+      <text class="sm" x="48" y="220">исходные не трогает;</text>
+      <text class="sm" x="48" y="236">метит дубли</text>
+      <path class="arr" d="M146 246V260"/><path class="head" d="M146 268l-5-8h10z"/>
+      <rect class="box" x="36" y="268" width="220" height="48" rx="6"/>
+      <text x="48" y="288" font-size="14" font-weight="600">Критик</text>
+      <text class="sm" x="48" y="306">сверяет исходное с цитатой</text>
+      <path class="arr" d="M146 316V330"/><path class="head" d="M146 338l-5-8h10z"/>
+      <rect class="box" x="36" y="338" width="220" height="64" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+      <text x="48" y="358" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
+      <text class="sm" x="48" y="376">30–60 строк:</text>
+      <text class="sm" x="48" y="392">принять или вернуть</text>
+      <path class="arr" d="M146 402V416"/><path class="head" d="M146 424l-5-8h10z"/>
+      <text class="sm" x="156" y="418">ваше «да»</text>
+      <rect class="box" x="36" y="424" width="220" height="48" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+      <text x="48" y="444" font-size="14" font-weight="600" style="fill:var(--accent)">База</text>
+      <text class="sm" x="48" y="462">принятые строки → три таблицы</text>
+      <path class="arr" d="M146 472V486"/><path class="head" d="M146 494l-5-8h10z"/>
+      <rect class="box" x="36" y="494" width="220" height="48" rx="6"/>
+      <text x="48" y="514" font-size="14" font-weight="600">Аналитик</text>
+      <text class="sm" x="48" y="532">вопросы к базе (урок 29)</text>
+      <path class="arr" d="M146 542V556"/><path class="head" d="M146 564l-5-8h10z"/>
+      <rect class="box" x="36" y="564" width="220" height="48" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+      <text x="48" y="584" font-size="14" font-weight="600" style="fill:var(--signal)">Вы</text>
+      <text class="sm" x="48" y="602">вывод и оговорки</text>
+      <path d="M36 370H10V120H27" style="stroke:var(--signal);stroke-width:2;fill:none"/>
+      <path d="M36 120l-9-5v10z" style="fill:var(--signal)"/>
+      <rect x="264" y="96" width="72" height="446" rx="8" style="fill:var(--accent-soft);stroke:var(--accent)"/>
+      <text x="300" y="122" font-size="13" font-weight="600" text-anchor="middle">главный</text>
+      <text x="300" y="138" font-size="13" font-weight="600" text-anchor="middle">агент</text>
+      <text class="sm" x="300" y="160" text-anchor="middle">раздаёт</text>
+      <text class="sm" x="300" y="176" text-anchor="middle">задания,</text>
+      <text class="sm" x="300" y="192" text-anchor="middle">запускает</text>
+      <text class="sm" x="300" y="208" text-anchor="middle">код</text>
+      <path d="M264 120H256M264 206H256M264 292H256M264 448H256M264 518H256" style="stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3 3"/>
+      <text class="sm" x="4" y="636">рыжим — точки, где решаете вы,</text>
+      <text class="sm" x="4" y="652">и возврат на новый прогон</text>
     </svg></div>
     <figcaption><b>Как читать.</b> Сверху вниз. Рыжим — три точки, где решаете вы, и возврат на новый прогон. У вас критик отработал раньше чистильщика (шаг 22) — почему это безопасно, сказано под схемой.</figcaption>
     </figure>
@@ -97,17 +110,17 @@
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
       <p>Единица расчёта — <b>одна статья</b>: её читает сборщик, потом критик, а главный агент (Claude Opus 5.5) раздаёт задания и читает короткие отчёты. Задайте размер статьи, модели и число статей.</p>
-      <label for="l23a">Токенов в одной статье, тыс.: <span id="l23av" class="mono"></span></label>
+      <div class="l23-ctl"><label for="l23a">Токенов в одной статье, тыс.</label><b id="l23av"></b></div>
       <input type="range" id="l23a" min="5" max="60" step="1" value="18">
       <div class="l23-pick" id="l23col"><span>Сборщик:</span></div>
       <div class="l23-pick" id="l23cri"><span>Критик:</span></div>
       <div class="row"><button type="button" id="l23cache">Скидка за кэш: выключена</button></div>
       <div id="l23bars" class="stack" style="gap:6px"></div>
-      <p class="out" id="l23one"></p>
-      <div class="verdict" id="l23head"></div>
-      <label for="l23n">Статей в прогоне: <span id="l23nv" class="mono"></span></label>
+      <p class="l23-one" id="l23one"></p>
+      <div class="l23-res" id="l23head"></div>
+      <div class="l23-ctl"><label for="l23n">Статей в прогоне</label><b id="l23nv"></b></div>
       <input type="range" id="l23n" min="5" max="200" step="5" value="100">
-      <p class="out" id="l23out"></p>
+      <p class="l23-one" id="l23out"></p>
       <p class="why" id="l23note"></p>
       <p class="try-note">Цены настоящие<sup class="fn" data-fn="5">5</sup> — со <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">страницы цен Anthropic</a>, актуально на ноябрь 2026. Объёмы условные.</p>
       <details class="more">
@@ -255,8 +268,8 @@ function draw(){
   var solo=agent(OVER+a,COL_OUT,OPUS);
   var rows=[['сборщик',col.usd],['критик',cri.usd],['главный',main.usd]], mx=Math.max(col.usd,cri.usd,main.usd,0.001), box=$('l23bars'); box.textContent='';
   rows.forEach(function(q){var row=el('div','bar-row'); row.appendChild(el('span',null,q[0])); var b=el('div','bar'), f=el('i'); f.style.width=(q[1]/mx*100).toFixed(1)+'%'; b.appendChild(f); row.appendChild(b); row.appendChild(el('span','num',usd(q[1]))); box.appendChild(row);});
-  $('l23one').textContent='Одна статья по API: '+usd(one)+' · '+Math.round(tok)+' тыс. токенов';
-  $('l23out').textContent='Прогон на '+n+' статей: '+usd(one*n+fix)+' · '+times((tok*n+FIX_IN+FIX_OUT)/1000)+' млн токенов';
+  var o1=$('l23one'); o1.textContent='Одна статья по API: '; o1.appendChild(el('b',null,usd(one))); o1.appendChild(document.createTextNode(' · '+Math.round(tok)+' тыс. токенов'));
+  var o2=$('l23out'); o2.textContent='Прогон на '+n+' статей: '; o2.appendChild(el('b',null,usd(one*n+fix))); o2.appendChild(document.createTextNode(' · '+times((tok*n+FIX_IN+FIX_OUT)/1000)+' млн токенов'));
   var kt=tok/solo.tok, km=one/solo.usd;
   var head='Против одного агента команда тратит в '+times(kt)+(kt<10?' раза':' раз')+' больше токенов. ';
   if(km>=1.05) head+='По деньгам — в '+times(km)+(km<10?' раза':' раз')+' больше.';

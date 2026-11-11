@@ -21,8 +21,24 @@
     .l31-conf{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
     .l31-empty{color:var(--signal)}
     .l31-path{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:4px}
-    .l31-o{border-bottom:2px solid var(--accent)} .l31-u{border-bottom:2px dashed var(--signal)} .l31-g{border-bottom:2px dotted var(--ink)}
-    .l31-leg{font-size:.9rem;display:flex;flex-wrap:wrap;gap:4px 16px;margin:0}
+    .l31-o{border-bottom:3px solid var(--accent)} .l31-u{border-bottom:3px dashed var(--signal)} .l31-g{border-bottom:3px dotted var(--ink)}
+    .l31-leg{font-size:.9rem;display:flex;flex-wrap:wrap;gap:6px;margin:0}
+    .l31-leg>span{border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface)}
+    .l31-leg>span>span{font-weight:600}
+    .l31-tabs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);gap:4px;padding:4px;background:var(--bg);border-radius:10px;scroll-margin-top:12px}
+    .l31-tabs button{border:1px solid transparent;background:transparent;color:var(--muted);min-height:52px;padding:6px 8px;white-space:normal;line-height:1.25;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;border-radius:7px}
+    .l31-tabs button b{font-size:.88rem;font-weight:600;color:var(--ink)}
+    .l31-tabs button small{font-size:.74rem}
+    .l31-tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .l31-tabs button[aria-selected="true"] b{color:var(--accent)}
+    .l31-tabs button small.l31-has{color:var(--signal)}
+    @media (hover:hover){.l31-tabs button:hover{background:var(--surface)}}
+    .l31-pane[hidden]{display:none}
+    .l31-warn{margin:0;padding:8px 10px;border-radius:8px;background:var(--signal-soft);color:var(--ink);font-size:.9rem}
+    .l31-warn.l31-fine{background:var(--accent-soft)}
+    ul.plain.l31-done{list-style:none;padding-left:0;gap:8px}
+    .l31-done li{position:relative;padding-left:1.9rem}
+    .l31-done li::before{content:"✓";position:absolute;left:0;top:.1em;width:1.3rem;height:1.3rem;border-radius:50%;background:var(--accent);color:var(--surface);font-size:.8rem;font-weight:700;display:grid;place-items:center}
     .l31-res td,.l31-res th{font-size:.88rem;padding:6px;vertical-align:top}
     .l31-plan{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:3px}
     .l31-plan li{font-size:.95rem}
@@ -49,7 +65,7 @@
 
   <div class="stack"><h2>Отчёт на одну страницу</h2>
     <p>Семь блоков в два слоя. Сверху — что нужно <b>читателю</b>: тому, кто будет решать по вашему выводу (руководитель лаборатории; вы сами через полгода). Ниже черты — что нужно <b>проверяющему</b>: тому, кто захочет убедиться. От читателя зависит первая строка: ему нужен вывод, а не история сбора.</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
       <div class="scroll"><svg class="fit-w" viewBox="0 0 340 556" width="340" height="556" role="img" aria-label="Макет отчёта на одну страницу, семь блоков. Для читателя: 1 — главный вывод, 2 — ответы на пять вопросов с оценкой, 3 — до трёх кандидатов для лаборатории. Для проверяющего: 4 — расхождения, 5 — пробелы, 6 — качество данных, 7 — что сделать иначе">
       <path d="M4 4H312L336 28V548H4Z" style="fill:var(--surface);stroke:var(--line)"/>
       <path d="M312 4V28H336" style="fill:none;stroke:var(--line)"/>
@@ -57,10 +73,10 @@
       <text class="sm" x="16" y="46">64 фермента · 112 источников · 410 измерений</text>
       <text class="sm" x="16" y="61">проверено вручную: 60 строк · 11.2026</text>
       <text class="sm" x="16" y="84" style="fill:var(--accent)">ДЛЯ ЧИТАТЕЛЯ</text>
-      <rect x="16" y="92" width="308" height="44" rx="5" style="fill:var(--accent-soft);stroke:none"/>
+      <rect x="16" y="92" width="308" height="44" rx="5" style="fill:var(--accent-soft);stroke:var(--accent);stroke-width:2"/>
       <text x="26" y="112" font-size="13" font-weight="600">1. Главный вывод</text>
       <text class="sm" x="26" y="128">2–3 фразы: основание, условия, граница</text>
-      <rect class="box" x="16" y="144" width="308" height="90" rx="5" style="stroke:var(--accent);stroke-width:2"/>
+      <rect class="box" x="16" y="144" width="308" height="90" rx="5"/>
       <text x="26" y="165" font-size="13" font-weight="600">2. Ответы на пять вопросов</text>
       <text class="sm" x="26" y="184">ответ → на чём основан → оценка</text>
       <text class="sm" x="26" y="202">В1 факты: 9 — средняя+, 14 — низкая</text>
@@ -110,9 +126,14 @@
       <p>Нет: примерно 0–6&nbsp;%. «Ошибок не найдено» не значит «ошибок нет». Проверьте в шаблоне ниже: поставьте 0 в поле «с ошибкой после критика».</p>
     </details>
     <div class="panel"><span class="eyebrow">Попробуйте сами</span>
-      <p>Шаблон отчёта. Поля заполнены условным примером — замените своими данными: страница под формой собирается сама. Текст никуда не отправляется: он хранится только в этом браузере и переживает перезагрузку.</p>
-      <div class="row"><button type="button" class="primary" id="l31show">Показать страницу ↓</button></div>
+      <p>Шаблон отчёта. Поля заполнены условным примером — замените своими данными: страница на третьей вкладке собирается сама. Текст никуда не отправляется: он хранится только в этом браузере и переживает перезагрузку.</p>
+      <div class="l31-tabs" id="l31tabs" role="tablist" aria-label="Шаблон отчёта">
+        <button type="button" role="tab" id="l31t-r" aria-controls="l31pr" aria-selected="true"><b>Читатель</b><small>шапка, 1–3</small></button>
+        <button type="button" role="tab" id="l31t-c" aria-controls="l31pc" aria-selected="false"><b>Проверяющий</b><small>блоки 4–7</small></button>
+        <button type="button" role="tab" id="l31t-s" aria-controls="l31ps" aria-selected="false"><b>Страница</b><small id="l31tsn">собранная</small></button>
+      </div>
       <div class="l31-form" id="l31form">
+        <div class="l31-pane l31-form" id="l31pr" role="tabpanel" aria-labelledby="l31t-r">
         <label>Тема базы<input id="l31topic"></label>
         <div class="l31-nums">
           <label>Объектов в базе<input id="l31n" type="number" min="0"></label>
@@ -131,6 +152,8 @@
           <div class="row"><button type="button" class="small" id="l31add">Добавить вопрос</button></div>
           <label>3. Проверить в лаборатории: до трёх кандидатов, у каждого «почему этот»<textarea id="l31lab"></textarea></label>
         </fieldset>
+        </div>
+        <div class="l31-pane l31-form" id="l31pc" role="tabpanel" aria-labelledby="l31t-c" hidden>
         <fieldset class="l31-group"><legend>Для проверяющего</legend>
           <label>4. Расхождения между источниками<textarea id="l31diff"></textarea></label>
           <label>5. Пробелы в данных<textarea id="l31gap"></textarea></label>
@@ -141,11 +164,13 @@
           <p class="why" id="l31ci"></p>
           <label>7. Что сделать иначе<textarea id="l31next"></textarea></label>
         </fieldset>
+        </div>
       </div>
-      <span class="eyebrow">Собранная страница</span>
-      <div class="l31-sheet" id="l31sheet"></div>
-      <p class="why" id="l31warn"></p>
-      <div class="row"><button type="button" id="l31up">К форме ↑</button><button type="button" class="primary" id="l31copy">Скопировать текст</button><button type="button" id="l31clear">Очистить поля</button><button type="button" id="l31reset">Сначала</button><span class="out" id="l31out"></span></div>
+      <div class="l31-pane" id="l31ps" role="tabpanel" aria-labelledby="l31t-s" hidden>
+        <div class="l31-sheet" id="l31sheet"></div>
+      </div>
+      <p class="l31-warn" id="l31warn" aria-live="polite"></p>
+      <div class="row"><button type="button" class="primary" id="l31copy">Скопировать текст</button><button type="button" id="l31clear">Очистить поля</button><button type="button" id="l31reset">Сначала</button><span class="out" id="l31out"></span></div>
       <p class="try-note">Пример условный. Доверительный интервал считается настоящей формулой (интервал Уилсона, 95&nbsp;%, урок 22).</p></div>
     <p><b>Что вы увидели.</b> Пустой блок на странице заметен сразу, а диапазон ошибок зависит от размера выборки не меньше, чем от числа ошибок.</p>
     <p class="recap"><b>Привал.</b> Вывод сформулирован, страница размечена, у слабых мест свои блоки. Осталось понять, почему подпись под выводом ваша, — и показать работу человеку.</p></div>
@@ -219,7 +244,7 @@
 
   <div class="panel tint milestone"><span class="eyebrow">Курс закончен</span>
     <p>Путь пройден: семь модулей, 31 урок. Теперь вы:</p>
-    <ul class="plain">
+    <ul class="plain l31-done">
       <li><b>отличаете</b>, где модель вспоминает, а где достраивает, и знаете, почему она ошибается;</li>
       <li><b>считаете</b> память, скорость и цену — и выбираете, локально или в облаке;</li>
       <li><b>запускаете</b> агента в папке проекта и читаете его просьбы о разрешении;</li>
@@ -254,8 +279,9 @@
 (function(){
 var $=AI.$, el=AI.el;
 // метка на странице, подпись в списке; 0–2 — уверенность в факте, 3 — список фактов, 4–5 — полнота списка (две шкалы урока 30)
-var CONF=[['●●● высокая','факт: высокая — 4+ независимых источника, сходятся'],['●●○ средняя','факт: средняя — 2–3 источника или детали расходятся'],['●○○ низкая','факт: низкая — один источник или противоречат'],
- ['по строкам','список фактов: уверенность по строкам — распределение в ответе'],['список неполон','расхождения, пробелы: полнота — список неполон'],['список полон','расхождения, пробелы: полнота — проверены все источники']];
+var CONF=[['●●● высокая','факт: высокая — 4+ независимых источника, сходятся','●●● высокая: 4+ источника'],['●●○ средняя','факт: средняя — 2–3 источника или детали расходятся','●●○ средняя: 2–3 источника'],['●○○ низкая','факт: низкая — один источник или противоречат','●○○ низкая: 1 источник, спор'],
+ ['по строкам','список фактов: уверенность по строкам — распределение в ответе','по строкам: распределение'],['список неполон','расхождения, пробелы: полнота — список неполон','список неполон'],['список полон','расхождения, пробелы: полнота — проверены все источники','список полон: всё проверено']];
+var OPTG=[['Уверенность в факте',[0,1,2]],['Список фактов',[3]],['Полнота списка',[4,5]]];
 var EX={topic:'База ферментов для разложения ПЭТ при 60–70 °C', n:64, src:112, m:410,
  main:'В одном сравнении четырёх улучшенных ферментов — на одном и том же ПЭТ, с одной загрузкой фермента, каждый при своей лучшей температуре — больше всего ПЭТ разложил LCC-ICCG. Для остальных ферментов базы условия опытов разные, и прямо сравнивать их нельзя.',
  parts:[true,true,true],
@@ -276,7 +302,7 @@ function addRow(vals){
   var la=el('label',null,'Ответ и на чём основан'), ia=el('textarea'); la.appendChild(ia);
   var lc=el('label',null,'Оценка — одна из двух шкал урока 30'), sc=el('select');
   var o0=el('option',null,'— оценка не выбрана —'); o0.value=''; sc.appendChild(o0);
-  CONF.forEach(function(c,j){var o=el('option',null,c[1]); o.value=String(j); sc.appendChild(o);});
+  OPTG.forEach(function(g){ var og=el('optgroup'); og.label=g[0]; g[1].forEach(function(j){ var o=el('option',null,CONF[j][2]); o.value=String(j); og.appendChild(o); }); sc.appendChild(og); });
   lc.appendChild(sc);
   d.appendChild(lq); d.appendChild(la); d.appendChild(lc); $('l31qs').appendChild(d);
   if(vals){ iq.value=vals[0]; ia.value=vals[1]; sc.value=vals[2]; }
@@ -354,6 +380,8 @@ function render(){
   sec('7. Что сделать иначе',v('l31next'),'Не заполнено.');
   if(low && cnt && low===cnt) warn.push('у всех ответов низкая уверенность — тогда это и есть главный вывод');
   $('l31warn').textContent= warn.length ? 'Обратите внимание: '+warn.join('; ')+'.' : 'Все блоки заполнены.';
+  $('l31warn').classList.toggle('l31-fine',!warn.length);
+  var tsn=$('l31tsn'); var wn=warn.length, wd=wn%10, wh=wn%100; tsn.textContent= wn ? wn+' '+((wd===1&&wh!==11)?'замечание':(wd>=2&&wd<=4&&(wh<12||wh>14))?'замечания':'замечаний') : 'без замечаний'; tsn.classList.toggle('l31-has',!!warn.length);
   plain=T.join('\n').replace(/\n{3,}/g,'\n\n').trim();
 }
 function copy(){
@@ -373,8 +401,14 @@ $('l31form').addEventListener('input',function(e){ if(!e.isTrusted && e.target &
 $('l31form').addEventListener('change',function(){ render(); save(); });
 $('l31add').addEventListener('click',function(){ addRow(null); render(); save(); });
 $('l31copy').addEventListener('click',copy);
-$('l31show').addEventListener('click',function(){ $('l31sheet').scrollIntoView({behavior:'smooth',block:'start'}); });
-$('l31up').addEventListener('click',function(){ $('l31form').scrollIntoView({behavior:'smooth',block:'start'}); });
+var PANES={r:'l31pr',c:'l31pc',s:'l31ps'};
+function tab(k){
+  Object.keys(PANES).forEach(function(x){ $(PANES[x]).hidden=x!==k; $('l31t-'+x).setAttribute('aria-selected',x===k?'true':'false'); $('l31t-'+x).tabIndex=x===k?0:-1; });
+  if(k!=='s') grow();
+  try{ var t=$('l31tabs'); if(t.getBoundingClientRect().top<0) t.scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){}
+}
+Object.keys(PANES).forEach(function(k,i,a){ var b=$('l31t-'+k); b.addEventListener('click',function(){ tab(k); });
+  b.addEventListener('keydown',function(e){ var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d) return; e.preventDefault(); var n=a[(i+d+a.length)%a.length]; tab(n); $('l31t-'+n).focus(); }); });
 $('l31clear').addEventListener('click',function(){ fill(EMPTY); $('l31out').textContent=''; render(); save(); });
 $('l31reset').addEventListener('click',function(){ fill(EX); $('l31out').textContent=''; render(); forget(); });
 fill(load()||EX); render();

@@ -1,6 +1,8 @@
   <style>
     .l09-seg{display:flex;flex-wrap:wrap;gap:8px}
     .l09-seg button{flex:1 1 auto;padding-inline:10px}
+    /* устройства на телефоне: 3 + 2 кнопки равной ширины */
+    @media (max-width:600px){#l09dev{display:grid;grid-template-columns:repeat(6,1fr)}#l09dev .l09-k{grid-column:1/-1}#l09dev button{grid-column:span 2}#l09dev button:nth-last-child(-n+2){grid-column:span 3}}
     .l09-k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);flex-basis:100%;margin-bottom:-2px}
     /* ответ: формула потолка и то, что выйдет на деле */
     .l09-res{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}

@@ -18,6 +18,11 @@
 @media (min-width:600px){.l03-btns{grid-template-columns:1.6fr 1fr 1fr 1fr}.l03-btns .primary{grid-column:auto}}
 .l03-out{font-size:.97rem;line-height:1.5;padding:10px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0;min-height:5.6em}
 .l03-out.l03-bad{border-left-color:var(--signal);background:var(--signal-soft)}
+.l03-do{font-size:.95rem;font-weight:500;color:var(--accent);margin:0}
+.l03-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 10px}
+.l03-ctl input{grid-column:1/-1}
+.l03-ctl b{font-family:var(--f-mono);font-size:1.05rem;font-weight:600;color:var(--accent)}
+.l03-ends{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
 </style>
   <div class="stack"><span class="eyebrow">Модуль 1 · Урок 3 из 31 · 25 минут</span>
     <h1>Обучение: как подбираются веса</h1>
@@ -42,7 +47,7 @@
       <tr><th>A</th><td>0,11</td><td>0,19</td><td>0,32</td><td>0,41</td><td>0,49</td></tr>
     </table></div>
     <p>Нужно найти k — наклон прямой. Начнём с плохой догадки k&nbsp;=&nbsp;0,03 и сделаем один шаг обучения.</p>
-    <figure class="fig">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 -6 340 244" width="340" height="244" role="img" aria-label="Пять точек измерений; нижняя прямая — догадка k = 0,03, пунктиры — промахи; верхняя пунктирная прямая — после одного шага, k = 0,061">
       <path class="ax" d="M40 14V200H336"/>
       <g text-anchor="middle"><text class="sm" x="88" y="215">1</text><text class="sm" x="136" y="215">2</text><text class="sm" x="184" y="215">3</text><text class="sm" x="232" y="215">4</text><text class="sm" x="280" y="215">5</text></g>
@@ -51,14 +56,16 @@
       <text class="sm" x="336" y="232" text-anchor="end">концентрация c, мг/л</text>
       <text class="sm" x="44" y="8">оптическая плотность A</text>
       <path style="stroke:var(--signal);stroke-width:1.5;stroke-dasharray:3 3;fill:none" d="M88 169.2V191.6M136 146.8V183.2M184 110.4V174.8M232 85.2V166.4M280 62.8V158"/>
-      <path class="fit" d="M40 200L336 148.2"/>
-      <path class="fit" style="stroke-dasharray:6 4;opacity:.75" d="M40 200L336 94.7"/>
+      <path class="fit" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:6 4" d="M40 200L336 148.2"/>
+      <path class="fit" d="M40 200L336 94.7"/>
+      <path class="arr" d="M318 149V112"/><path class="head" d="M318 103l-5 9h10z"/>
+      <text x="312" y="134" font-size="12" font-weight="600" text-anchor="end" style="fill:var(--accent)">шаг</text>
       <circle class="pt" cx="88" cy="169.2" r="5"/><circle class="pt" cx="136" cy="146.8" r="5"/><circle class="pt" cx="184" cy="110.4" r="5"/><circle class="pt" cx="232" cy="85.2" r="5"/><circle class="pt" cx="280" cy="62.8" r="5"/>
       <text class="sm" x="288" y="84" style="fill:var(--signal)">промах</text>
-      <path class="fit" d="M48 46H70"/><text class="sm" x="76" y="50">до шага: k = 0,03</text>
-      <path class="fit" style="stroke-dasharray:6 4;opacity:.75" d="M48 64H70"/><text class="sm" x="76" y="68">после шага: k = 0,061</text>
+      <path class="fit" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:6 4" d="M48 46H70"/><text class="sm" x="76" y="50">до шага: k = 0,03</text>
+      <path class="fit" d="M48 64H70"/><text class="sm" x="76" y="68" style="fill:var(--ink)">после шага: k = 0,061</text>
     </svg></div>
-    <figcaption><b>Как читать.</b> Точки — измерения, оранжевые пунктиры — промахи. Нижняя прямая — догадка k&nbsp;=&nbsp;0,03; верхняя, пунктирная, — после одного шага обучения.</figcaption>
+    <figcaption><b>Как читать.</b> Точки — измерения, оранжевые пунктиры — промахи. Нижняя серая прямая — догадка k&nbsp;=&nbsp;0,03; верхняя — после одного шага обучения; стрелка справа — сам шаг.</figcaption>
     </figure>
     <ol class="l03-pts">
       <li><b>Предсказать.</b> При k&nbsp;=&nbsp;0,03 и c&nbsp;=&nbsp;5 прямая даёт A&nbsp;=&nbsp;0,15. Измерено 0,49 — промах большой.</li>
@@ -73,11 +80,13 @@
     </details>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
+      <p class="l03-do">→ Нажимайте «Один шаг обучения» и следите за прямой и ошибкой.</p>
       <div class="scroll"><svg id="l3svg" class="fit-w" viewBox="0 -6 340 244" width="340" height="244" role="img" aria-label="Калибровочная прямая A = k·c, пять точек измерений и пунктирные промахи"></svg></div>
       <div class="l03-stats"><span><i>k</i><b id="l3k"></b></span><span><i>ошибка</i><b id="l3e"></b></span><span><i>градиент</i><b id="l3g"></b></span><span><i>шагов</i><b id="l3n">0</b></span></div>
       <div class="scroll"><svg id="l3err" class="fit-w" viewBox="0 0 340 84" width="340" height="84" role="img" aria-label="Как меняется ошибка от шага к шагу"></svg></div>
-      <label for="l3lr">Скорость обучения: <span id="l3lrv" class="mono">0,020</span></label>
+      <div class="l03-ctl"><label for="l3lr">Скорость обучения</label><b id="l3lrv">0,020</b>
       <input type="range" id="l3lr" min="0.002" max="0.1" step="0.002" value="0.02">
+      <span class="l03-ends" aria-hidden="true"><span>0,002</span><span>0,100</span></span></div>
       <div class="l03-btns"><button id="l3step" type="button" class="primary">Один шаг обучения</button><button id="l3step10" type="button">+10 шагов</button><button id="l3step50" type="button">+50 шагов</button><button id="l3reset" type="button">Сначала</button></div>
       <p class="l03-out" id="l3out" aria-live="polite"></p>
       <p class="try-note">Точки условные, шаг — настоящий градиентный спуск. Попробуйте скорость 0,002, затем 0,02 и 0,1.</p>
@@ -92,39 +101,39 @@
   <div class="stack"><h2>Тот же шаг в большой модели</h2>
     <p>Большую модель обучают теми же четырьмя действиями. Отличаются масштабы: вместо пяти точек — фрагменты текста, вместо одного веса — миллиарды.</p>
     <p>Ошибку считают по вероятности, которую модель дала верному токену. Уверенно и верно — ошибка около нуля. Верный токен «не ожидала» — ошибка большая.</p>
-    <figure class="fig wide">
+    <figure class="fig" style="align-items:start">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 484" width="340" height="484" role="img" aria-label="Один шаг обучения языковой модели в пяти блоках, рядом тот же шаг для калибровочной прямой; стрелка возвращает к началу">
       <g>
-        <rect class="box" x="6" y="6" width="286" height="70" rx="6"/>
+        <rect class="box" x="6" y="6" width="296" height="70" rx="6"/>
         <text x="18" y="28" font-size="14" font-weight="600">1. Пример из обучающих текстов</text>
         <text class="sm" x="18" y="48">…снижает энергию → верно: «активации»</text>
         <text class="sm" x="18" y="64" style="fill:var(--signal)">калибровка: точка c = 5, A = 0,49</text>
-        <rect class="box" x="6" y="102" width="286" height="70" rx="6"/>
+        <rect class="box" x="6" y="102" width="296" height="70" rx="6"/>
         <text x="18" y="124" font-size="14" font-weight="600">2. Предсказание</text>
         <text class="sm" x="18" y="144">в начале обучения «активации» — лишь 2 %</text>
         <text class="sm" x="18" y="160" style="fill:var(--signal)">калибровка: k·c = 0,15 вместо 0,49</text>
-        <rect class="box" x="6" y="198" width="286" height="70" rx="6"/>
+        <rect class="box" x="6" y="198" width="296" height="70" rx="6"/>
         <text x="18" y="220" font-size="14" font-weight="600">3. Ошибка: насколько промахнулись</text>
         <text class="sm" x="18" y="240">−ln 0,02 ≈ 3,9: верное было неожиданным</text>
         <text class="sm" x="18" y="256" style="fill:var(--signal)">калибровка: средний квадрат 0,055</text>
-        <rect class="box" x="6" y="294" width="286" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="294" width="296" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="316" font-size="14" font-weight="600">4. Градиент для каждого веса</text>
         <text class="sm" x="18" y="336">миллиарды направлений сразу</text>
         <text class="sm" x="18" y="352" style="fill:var(--signal)">калибровка: одно число −1,56 → k вверх</text>
-        <rect class="box" x="6" y="390" width="286" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="390" width="296" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="412" font-size="14" font-weight="600">5. Сдвиг: все веса чуть-чуть</text>
         <text class="sm" x="18" y="432">в следующий раз 2,1 %, к концу — 88 %</text>
         <text class="sm" x="18" y="448" style="fill:var(--signal)">калибровка: k = 0,030 → 0,061</text>
       </g>
       <g>
-        <path class="arr" d="M149 76V94"/><path class="head" d="M149 102l-5-9h10z"/>
-        <path class="arr" d="M149 172V190"/><path class="head" d="M149 198l-5-9h10z"/>
-        <path class="arr" d="M149 268V286"/><path class="head" d="M149 294l-5-9h10z"/>
-        <path class="arr" d="M149 364V382"/><path class="head" d="M149 390l-5-9h10z"/>
-        <path class="arr" d="M292 425H313V41H302"/><path class="head" d="M292 41l10-5v10z"/>
-        <text class="sm" x="331" y="233" text-anchor="middle" transform="rotate(-90 331 233)">следующий фрагмент — и так триллионы раз</text>
+        <path class="arr" d="M154 76V94"/><path class="head" d="M154 102l-5-9h10z"/>
+        <path class="arr" d="M154 172V190"/><path class="head" d="M154 198l-5-9h10z"/>
+        <path class="arr" d="M154 268V286"/><path class="head" d="M154 294l-5-9h10z"/>
+        <path class="arr" d="M154 364V382"/><path class="head" d="M154 390l-5-9h10z"/>
+        <path class="arr" d="M302 425H320V41H312"/><path class="head" d="M302 41l10-5v10z"/>
+        <text class="sm" x="333" y="233" text-anchor="middle" transform="rotate(-90 333 233)">следующий фрагмент — и так триллионы раз</text>
       </g>
-      <text class="sm" x="6" y="478">проценты условные · оранжевым — калибровка выше</text>
+      <text class="sm" x="6" y="478">проценты условные</text>
     </svg></div>
     <figcaption><b>Как читать.</b> Сверху вниз — один шаг. Серая строка — языковая модель, оранжевая — тот же шаг в калибровке. В блоке 3 число 3,9 — ошибка: верному токену дали всего 2&nbsp;%.</figcaption>
     </figure>
@@ -248,15 +257,16 @@ function mk(svg,t,at,txt){var e=document.createElementNS(NS,t); for(var a in at)
 function l3err(){
   // малый график: ошибка по шагам, шкала 0…0,06; всё, что выше, прижато к верхнему краю и помечено
   var svg=$('l3err'); svg.textContent='';
-  var x0=40, x1=332, y0=64, y1=14, top=0.06, n=Math.max(10,hist.length-1);
+  var x0=40, x1=332, y0=64, y1=14, n=Math.max(10,hist.length-1);
+  var hi=Math.max.apply(null,hist), over=hi>0.06, top=over?hi:0.06;
   function ex(i){return x0+(x1-x0)*i/n;} function ey(e){return y0-(y0-y1)*Math.min(e,top)/top;}
+  function lab(v){return v<1?v.toFixed(2).replace('.',','):v<1000?String(Math.round(v)):'10^'+Math.floor(Math.log10(v));}
   mk(svg,'path',{'class':'ax',d:'M'+x0+' '+y1+'V'+y0+'H'+x1});
   mk(svg,'text',{'class':'sm',x:x0-5,y:y0+4,'text-anchor':'end'},'0');
-  mk(svg,'text',{'class':'sm',x:x0-5,y:y1+4,'text-anchor':'end'},'0,06');
+  mk(svg,'text',{'class':'sm',x:x0-5,y:y1+4,'text-anchor':'end'},lab(top));
   mk(svg,'text',{'class':'sm',x:x0,y:y0+16},'шаг 0');
   mk(svg,'text',{'class':'sm',x:x1,y:y0+16,'text-anchor':'end'},'шаг '+n);
-  var over=hist.some(function(e){return e>top;});
-  mk(svg,'text',{'class':'sm',x:x1,y:9,'text-anchor':'end',style:over?'fill:var(--signal)':''},over?'ошибка ушла вверх за график ↑':'ошибка по шагам');
+  mk(svg,'text',{'class':'sm',x:x1,y:9,'text-anchor':'end',style:over?'fill:var(--signal)':''},over?'ошибка растёт — шкала растянута ↑':'ошибка по шагам');
   if(hist.length>1) mk(svg,'path',{'class':'fit',style:'stroke-width:2'+(over?';stroke:var(--signal)':''),d:hist.map(function(e,i){return (i?'L':'M')+ex(i).toFixed(1)+' '+ey(e).toFixed(1);}).join('')});
   mk(svg,'circle',{'class':'pt',cx:ex(hist.length-1),cy:ey(hist[hist.length-1]),r:4.5});
 }
@@ -272,8 +282,8 @@ function l3draw(){
   for(var i=0;i<C.length;i++) mk(g,'path',{d:'M'+X(C[i])+' '+Y(A[i])+'V'+Y(Math.max(-1,Math.min(2,kk*C[i]))),style:'stroke:var(--signal);stroke-width:1.5;stroke-dasharray:3 3;fill:none'});
   // прямая, ушедшая за график, не исчезает: остаётся у края и подписана
   var away = kk<0 ? 'down' : kk>0.6 ? 'up' : '';
-  if(away==='down'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M40 198H336'}); mk(svg,'text',{x:188,y:188,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal)'},'прямая ушла вниз за график ↓'); }
-  else if(away==='up'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M42 200V14'}); mk(svg,'text',{x:188,y:30,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal)'},'прямая ушла вверх за график ↑'); }
+  if(away==='down'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M40 198H336'}); mk(svg,'text',{x:188,y:188,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal);paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round'},'прямая ушла вниз за график ↓'); }
+  else if(away==='up'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M42 200V14'}); mk(svg,'text',{x:188,y:30,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal);paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round'},'прямая ушла вверх за график ↑'); }
   else mk(g,'path',{'class':'fit',d:'M'+X(0)+' '+Y(0)+'L'+X(6.2)+' '+Y(kk*6.2)});
   for(i=0;i<C.length;i++) mk(svg,'circle',{'class':'pt',cx:X(C[i]),cy:Y(A[i]),r:5});
   var e=mse(kk), gr=grad(kk);

@@ -6,7 +6,7 @@
     <p>Попросите модель: «спроектируй базу ферментов». Она предложит типичную: два десятка полей, половина из которых вам не нужна, и ни слова о том, как понять, что база готова. Чего ей не хватило?</p>
     <p><b>Разгадка:</b> задания. <b>Техническое задание</b> (ТЗ)<sup class="fn" data-fn="1">1</sup> — документ, по которому исполнитель делает работу, а заказчик её принимает. Хорошее ТЗ <span class="hl">превращает пожелание в проверяемый результат</span><sup class="fn" data-fn="2">2</sup>. «Хочу базу ферментов» — пожелание. «База отвечает на пять вопросов, у каждой цифры есть источник, единица и статус» — уже можно проверить.</p>
     <p>В ТЗ на базу шесть разделов. Урок идёт по ним:</p>
-    <ol class="l18-map">
+    <ol class="l18-map l18-toc">
       <li>Цель и вопросы.</li>
       <li>Таблицы и поля.</li>
       <li>Поля доверия и статусы.</li>
@@ -22,7 +22,7 @@
 
   <div class="stack"><h2>Таблица, строка, связь</h2>
     <p>Раздел 2 ТЗ — на настоящем кусочке базы.</p>
-    <figure class="fig wide"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 682" width="340" height="682" role="img" aria-label="Три таблицы: ферменты, измерения, источники. У каждого поля подпись по-русски и имя латиницей. Строка измерения M1 показана по полям: знак, число и единица как в статье, приведённые значение и единица, температура, поля доверия со звездой. Она ссылается на фермент E3 и на источник S2; фермент E3 — вариант фермента E2 с четырьмя заменами">
+    <figure class="fig l18-fig"><div class="scroll"><svg class="fit-w" viewBox="0 0 340 714" width="340" height="714" role="img" aria-label="Три таблицы: ферменты, измерения, источники. У каждого поля подпись по-русски и имя латиницей. Строка измерения M1 показана по полям: знак, число и единица как в статье, приведённые значение и единица, температура, поля доверия со звездой. Она ссылается на фермент E3 и на источник S2; фермент E3 — вариант фермента E2 с четырьмя заменами">
       <g>
         <rect class="box" x="4" y="6" width="332" height="132" rx="6"/>
         <text x="14" y="28" font-size="14" font-weight="600">Ферменты</text>
@@ -33,75 +33,77 @@
         <text class="sm" x="14" y="106">E2 · LCC · G9BY57 · — · —</text>
         <text class="sm" x="14" y="124" style="fill:var(--accent)">E3 · LCC-ICCG · G9BY57 · E2 · 4 замены</text>
 
-        <rect class="box" x="4" y="196" width="332" height="290" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="4" y="196" width="332" height="322" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect x="8" y="267" width="324" height="80" rx="4" style="fill:var(--accent-soft)"/>
         <text x="14" y="218" font-size="14" font-weight="600">Измерения</text>
         <text class="sm" x="104" y="218" style="fill:var(--muted)">measurements</text>
-        <text class="sm" x="14" y="238" style="fill:var(--muted)">подпись</text>
-        <text class="sm" x="126" y="238" style="fill:var(--muted)">имя</text>
-        <text class="sm" x="206" y="238" style="fill:var(--muted)">строка M1</text>
-        <g font-size="12">
-          <text x="14" y="258">фермент</text>
-          <text x="14" y="276">источник <tspan style="fill:var(--accent)">★</tspan></text>
-          <text x="14" y="294">откуда взято <tspan style="fill:var(--accent)">★</tspan></text>
-          <text x="14" y="312">фраза <tspan style="fill:var(--accent)">★</tspan></text>
-          <text x="14" y="330">статус <tspan style="fill:var(--accent)">★</tspan></text>
-          <text x="14" y="348">параметр</text>
-          <text x="14" y="366">знак</text>
-          <text x="14" y="384">число в статье</text>
-          <text x="14" y="402">единица в статье</text>
-          <text x="14" y="420">значение</text>
-          <text x="14" y="438">единица</text>
-          <text x="14" y="456">температура, °C</text>
-          <text x="14" y="474">прочие условия</text>
-        </g>
-        <g style="fill:var(--muted)">
-          <text class="sm" x="126" y="258" style="fill:var(--muted)">enzyme_id</text>
-          <text class="sm" x="126" y="276" style="fill:var(--muted)">source_id</text>
-          <text class="sm" x="126" y="294" style="fill:var(--muted)">taken_from</text>
-          <text class="sm" x="126" y="312" style="fill:var(--muted)">quote</text>
-          <text class="sm" x="126" y="330" style="fill:var(--muted)">status</text>
-          <text class="sm" x="126" y="348" style="fill:var(--muted)">parameter</text>
-          <text class="sm" x="126" y="366" style="fill:var(--muted)">sign</text>
-          <text class="sm" x="126" y="384" style="fill:var(--muted)">value_raw</text>
-          <text class="sm" x="126" y="402" style="fill:var(--muted)">unit_raw</text>
-          <text class="sm" x="126" y="420" style="fill:var(--muted)">value</text>
-          <text class="sm" x="126" y="438" style="fill:var(--muted)">unit</text>
-          <text class="sm" x="126" y="456" style="fill:var(--muted)">temp_c</text>
-          <text class="sm" x="126" y="474" style="fill:var(--muted)">conditions</text>
+        <text class="sm" x="14" y="240" style="fill:var(--muted)">подпись</text>
+        <text class="sm" x="129" y="240" style="fill:var(--muted)">имя</text>
+        <text class="sm" x="207" y="240" style="fill:var(--muted)">строка M1</text>
+        <path class="ax" d="M14 247H326"/>
+        <g font-size="13">
+          <text x="14" y="262">фермент</text>
+          <text x="14" y="282">источник <tspan style="fill:var(--accent)">★</tspan></text>
+          <text x="14" y="302">откуда взято <tspan style="fill:var(--accent)">★</tspan></text>
+          <text x="14" y="322">фраза <tspan style="fill:var(--accent)">★</tspan></text>
+          <text x="14" y="342">статус <tspan style="fill:var(--accent)">★</tspan></text>
+          <text x="14" y="362">параметр</text>
+          <text x="14" y="382">знак</text>
+          <text x="14" y="402">число в статье</text>
+          <text x="14" y="422">единица в статье</text>
+          <text x="14" y="442">значение</text>
+          <text x="14" y="462">единица</text>
+          <text x="14" y="482">температура, °C</text>
+          <text x="14" y="502">прочие условия</text>
         </g>
         <g>
-          <text class="sm" x="206" y="258" style="fill:var(--accent)">E3</text>
-          <text class="sm" x="206" y="276" style="fill:var(--accent)">S2</text>
-          <text class="sm" x="206" y="294">статья</text>
-          <text class="sm" x="206" y="312">«a minimum of 90…»</text>
-          <text class="sm" x="206" y="330">не проверено</text>
-          <text class="sm" x="206" y="348">деполимеризация</text>
-          <text class="sm" x="206" y="366">≥</text>
-          <text class="sm" x="206" y="384">90</text>
-          <text class="sm" x="206" y="402">%</text>
-          <text class="sm" x="206" y="420">90</text>
-          <text class="sm" x="206" y="438">%</text>
-          <text class="sm" x="206" y="456">72</text>
-          <text class="sm" x="206" y="474">за 10 ч</text>
+          <text class="sm" x="129" y="262" style="fill:var(--muted)">enzyme_id</text>
+          <text class="sm" x="129" y="282" style="fill:var(--muted)">source_id</text>
+          <text class="sm" x="129" y="302" style="fill:var(--muted)">taken_from</text>
+          <text class="sm" x="129" y="322" style="fill:var(--muted)">quote</text>
+          <text class="sm" x="129" y="342" style="fill:var(--muted)">status</text>
+          <text class="sm" x="129" y="362" style="fill:var(--muted)">parameter</text>
+          <text class="sm" x="129" y="382" style="fill:var(--muted)">sign</text>
+          <text class="sm" x="129" y="402" style="fill:var(--muted)">value_raw</text>
+          <text class="sm" x="129" y="422" style="fill:var(--muted)">unit_raw</text>
+          <text class="sm" x="129" y="442" style="fill:var(--muted)">value</text>
+          <text class="sm" x="129" y="462" style="fill:var(--muted)">unit</text>
+          <text class="sm" x="129" y="482" style="fill:var(--muted)">temp_c</text>
+          <text class="sm" x="129" y="502" style="fill:var(--muted)">conditions</text>
+        </g>
+        <g font-size="13">
+          <text x="207" y="262" font-weight="600" style="fill:var(--accent)">E3</text>
+          <text x="207" y="282" font-weight="600" style="fill:var(--accent)">S2</text>
+          <text x="207" y="302">статья</text>
+          <text x="207" y="322">«a minimum of 90…»</text>
+          <text x="207" y="342">не проверено</text>
+          <text x="207" y="362">деполимеризация</text>
+          <text x="207" y="382">≥</text>
+          <text x="207" y="402">90</text>
+          <text x="207" y="422">%</text>
+          <text x="207" y="442">90</text>
+          <text x="207" y="462">%</text>
+          <text x="207" y="482">72</text>
+          <text x="207" y="502">за 10 ч</text>
         </g>
 
-        <rect class="box" x="4" y="544" width="332" height="112" rx="6"/>
-        <text x="14" y="566" font-size="14" font-weight="600">Источники</text>
-        <text class="sm" x="104" y="566" style="fill:var(--muted)">sources</text>
-        <text class="sm" x="14" y="588">id · авторы, год · DOI</text>
-        <text class="sm" x="14" y="604" style="fill:var(--muted)">id · authors_year · doi</text>
-        <text class="sm" x="14" y="626">S1 · Yoshida 2016 · 10.1126/science.aad6359</text>
-        <text class="sm" x="14" y="644" style="fill:var(--accent)">S2 · Tournier 2020 · 10.1038/s41586-020-2149-4</text>
+        <rect class="box" x="4" y="576" width="332" height="112" rx="6"/>
+        <text x="14" y="598" font-size="14" font-weight="600">Источники</text>
+        <text class="sm" x="104" y="598" style="fill:var(--muted)">sources</text>
+        <text class="sm" x="14" y="620">id · авторы, год · DOI</text>
+        <text class="sm" x="14" y="636" style="fill:var(--muted)">id · authors_year · doi</text>
+        <text class="sm" x="14" y="658">S1 · Yoshida 2016 · 10.1126/science.aad6359</text>
+        <text class="sm" x="14" y="676" style="fill:var(--accent)">S2 · Tournier 2020 · 10.1038/s41586-020-2149-4</text>
       </g>
       <g>
         <path class="arr" d="M40 196V146"/><path class="head" d="M40 138l-5 9h10z"/>
         <text class="sm" x="54" y="162">связь: фермент = E3</text>
         <text class="sm" x="54" y="178">у фермента много измерений</text>
-        <path class="arr" d="M40 486V536"/><path class="head" d="M40 544l-5-9h10z"/>
-        <text class="sm" x="54" y="510">связь: источник = S2</text>
-        <text class="sm" x="54" y="526">в статье много измерений</text>
+        <path class="arr" d="M40 518V568"/><path class="head" d="M40 576l-5-9h10z"/>
+        <text class="sm" x="54" y="542">связь: источник = S2</text>
+        <text class="sm" x="54" y="558">в статье много измерений</text>
       </g>
-      <text class="sm" x="4" y="674">строки настоящие, проверены 11.11.2026</text>
+      <text class="sm" x="4" y="706">строки настоящие, проверены 11.11.2026</text>
     </svg></div>
       <figcaption><b>Как читать.</b> Три рамки — три таблицы. В средней строка M1 разложена по полям: подпись, имя в файле, значение. Стрелки — связи. ★ — поля доверия (часть 3).</figcaption></figure>
     <ul class="plain">
@@ -126,9 +128,14 @@
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
       <p>Правило «каждое поле отвечает на вопрос» в действии. Отметьте вопросы к базе — поля, которые для них нужны, появятся в таблицах ниже. Следите за двумя полями со знаком «?»: их модель предложила «на всякий случай».</p>
-      <p class="why">★ — поле доверия (часть 3), нужно всегда · бледное — служебное: номер строки, связь · мелкая латиница — имя в файле · «← 1,2» — номера вопросов, которым нужно поле.</p>
+      <ul class="l18-legend">
+        <li><span class="tok">★</span> — поле доверия (часть 3), нужно всегда</li>
+        <li><span class="tok l18-svc">бледное</span> — служебное: номер строки, связь</li>
+        <li><span class="tok"><span class="l18-fn">мелкая латиница</span></span> — имя в файле</li>
+        <li><span class="tok">← 1,2</span> — номера вопросов, которым нужно поле.</li>
+      </ul>
       <div class="checks" id="l18q"></div>
-      <p class="out" id="l18out"></p>
+      <p class="l18-sum" id="l18out" aria-live="polite"></p>
       <div id="l18tables" class="stack" style="gap:10px"></div>
       <p class="try-note">Набор вопросов и полей условный, учебный; свои вопросы из шага 6 вы разложите так же в задании.</p>
     </div>
@@ -159,7 +166,7 @@
   <div class="stack"><h2>Значение: число, знак и две единицы</h2>
     <p>Раздел 4 ТЗ — словарь и единицы. Одна статья описывает один фермент двумя способами: производительность <b>16,7 г/л/ч</b> (граммы терефталата на литр в час) и «не меньше 90&nbsp;% деполимеризации за 10 часов»<sup class="fn" data-fn="4">4</sup>. В других работах — единицы активности на миллиграмм белка<sup class="fn" data-fn="7">7</sup>.</p>
     <p>Это разные <b>параметры</b> — измеренные величины, которые друг в друга не переводятся. Поле «параметр» говорит, что измерено, а <b>единица базы</b> у каждого параметра своя и записана в словаре ТЗ. Привести к ней — пересчитать внутри одного параметра: миллиграммы в граммы, но не проценты в граммы.</p>
-    <div class="scroll"><table class="cards">
+    <div class="scroll"><table class="cards l18-units">
       <tr><th>Фраза в статье</th><th>Знак</th><th>Как в статье</th><th>Приведённое</th></tr>
       <tr><td>«не меньше 90&nbsp;%» (строка M1, настоящая)</td><td>≥</td><td>90 · %</td><td>90 · % — совпало</td></tr>
       <tr><td>«400 мг/л/ч» (условный пример)</td><td>=</td><td>400 · мг/л/ч</td><td>0,4 · г/л/ч</td></tr>
@@ -187,7 +194,7 @@
     </ul>
     <p>Кто же пишет ТЗ? Черновик — агент, по вашим ответам. <span class="hl">ТЗ становится вашим, когда вы прошли по нему с вопросом к каждой строке: «это решение принял я?»</span></p>
     <p>Последний раздел — <b>что не входит в работу</b>: соседние темы, за которые агент иначе возьмётся из усердия, — кинетические константы, другие пластики, патенты<sup class="fn" data-fn="9">9</sup>.</p>
-    <div class="panel"><span class="eyebrow">Образец</span>
+    <div class="panel l18-sample"><span class="eyebrow">Образец</span>
     <details class="more">
       <summary>Образец: ТЗ на базу — шесть разделов на полстраницы · 3 мин</summary>
         <div class="stack" style="gap:8px">
@@ -291,7 +298,29 @@
     </ul></div>
 
 
-<style>.l18-fn{font-size:.78em;opacity:.65;margin-left:5px}.l18-map{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:4px}</style>
+<style>
+.l18-fn{font-size:.78em;opacity:.65;margin-left:5px}
+.l18-map{list-style:none;margin:0;padding:0;counter-reset:l18;display:grid;gap:8px}
+.l18-map>li{counter-increment:l18;position:relative;padding-left:2.6rem;min-height:1.8rem}
+.l18-map>li::before{position:absolute;left:0;top:.05rem;content:counter(l18);display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:.85rem;font-weight:600}
+.l18-toc{grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:6px 8px}
+.l18-toc>li{display:flex;gap:8px;align-items:center;padding-left:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:.92rem;line-height:1.3}
+.l18-toc>li::before{position:static;flex:none;width:1.6rem;height:1.6rem;font-size:.8rem}
+@media (min-width:760px){.l18-toc{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:760px){#v-lesson .fig.l18-fig{align-items:start}}
+.l18-legend{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:.88rem;color:var(--muted)}
+.l18-legend .tok{font-size:.82rem;color:var(--ink)}
+.tok.l18-svc{opacity:.6}
+.tok.l18-extra{background:transparent;outline:1.5px dashed var(--signal);outline-offset:-1.5px;color:var(--signal)}
+.tok.l18-extra.l18-off{text-decoration:line-through;opacity:.55}
+.l18-sum{margin:0;padding:8px 12px;border-radius:8px;background:var(--bg);font-size:.93rem;line-height:1.5}
+.panel.l18-sample{background:transparent;border:0;padding:0;gap:6px}
+@media (max-width:600px){
+  table.cards.l18-units>tbody>tr:not(.cards-head){display:grid;grid-template-columns:3.2rem repeat(2,minmax(0,1fr));column-gap:12px;padding:8px 12px}
+  table.cards.l18-units>tbody>tr>td:first-child{grid-column:1/-1}
+  table.cards.l18-units>tbody>tr>td:last-child{color:var(--accent);font-weight:600}
+}
+</style>
 <script>
 (function(){
 var $=AI.$, el=AI.el;
@@ -334,7 +363,8 @@ function draw(){
       if(kind==='extra'){
         extra.push(f[1]);
         tk=tok(f,' ?');
-        if(k){ tk.style.textDecoration='line-through'; tk.style.opacity='.5'; tk.title='ни на один отмеченный вопрос не отвечает'; }
+        tk.classList.add('l18-extra');
+        if(k){ tk.classList.add('l18-off'); tk.title='ни на один отмеченный вопрос не отвечает'; }
         else tk.title='предложено моделью «на всякий случай»';
         p.appendChild(tk); p.appendChild(document.createTextNode(' ')); return;
       }
@@ -344,7 +374,7 @@ function draw(){
         tk=tok(f,' ← '+need.join(',')); now[f[0]+f[2]]=1;
         if(seen && !seen[f[0]+f[2]]){ tk.classList.add('is-new'); fresh++; }
       } else if(kind==='star'){ tk=tok(f,' ★'); star++; }
-      else if(kind==='svc'){ tk=tok(f); tk.style.opacity='.6'; tk.title='служебное'; svc++; }
+      else if(kind==='svc'){ tk=tok(f); tk.classList.add('l18-svc'); tk.title='служебное'; svc++; }
       else tk=tok(f);
       p.appendChild(tk); p.appendChild(document.createTextNode(' ')); total++;
     });

@@ -1,16 +1,43 @@
   <style>
-    .l15-row{display:flex;flex-direction:column;gap:8px}
-    .l15-pair{display:grid;grid-template-columns:5.4rem 1fr;gap:6px 10px;align-items:baseline}
-    .l15-pair .k{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
-    .l15-v{font-family:var(--f-mono);font-size:.86rem;overflow-wrap:anywhere}
-    .l15-q{font-family:var(--f-mono);font-size:.82rem;overflow-wrap:anywhere}
-    .l15-sec{font-family:var(--f-mono);font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
-    .l15-links{font-size:.84rem;gap:6px 12px}
-    .l15-row .row{gap:8px}
+    /* интерактив «Десять строк»: карточка — сравнение — решение — разбор */
+    .l15-row{display:flex;flex-direction:column;gap:10px}
+    .l15-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .l15-head .mono{color:var(--muted);font-size:.8rem}
+    .l15-dots{display:flex;gap:4px;flex-wrap:wrap}
+    .l15-dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--line)}
+    .l15-dots i.done{background:var(--accent);border-color:var(--accent)}
+    .l15-dots i.cur{border-color:var(--accent)}
+    .l15-name{font-family:var(--f-display);font-size:1.12rem;font-weight:600;line-height:1.3}
+    .l15-name i{font-family:var(--f-body);font-size:.88rem;font-weight:400;color:var(--muted)}
+    .l15-cmp{display:grid;grid-template-columns:1fr;gap:6px}
+    @media (min-width:640px){.l15-cmp{grid-template-columns:1fr 1fr}}
+    .l15-side{border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+    .l15-side .k{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .l15-side.src{border-left:3px solid var(--accent)}
+    .l15-side.src .k{color:var(--accent)}
+    .l15-v{font-family:var(--f-mono);font-size:.86rem;overflow-wrap:anywhere;line-height:1.5}
+    .l15-q{font-family:var(--f-mono);font-size:.84rem;overflow-wrap:anywhere;line-height:1.5}
+    .l15-sec{font-family:var(--f-mono);font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere;max-height:9.5rem;overflow:auto;line-height:1.5}
+    .l15-links{font-size:.8rem;gap:4px 12px;color:var(--muted)}
+    .l15-links a{color:var(--muted)}
+    .l15-links .why{font-size:.8rem}
+    .l15-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .l15-tools button{min-height:36px;padding:5px 12px;font-size:.86rem;border-color:var(--line);color:var(--muted)}
+    .l15-ask{font-family:var(--f-mono);font-size:.76rem;color:var(--accent);font-weight:600}
+    .l15-dec{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .l15-dec button{text-align:center}
+    .l15-dec button:disabled,.l15-stb button:disabled{opacity:.4}
     .l15-st{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+    .l15-stb{display:flex;flex-direction:column;gap:6px}
+    .l15-stb button{text-align:left}
     .l15-sum{margin:0;padding-left:1.4rem;font-size:.9rem;display:flex;flex-direction:column;gap:4px}
-    .l15-bad{color:var(--bad)}
-    .l15-check{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:8px}
+    .l15-bad{color:var(--bad);font-weight:500}
+    .l15-bad::before{content:"✕ "}
+    /* пять шагов проверки: номера в кружках */
+    .l15-check{list-style:none;margin:0;padding:0;counter-reset:l15s;display:flex;flex-direction:column;gap:12px}
+    .l15-check>li{counter-increment:l15s;position:relative;padding-left:2.5rem}
+    .l15-check>li::before{content:counter(l15s);position:absolute;left:0;top:.05em;width:1.7rem;height:1.7rem;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);background:var(--bg);font:600 .82rem/1 var(--f-mono);display:grid;place-items:center;z-index:1}
+    .l15-check>li:not(:last-child)::after{content:"";position:absolute;left:calc(.85rem - 1px);top:1.7rem;bottom:-14px;width:2px;background:var(--line)}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 3 · Урок 15 из 31 · 30 минут</span>
     <h1>Первый агент: десять записей из открытых баз</h1>
@@ -45,34 +72,38 @@
     <figure class="fig">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 542" width="340" height="542" role="img" aria-label="Путь записи: база UniProt, запись G9BY57; раздел свойств; дословная фраза об оптимуме на ПЭТ выше 70 градусов; первоисточник PubMed 22194294; строка таблицы со статусом «не проверено». Человек сверяет обратным ходом: открывает ссылку, находит фразу и сравнивает с числом в строке, затем ставит статус.">
       <g>
-        <rect class="box" x="6" y="6" width="290" height="62" rx="6"/>
+        <rect class="box" x="6" y="6" width="252" height="62" rx="6"/>
         <text x="18" y="30" font-size="14" font-weight="600">1. База: UniProt</text>
         <text class="sm" x="18" y="52">запись G9BY57 · LC-cutinase (LCC)</text>
-        <rect class="box" x="6" y="96" width="290" height="62" rx="6"/>
+        <rect class="box" x="6" y="96" width="252" height="62" rx="6"/>
         <text x="18" y="120" font-size="14" font-weight="600">2. Раздел записи</text>
         <text class="sm" x="18" y="142">Function → Biophysicochemical…</text>
-        <rect class="box" x="6" y="186" width="290" height="80" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="186" width="252" height="80" rx="6" style="stroke:var(--accent);stroke-width:2;fill:var(--accent-soft)"/>
         <text x="18" y="210" font-size="14" font-weight="600">3. Дословная фраза</text>
-        <text class="sm" x="18" y="232">«Optimum temperature using PET</text>
-        <text class="sm" x="18" y="250">as substrate is superior to 70…»</text>
-        <rect class="box" x="6" y="294" width="290" height="62" rx="6"/>
+        <text class="sm" x="18" y="232" style="fill:var(--ink)">«Optimum temperature using PET</text>
+        <text class="sm" x="18" y="250" style="fill:var(--ink)">as substrate is superior to 70…»</text>
+        <rect class="box" x="6" y="294" width="252" height="62" rx="6"/>
         <text x="18" y="318" font-size="14" font-weight="600">4. Первоисточник</text>
         <text class="sm" x="18" y="340">PubMed 22194294 · Sulaiman, 2012</text>
-        <rect class="box" x="6" y="384" width="290" height="62" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="384" width="252" height="62" rx="6"/>
         <text x="18" y="408" font-size="14" font-weight="600">5. Строка таблицы</text>
         <text class="sm" x="18" y="430">LCC · &gt;70 °C · ПЭТ · не проверено</text>
-        <rect class="box" x="6" y="474" width="290" height="62" rx="6" style="stroke:var(--signal);stroke-width:2"/>
+        <rect class="box" x="6" y="474" width="252" height="62" rx="6" style="stroke:var(--signal);stroke-width:2"/>
         <text x="18" y="498" font-size="14" font-weight="600">6. Вы сверяете</text>
         <text class="sm" x="18" y="520">ссылка → фраза → число → статус</text>
       </g>
       <g>
-        <path class="arr" d="M151 68V88"/><path class="head" d="M151 96l-5-9h10z"/>
-        <path class="arr" d="M151 158V178"/><path class="head" d="M151 186l-5-9h10z"/>
-        <path class="arr" d="M151 266V286"/><path class="head" d="M151 294l-5-9h10z"/>
-        <path class="arr" d="M151 356V376"/><path class="head" d="M151 384l-5-9h10z"/>
-        <path class="arr" style="stroke:var(--signal)" d="M151 446V466"/><path class="head" style="fill:var(--signal)" d="M151 474l-5-9h10z"/>
-        <path class="arr" style="stroke:var(--signal);stroke-dasharray:4 4" d="M296 505H322V226H304"/><path class="head" style="fill:var(--signal)" d="M296 226l9-5v10z"/>
-        <text class="sm" x="331" y="362" transform="rotate(90 331 362)" text-anchor="middle" style="fill:var(--signal)">обратный ход: найти фразу</text>
+        <path class="arr" d="M132 68V88"/><path class="head" d="M132 96l-5-9h10z"/>
+        <path class="arr" d="M132 158V178"/><path class="head" d="M132 186l-5-9h10z"/>
+        <path class="arr" d="M132 266V286"/><path class="head" d="M132 294l-5-9h10z"/>
+        <path class="arr" d="M132 356V376"/><path class="head" d="M132 384l-5-9h10z"/>
+        <path class="arr" style="stroke:var(--signal)" d="M132 446V466"/><path class="head" style="fill:var(--signal)" d="M132 474l-5-9h10z"/>
+        <path class="arr" style="stroke:var(--signal);stroke-dasharray:5 4" d="M258 505H300V226H266"/><path class="head" style="fill:var(--signal)" d="M258 226l9-5v10z"/>
+        <rect x="266" y="322" width="70" height="78" rx="5" style="fill:var(--bg)"/>
+        <text class="sm" x="300" y="340" text-anchor="middle" style="fill:var(--signal)">обратный</text>
+        <text class="sm" x="300" y="356" text-anchor="middle" style="fill:var(--signal)">ход:</text>
+        <text class="sm" x="300" y="376" text-anchor="middle" style="fill:var(--signal)">найти</text>
+        <text class="sm" x="300" y="392" text-anchor="middle" style="fill:var(--signal)">фразу</text>
       </g>
     </svg></div>
       <figcaption><b>Как читать.</b> Шаги 1–5 делает агент, шаг 6 — вы. Пунктирная стрелка — обратный ход проверки: от строки таблицы назад к дословной фразе.</figcaption>
@@ -279,23 +310,26 @@ function draw(){
     $('l15out').textContent='Найдено ошибок: '+c.err+' из 2 · пропусков значений: '+c.miss+' из 2 · лишних отметок: '+c.fa+'.';
     return;
   }
-  box.appendChild(el('span','mono','строка '+(i+1)+' из '+R.length));
-  var h=el('div'); h.appendChild(el('b',null,(i+1)+'. '+r.n)); h.appendChild(document.createTextNode(' · ')); h.appendChild(el('i',null,r.o)); box.appendChild(h);
-  var pr=el('div','l15-pair');
-  pr.appendChild(el('span','k','у агента')); pr.appendChild(el('span','l15-v','T опт '+r.t+' · pH '+r.ph+' · условия: '+r.c+' · статус: не проверено'));
-  pr.appendChild(el('span','k','в источнике')); pr.appendChild(el('span','l15-q',r.q));
-  box.appendChild(pr);
+  var hd=el('div','l15-head'); hd.appendChild(el('span','mono','строка '+(i+1)+' из '+R.length));
+  var dots=el('span','l15-dots'); for(var d=0;d<R.length;d++) dots.appendChild(el('i',ans[d]!==undefined?'done':(d===i?'cur':null)));
+  hd.appendChild(dots); box.appendChild(hd);
+  var h=el('div','l15-name'); h.appendChild(document.createTextNode((i+1)+'. '+r.n+' ')); h.appendChild(el('i',null,r.o)); box.appendChild(h);
+  var cmp=el('div','l15-cmp');
+  var s1=el('div','l15-side'); s1.appendChild(el('span','k','у агента')); s1.appendChild(el('span','l15-v','T опт '+r.t+' · pH '+r.ph+' · условия: '+r.c+' · статус: не проверено')); cmp.appendChild(s1);
+  var s2=el('div','l15-side src'); s2.appendChild(el('span','k','в источнике')); s2.appendChild(el('span','l15-q',r.q)); cmp.appendChild(s2);
+  box.appendChild(cmp);
   if(r.note) box.appendChild(el('div','why','К сведению: '+r.note+'.'));
-  var lr=el('div','row l15-links');
+  var sr=el('div','l15-tools'), bs=el('button',null,open[i]?'Скрыть раздел':'Раздел записи'); bs.type='button'; bs.setAttribute('aria-expanded',open[i]?'true':'false');
+  bs.addEventListener('click',function(){open[i]=!open[i]; draw();});
+  sr.appendChild(bs);
+  var lr=el('span','row l15-links');
   lr.appendChild(link('UniProt '+r.u,'https://www.uniprot.org/uniprotkb/'+r.u+'/entry'));
   if(r.pm) lr.appendChild(link('PubMed '+r.pm,'https://pubmed.ncbi.nlm.nih.gov/'+r.pm+'/'));
   lr.appendChild(el('span','why',r.src));
-  box.appendChild(lr);
-  var sr=el('div','row'), bs=el('button',null,open[i]?'Скрыть раздел':'Раздел записи'); bs.type='button';
-  bs.addEventListener('click',function(){open[i]=!open[i]; draw();});
-  sr.appendChild(bs); box.appendChild(sr);
+  sr.appendChild(lr); box.appendChild(sr);
   if(open[i]) box.appendChild(el('div','l15-sec','Temperature dependence: '+r.sec));
-  var br=el('div','row');
+  if(ans[i]===undefined) box.appendChild(el('span','l15-ask','Есть ли в строке дефект?'));
+  var br=el('div','l15-dec');
   [['Вижу дефект',true],['Дефекта нет',false]].forEach(function(o){
     var b=el('button',ans[i]===o[1]?'primary':null,o[0]); b.type='button'; b.disabled=(ans[i]!==undefined&&ans[i]!==o[1]);
     b.addEventListener('click',function(){ if(ans[i]===undefined){ans[i]=o[1]; draw();} });
@@ -311,7 +345,7 @@ function draw(){
     var q=SQM[i];
     if(q){
       var sb=el('div','l15-st'); sb.appendChild(el('b',null,'Какой статус поставить этой строке?'));
-      var srow=el('div','row');
+      var srow=el('div','l15-stb');
       ST.forEach(function(t,j){
         var b=el('button',stAns[i]===j?'primary':null,t); b.type='button'; b.disabled=(stAns[i]!==undefined&&stAns[i]!==j);
         b.addEventListener('click',function(){ if(stAns[i]===undefined){stAns[i]=j; draw();} });
@@ -324,8 +358,8 @@ function draw(){
       }
       box.appendChild(sb);
     }
-    var nr=el('div','row'), nx=el('button','primary',i<R.length-1?'Следующая строка':'Итог по таблице'); nx.type='button';
-    nx.addEventListener('click',function(){ if(i<R.length-1) cur++; else finished=true; draw(); });
+    var nr=el('div','row'), nx=el('button','primary',i<R.length-1?'Следующая строка →':'Итог по таблице'); nx.type='button';
+    nx.addEventListener('click',function(){ if(i<R.length-1) cur++; else finished=true; draw(); var c=$('l15card'); if(c.getBoundingClientRect().top<0) c.scrollIntoView({block:'start'}); });
     nr.appendChild(nx); box.appendChild(nr);
   }
   $('l15out').textContent='Разобрано строк: '+c.done+' из '+R.length+'. Дефектов в таблице — четыре.';
