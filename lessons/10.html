@@ -1,42 +1,135 @@
   <style>
-    .l10-task{display:flex;flex-direction:column;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
-    .l10-task:first-child{border-top:0}
-    .l10-task .row button{padding:5px 12px;font-size:.88rem}
-    .l10-res{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-family:var(--f-mono);font-size:.88rem}
-    .l10-res .num{font-weight:600}
-    .l10-res .sub{color:var(--muted);font-size:.8rem}
+    /* цвет урока: бирюзовое — локально, янтарное — облако (полоски, калькулятор, схема) */
+    .l10-score{display:grid;grid-template-columns:1fr 3.6rem;gap:3px 10px;align-items:center}
+    .l10-score .nm{grid-column:1/-1;font-size:.93rem;line-height:1.4;margin-top:8px}
+    .l10-score .nm:first-child{margin-top:0}
+    .l10-score .v{font-family:var(--f-mono);font-size:.88rem;text-align:right}
+    .l10-score .bar{display:flex;height:16px;background-color:var(--surface);background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:25% 100%;border-right:1px solid var(--line);border-radius:0}
+    .l10-score .bar>i{background:color-mix(in srgb,var(--muted) 50%,var(--surface));border-radius:0 3px 3px 0;flex:none}
+    .l10-score .bar>i.l10-cloud{background:var(--signal)}
+    .l10-score .bar>i.l10-home{background:var(--accent);border-radius:0}
+    .l10-score .bar>i.l10-range{background:color-mix(in srgb,var(--accent) 45%,var(--surface))}
+    .l10-score .v.l10-hi{font-weight:600}
+    .l10-axis{position:relative;height:1.3em;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+    .l10-axis span{position:absolute;transform:translateX(-50%)}
+    .l10-axis span:first-child{transform:none}
+    .l10-axis span:last-child{transform:translateX(-100%)}
+    /* второй интерактив: тот же вид «это можно трогать», что у «Попробуйте сами» */
+    .l10-calc{border-top:3px solid var(--accent);border-radius:4px 4px 10px 10px}
+    .l10-calc>.eyebrow:first-child{font-family:var(--f-display);font-size:1.16rem;font-weight:600;letter-spacing:0;text-transform:none;line-height:1.25;color:var(--ink)}
+    .l10-calc>.eyebrow:first-child::before{content:"";display:inline-block;width:.62em;height:.62em;margin-right:.5em;border-radius:50%;border:.18em solid var(--accent)}
+    .l10-ctls{background:var(--bg);border-radius:8px;padding:10px 14px 4px;display:flex;flex-direction:column;gap:2px}
+    .l10-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:0 10px;font-size:.95rem;line-height:1.35}
+    .l10-ctl input{grid-column:1/-1}
+    .l10-ctl .val{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+    .l10-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .l10-seg button{padding-inline:6px}
+    @media (min-width:600px){#l10dev{grid-template-columns:repeat(4,1fr)}}
+    .l10-k{grid-column:1/-1;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);margin-bottom:-2px}
+    .l10-vs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .l10-tile{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:4px 4px 8px 8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+    .l10-tile.cl{border-top-color:var(--signal)}
+    .l10-tile .h{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);line-height:1.35}
+    .l10-tile.cl .h{color:var(--signal)}
+    .l10-tile .big{display:flex;flex-direction:column}
+    .l10-tile .big .v{font-family:var(--f-display);font-size:1.6rem;font-weight:600;line-height:1.15}
+    .l10-tile .big .k,.l10-tile .sub{font-family:var(--f-mono);font-size:.76rem;color:var(--muted);line-height:1.4}
+    .l10-tile .sub{display:flex;justify-content:space-between;gap:8px}
+    .l10-tile .sub .num{color:var(--ink)}
+    /* куда отправить задачу */
+    .l10-pips{display:flex;gap:4px}
+    .l10-pips i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+    .l10-pips i.done{background:var(--accent);opacity:.45}
+    .l10-pips i.cur{background:var(--accent)}
+    .l10-q{font-family:var(--f-display);font-size:1.08rem;line-height:1.4}
+    .l10-q .k{display:block;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+    .l10-opts button:disabled{opacity:1}
+    .l10-opts button:disabled:not(.right):not(.wrong){color:var(--muted);opacity:.7}
+    .l10-opts button.right,.l10-opts button.wrong{font-weight:500}
+    .l10-pick{outline:2px solid currentColor;outline-offset:2px}
+    .l10-pick::after{content:"ваш выбор";float:right;font-family:var(--f-mono);font-size:.76rem;font-weight:400;line-height:1.9}
+    .verdict.l10-fin{padding-left:12px;border-left:3px solid var(--accent)}
+    .l10-ol{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:8px}
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 2 · Урок 10 из 31 · 30 минут</span>
     <h1>Локально или в облаке: выбор и расчёт</h1>
-    <p class="lead">Насколько домашние модели слабее облачных, что они дают взамен, чем их запускать — и как посчитать время и деньги для своего проекта.</p></div>
+    <p class="lead">После урока вы сможете решить, какую работу оставить домашней модели, а какую отдать облаку, — и посчитать время и деньги для своего проекта.</p></div>
 
   <div class="stack"><h2>Насколько домашние модели слабее</h2>
     <div class="callout story"><span class="lbl">Два решения Сергея</span><p>Рукописные дневники Сергей распознаёт дома, на медленном <span class="mono">ftm</span>, хотя облако справилось бы быстрее. А сто открытых статей о ферментах дома читать не стал бы. Почему решения разные? Об этом урок — с расчётом для вашего проекта.</p></div>
-    <p>Начнём с качества. Дома можно запустить только модель с <b>открытыми весами</b>: её файл разрешено скачать. Это не открытый код: данные и программы обучения обычно не публикуют. Закрытую модель — Claude, GPT — скачать нельзя.</p>
+    <p>Начнём с качества. Дома можно запустить только модель с <b>открытыми весами</b>: её файл разрешено скачать. Открыто при этом не всё: данные и программы обучения обычно не публикуют. Закрытую модель — Claude, GPT — скачать нельзя.</p>
     <p>Независимый сайт Artificial Analysis ставит моделям общий балл по одному набору трудных задач<sup class="fn" data-fn="1">1</sup>:</p>
-    <div class="scroll"><table>
-      <tr><th>Модель</th><th>Балл</th></tr>
-      <tr><td>Claude Fable 5.2 — старшая модель Anthropic; в расчётах курса не участвует: дорога</td><td>≈ 62</td></tr>
-      <tr><td>Kimi K3.1 Pro — лучшая с открытыми весами, 2,8 трлн параметров</td><td>46</td></tr>
-      <tr><td>Claude Haiku 5.5 — <b>младшая облачная</b></td><td>≈ 25</td></tr>
-      <tr><td>Qwen3.8 27B — лучшая с открытыми весами до 40 млрд, ≈ 17 ГБ</td><td>20</td></tr>
-      <tr><td><b>Домашние</b>, 7–8 млрд, — влезают в 16 ГБ</td><td>≈ 5–10</td></tr>
-    </table></div>
-    <p class="why">Шкала — до 100: в основном это доля трудных многошаговых задач (документы, программирование, наука), решённых с первой попытки. Простого «найди число в абзаце» среди них нет — о такой работе балл говорит мало. Актуально на ноябрь 2026.</p>
+    <figure class="fig" style="align-items:start">
+    <div class="l10-score" role="img" aria-label="Баллы моделей по шкале до 100: Claude Fable 5.2 — около 62; Kimi K3.1 Pro — 46; Claude Haiku 5.5 — около 25; Qwen3.8 27B — 20; домашние модели на 7–8 млрд параметров — около 5–10">
+      <span class="nm">Claude Fable 5.2 — старшая модель Anthropic</span><span class="bar"><i style="width:62%"></i></span><span class="v">≈ 62</span>
+      <span class="nm">Kimi K3.1 Pro — лучшая с открытыми весами, 2,8 трлн параметров</span><span class="bar"><i style="width:46%"></i></span><span class="v">46</span>
+      <span class="nm">Claude Haiku 5.5 — <b>младшая облачная</b></span><span class="bar"><i class="l10-cloud" style="width:25%"></i></span><span class="v l10-hi">≈ 25</span>
+      <span class="nm">Qwen3.8 27B — лучшая с открытыми весами до 40 млрд, ≈ 17 ГБ</span><span class="bar"><i style="width:20%"></i></span><span class="v">20</span>
+      <span class="nm"><b>Домашние</b>, 7–8 млрд, — влезают в 16 ГБ</span><span class="bar"><i class="l10-home" style="width:5%"></i><i class="l10-range" style="width:5%"></i></span><span class="v l10-hi">≈ 5–10</span>
+      <span class="l10-axis" aria-hidden="true"><span style="left:0">0</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="left:100%">100</span></span>
+    </div>
+    <figcaption><b>Как читать.</b> Шкала — до 100: в основном это доля трудных многошаговых задач (документы, программирование, наука), решённых с первой попытки. Простого «найди число в абзаце» среди них нет — о такой работе балл говорит мало. Актуально на ноябрь 2026. Цветом выделены две строки, о которых речь дальше: младшая облачная и домашние.</figcaption>
+    </figure>
     <p>Здесь <span class="hl">два разных разрыва</span>. Лучшие модели с открытыми весами — триллионы параметров, дома не запустить — отстают от закрытых на месяцы<sup class="fn" data-fn="2">2</sup>. Модели, которые влезают в обычный компьютер (до 8–30 млрд параметров), отстают на годы. Дальше зовём их <b>домашними</b>.</p>
     <p>Зачем они, если даже младшая облачная сильнее? Ради данных, которые нельзя отдавать, и ради работы без счёта и без сети. Домашняя модель неплохо делает <b>узкую работу по образцу</b>: разложить тексты по темам, вытащить поле по шаблону, расшифровать речь. Хуже — <b>многошаговое рассуждение</b>, редкие факты, длинные документы: там она чаще уверенно ошибается (урок 6).</p>
-    <div class="callout warn"><span class="lbl">Баллы — ориентир, не приговор</span><p>Достать число из абзаца — узкая работа: с ней справляются и младшие облачные модели, а иногда и домашние. Насколько — покажет только прогон десятка своих примеров с известным ответом<sup class="fn" data-fn="3">3</sup>; в проекте это замер ошибок (урок 22).</p></div></div>
+    <div class="callout warn"><span class="lbl">Ориентир, не приговор</span><p>Достать число из абзаца — узкая работа: с ней справляются и младшие облачные модели, а иногда и домашние. Насколько — покажет только прогон десятка своих примеров с известным ответом<sup class="fn" data-fn="3">3</sup>; в проекте это замер ошибок (урок 22).</p></div></div>
 
   <div class="stack"><h2>Что домашняя модель даёт взамен</h2>
     <p>Облако видит всё, что в окне (урок 7). Локальная модель не отправляет ничего: <span class="hl">текст не покидает компьютер</span>. Ещё она работает без интернета и лимитов и не меняется, пока вы сами не скачаете другую. Облачные модели провайдер обновляет и снимает по своему расписанию<sup class="fn" data-fn="4">4</sup>, а в часы пик они отвечают медленнее.</p>
-    <p>Плата — время и качество. Деньги почти не решают: простая работа в облаке стоит центы (интерактив ниже). А если ответ не нужен сразу — ещё вдвое меньше. <b>Пакетный режим</b> (урок 7): пачку запросов провайдер выполняет без спешки. Скидка 50 %, ответ — в течение суток, обычно быстрее часа<sup class="fn" data-fn="5">5</sup>.</p>
-    <div class="callout"><span class="lbl">Чем запускать</span><p>Файл модели сам ничего не делает: нужна программа, которая загрузит веса в память и прогонит цикл «угадать токен — дописать» (урок 1). <b>LM Studio</b> — окно с кнопками (урок 9). <b>Ollama</b> работает из терминала и даёт свой API: ей могут слать текст другие программы на этом же компьютере. Обе бесплатные<sup class="fn" data-fn="6">6</sup> (ноябрь 2026). Осторожно: модели с пометкой <span class="mono">:cloud</span> в Ollama работают на её серверах, и текст уходит туда<sup class="fn" data-fn="7">7</sup>.</p></div></div>
+    <p>Плата — время и качество. Деньги почти не решают: простая работа в облаке стоит центы. А если ответ не нужен сразу — ещё вдвое меньше. <b>Пакетный режим</b> (урок 7): пачку запросов провайдер выполняет без спешки. Скидка 50 %, ответ — в течение суток, обычно быстрее часа<sup class="fn" data-fn="5">5</sup>.</p>
+    <details class="ask">
+      <summary>Нужно прочитать сто статей по 16 тысяч токенов и выписать из каждой несколько строк. Сколько времени это займёт дома, на ftm с моделью 8B, — и сколько денег в облаке у младшей модели Haiku?</summary>
+      <p>Дома — почти двое суток (47,8 часа). В облаке — 18 центов и около минуты. Проверьте в калькуляторе ниже и поищите условия, при которых домашний компьютер догоняет облако.</p>
+    </details></div>
+
+  <div class="panel l10-calc">
+    <span class="eyebrow">Калькулятор: время и деньги</span>
+    <p>Время = статьи × (токены статьи ÷ скорость чтения + токены ответа ÷ скорость письма). Вход в цене облака — это чтение, выход — письмо (почему выход дороже — урок 9).</p>
+    <div class="l10-ctls">
+      <div class="l10-ctl"><label for="l10n">Статей</label><span id="l10nv" class="val"></span>
+        <input type="range" id="l10n" min="0" max="6" step="1" value="3"></div>
+      <div class="l10-ctl"><label for="l10m">Токенов в статье (вход, чтение)</label><span id="l10mv" class="val"></span>
+        <input type="range" id="l10m" min="2000" max="40000" step="1000" value="16000"></div>
+      <div class="l10-ctl"><label for="l10o">Токенов в ответе (выход, письмо)</label><span id="l10ov" class="val"></span>
+        <input type="range" id="l10o" min="100" max="2000" step="100" value="300"></div>
+    </div>
+    <div class="l10-seg" id="l10dev"><span class="l10-k">где считать локально</span></div>
+    <div class="l10-seg" id="l10mode"><span class="l10-k">режим облака</span></div>
+    <div class="l10-vs" id="l10res" aria-live="polite"></div>
+    <p class="out" id="l10cout"></p>
+    <p class="try-note">Цены Claude по API настоящие, на ноябрь 2026; скорости ftm — замер из урока 9; время в облаке условное.</p>
+    <details class="more">
+      <summary>Справка: откуда числа калькулятора и что будет на подписке</summary>
+      <p>Скорости ftm — замер (урок 9), Mac — опубликованные замеры на модели 7B. На длинной статье чтение немного медленнее: каждый токен сверяется со всеми предыдущими (урок 2). Время в облаке условное: ваши запросы идут одновременно (считаем 10 сразу), а дома компьютер один. На подписке счёта не будет, но пачка съест часть лимита — какую, Anthropic в токенах не публикует.</p>
+    </details>
+  </div>
+
+  <div class="stack"><h2>Чем запускать домашнюю модель</h2>
+    <p>Файл модели сам ничего не делает: нужна программа, которая загрузит веса в память и прогонит цикл «угадать токен — дописать» (урок 1). Таких программ две, обе бесплатные<sup class="fn" data-fn="6">6</sup> (ноябрь 2026):</p>
+    <ul class="plain">
+      <li><b>LM Studio</b> — окно с кнопками (урок 9);</li>
+      <li><b>Ollama</b> — работает из терминала, текстового окна для команд, и даёт свой API: ей могут слать текст другие программы на этом же компьютере.</li>
+    </ul>
+    <div class="callout warn"><span class="lbl">Осторожно</span><p>Модели с пометкой <span class="mono">:cloud</span> в Ollama работают на её серверах, и текст уходит туда<sup class="fn" data-fn="7">7</sup>.</p></div>
+    <details class="more">
+      <summary>Справка: памятка выбора — что потянет ваш компьютер · 2 мин</summary>
+      <p>По объёму памяти (урок 8) и её пропускной способности (урок 9). Модели в 4 битах, порядок величин.</p>
+      <div class="scroll"><table class="cards">
+        <tr><th>Память и ГБ/с</th><th>Модель, окно, письмо</th><th>Для нашего проекта</th></tr>
+        <tr><td>8 ГБ, ≈ 70–120</td><td>до 3–4 млрд; 16 тыс. впритык; ≈ 15–30 ток/с</td><td>годится: разметка, расшифровка; нет: цифры из статей</td></tr>
+        <tr><td>16 ГБ, 34 (ftm)</td><td>до 8 млрд; 16 тыс.; 2–3 ток/с</td><td>годится: закрытые данные ночью; нет: сто статей к утру</td></tr>
+        <tr><td>16–32 ГБ, ≈ 120–150</td><td>8–14 млрд; 16–32 тыс.; ≈ 10–30 ток/с</td><td>годится: черновое извлечение с проверкой; сложное — в облако</td></tr>
+        <tr><td>64–128 ГБ, ≈ 300–600</td><td>до 70 млрд (≈ 4–10 ток/с); смесь экспертов того же размера — в разы быстрее</td><td>почти всё локально, кроме самого сложного рассуждения</td></tr>
+        <tr><td>Облако</td><td>любая модель; окно до миллиона</td><td>решают цена, приватность и условия тарифа (урок 7)</td></tr>
+      </table></div>
+    </details></div>
 
   <div class="stack"><h2>Смешанная схема</h2>
     <p>Выбирать что-то одно не обязательно: работу делят<sup class="fn" data-fn="8">8</sup>.</p>
     <p class="pull">Закрытое и массовое — локально. Сложное — в облако, и только то, что можно показать.</p>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 452" width="340" height="452" role="img" aria-label="Таблица: шесть видов задач и где их выполнять — локально, в облаке или сначала локально, потом в облаке">
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 440" width="340" height="440" role="img" aria-label="Таблица: шесть видов задач и где их выполнять — локально, в облаке или сначала локально, потом в облаке">
       <text class="sm" x="4" y="14">задача → где выполнять</text>
       <g>
         <rect class="box" x="4" y="24" width="332" height="62" rx="6"/>
@@ -69,59 +162,87 @@
         <text class="sm" x="14" y="418">обезличить → отправить</text>
         <rect x="190" y="406" width="138" height="22" rx="11" style="fill:var(--accent)"/><text x="259" y="421" font-size="12" text-anchor="middle" style="fill:var(--surface)">локально → облако</text>
       </g>
-      <text class="sm" x="4" y="448">зелёное — локально, оранжевое — облако</text>
     </svg></div>
-    <p>Вот и разгадка двух решений Сергея. Дневники — первая строка: личное, спешки нет. Сто статей — третья: тексты открытые, нужна точность. А последняя строка соединяет оба мира: локальная модель убирает имена и суммы, большая в облаке разбирает обезличенный текст.</p>
+    <figcaption><b>Как читать.</b> Слева — вид работы, справа на метке — где её выполнять. Последняя строка соединяет оба мира: сначала локально, потом в облако.</figcaption>
+    </figure>
+    <p><b>Разгадка двух решений Сергея.</b> Дневники — первая строка: личное, спешки нет. Сто статей — третья: тексты открытые, нужна точность. А последняя строка соединяет оба мира: локальная модель убирает имена и суммы, большая в облаке разбирает обезличенный текст.</p>
     <div class="callout warn"><span class="lbl">Насколько это надёжно</span><p>Имена из известного списка надёжнее убирает простая замена по списку, без модели. Модель ловит то, чего в списке нет, — и иногда пропускает. Человек проверяет выборкой, значит, часть пропусков уйдёт в облако. По-настоящему закрытое — только локально.</p></div>
 </div>
 
   <div class="panel">
     <span class="eyebrow">Попробуйте сами</span>
-    <div class="row" id="l10tabs"></div>
-    <div id="l10where">
-      <p>Семь настоящих задач из наших проектов. Куда бы вы отправили каждую?</p>
-      <div id="l10tasks"></div>
-      <div class="row"><span class="out" id="l10out"></span><button type="button" id="l10reset">Сначала</button></div>
-      <p class="why">Задачи настоящие, разбор — рекомендация: при других условиях решение может быть другим. Где верны два ответа, засчитываем оба.</p>
-    </div>
-    <div id="l10calc" hidden>
-      <p>Время = статьи × (токены статьи ÷ скорость чтения + токены ответа ÷ скорость письма). Вход в цене облака — это чтение, выход — письмо (почему выход дороже — урок 9).</p>
-      <label for="l10n">Статей: <span id="l10nv" class="mono"></span></label>
-      <input type="range" id="l10n" min="0" max="6" step="1" value="3">
-      <label for="l10m">Токенов в статье (вход, чтение): <span id="l10mv" class="mono"></span></label>
-      <input type="range" id="l10m" min="2000" max="40000" step="1000" value="16000">
-      <label for="l10o">Токенов в ответе (выход, письмо): <span id="l10ov" class="mono"></span></label>
-      <input type="range" id="l10o" min="100" max="2000" step="100" value="300">
-      <span class="eyebrow">Где считать локально</span>
-      <div class="row" id="l10dev"></div>
-      <span class="eyebrow">Режим облака</span>
-      <div class="row" id="l10mode"></div>
-      <div class="l10-res" id="l10res"></div>
-      <p class="out" id="l10cout"></p>
-      <p class="why">Скорости ftm — замер (урок 9), Mac — опубликованные замеры на модели 7B. На длинной статье чтение немного медленнее: каждый токен сверяется со всеми предыдущими (урок 2). Цены Claude по API — настоящие, на ноябрь 2026. Время в облаке условное: ваши запросы идут одновременно (считаем 10 сразу), а дома компьютер один. На подписке счёта не будет, но пачка съест часть лимита — какую, Anthropic в токенах не публикует.</p>
-    </div>
+    <p>Семь настоящих задач из наших проектов, по одной. Куда бы вы отправили каждую? Разбор появится сразу под кнопками.</p>
+    <div class="l10-pips" id="l10pips" aria-hidden="true"></div>
+    <p class="l10-q" id="l10q"></p>
+    <div class="opts l10-opts" id="l10opts"></div>
+    <div class="verdict" id="l10ver"></div>
+    <div class="row"><button type="button" class="primary" id="l10next" disabled>Дальше</button><button type="button" id="l10reset">Сначала</button></div>
+    <p class="try-note">Задачи настоящие, разбор — рекомендация: при других условиях решение может быть другим. Где годятся два ответа, подходят оба.</p>
   </div>
 
-  <div class="panel"><span class="eyebrow">Памятка выбора</span>
-    <p>Что потянет компьютер — по объёму памяти (урок 8) и её пропускной способности (урок 9). Модели в 4 битах, порядок величин.</p>
-    <div class="scroll"><table>
-      <tr><th>Память и ГБ/с</th><th>Модель, окно, письмо</th><th>Для нашего проекта</th></tr>
-      <tr><td>8 ГБ, ≈ 70–120</td><td>до 3–4 млрд; 16 тыс. впритык; ≈ 15–30 ток/с</td><td>годится: разметка, расшифровка; нет: цифры из статей</td></tr>
-      <tr><td>16 ГБ, 34 (ftm)</td><td>до 8 млрд; 16 тыс.; 2–3 ток/с</td><td>годится: закрытые данные ночью; нет: сто статей к утру</td></tr>
-      <tr><td>16–32 ГБ, ≈ 120–150</td><td>8–14 млрд; 16–32 тыс.; ≈ 10–30 ток/с</td><td>годится: черновое извлечение с проверкой; сложное — в облако</td></tr>
-      <tr><td>64–128 ГБ, ≈ 300–600</td><td>до 70 млрд (≈ 4–10 ток/с); смесь экспертов того же размера — в разы быстрее</td><td>почти всё локально, кроме самого сложного рассуждения</td></tr>
-      <tr><td>Облако</td><td>любая модель; окно до миллиона</td><td>решают цена, приватность и условия тарифа (урок 7)</td></tr>
-    </table></div>
-    <span class="eyebrow">Частые вопросы</span>
+  <div class="panel faq"><span class="eyebrow">Частые вопросы</span>
     <ul class="plain">
       <li><b>Покупать ли компьютер ради локальных моделей?</b> При открытых данных — нет: сто статей в облаке стоят центы. Покупка оправдана только постоянной работой с закрытыми данными.</li>
       <li><b>Нет круглосуточного компьютера?</b> Подойдёт ноутбук, которому запретили засыпать.</li>
     </ul></div>
 
   <div class="two">
-    <div class="panel"><span class="eyebrow">Биотехнология</span><p>Сто открытых статей о ПЭТ-гидролазах моделью 8B на ftm — почти двое суток. В облаке Claude Haiku 5.5 — 18 центов и около минуты, в пакетном режиме — 9 центов. Приватность здесь не нужна, так что локальная модель проигрывает по всем пунктам, кроме независимости. Неопубликованные измерения своей лаборатории — другое дело: их разумно обезличить локально. Хватит ли для цифр из статей Haiku, которая в 20 раз дешевле Sonnet? Решает не балл, а <b>замер ошибок на пробной партии</b> (урок 22).</p></div>
+    <div class="panel"><span class="eyebrow">Биотехнология</span><p>Сто открытых статей о ПЭТ-гидролазах:</p>
+      <ul class="plain">
+        <li>моделью 8B на ftm — почти двое суток;</li>
+        <li>в облаке Claude Haiku 5.5 — 18 центов и около минуты, в пакетном режиме — 9 центов.</li>
+      </ul>
+      <p>Приватность здесь не нужна, так что локальная модель проигрывает по всем пунктам, кроме независимости. Неопубликованные измерения своей лаборатории — другое дело: их разумно обезличить локально. Хватит ли для цифр из статей Haiku, которая в 20 раз дешевле Sonnet? Решает не балл, а <b>замер ошибок на пробной партии</b> (урок 22).</p></div>
     <div class="panel"><span class="eyebrow">Свои проекты</span><p>На <span class="mono">ftm</span> уже работает смешанная схема. Голосовые заметки бота «Жемчужины» расшифровывает локальная модель распознавания речи, а разбор заметки делает облачная Claude Haiku. Рукописные дневники распознаёт локальная <span class="mono">qwen3-vl:8b</span> — около 70 страниц за ночь (8 часов по 6,7 минуты на страницу, урок 9); в облако — только вручную, если вышел мусор.</p></div>
   </div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Домашние модели — те, что влезают в свой компьютер, — отстают от лидеров на годы: хороши в узкой работе по образцу, слабы в сложном рассуждении.</li>
+    <li>Довод за локальную модель — приватность и независимость; по деньгам и времени на открытых данных облако выигрывает, в пакетном режиме — ещё вдвое дешевле.</li>
+    <li>Смешанная схема: закрытое и массовое — локально, сложное и обезличенное — в облако.</li>
+    <li>Запускают домашние модели LM Studio и Ollama; модели <span class="mono">:cloud</span> внутри Ollama — не локальные.</li></ul></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Разберите три свои задачи так же, как в интерактиве.</p>
+    <ol class="steps">
+      <li>Выпишите три свои регулярные задачи с AI.</li>
+      <li>Ответьте для каждой на два вопроса: можно ли отдавать эти данные на чужой сервер; нужно ли здесь сложное рассуждение.</li>
+      <li>Решите по ответам, где выполнять каждую, и запишите.</li>
+    </ol>
+    <details class="more">
+      <summary>Для любопытных: найдите баллы своих моделей на Artificial Analysis · ещё 10 минут</summary>
+      <ol class="l10-ol">
+        <li>Откройте сравнение моделей на <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a> (сайт на английском) и найдите в общем рейтинге модель, которой пользуетесь сами.</li>
+        <li>Включите переключатель Open Weights и найдите лучшую модель с открытыми весами.</li>
+        <li>Откройте раздел небольших моделей с открытыми весами (Small Open Source Models) и найдите лучшую, которая влезет в память вашего компьютера (шаг 8).</li>
+        <li>Запишите три балла.</li>
+      </ol>
+    </details></div>
+
+  <div class="panel" data-note="step" data-time="≈ 20 минут"><span class="eyebrow">Сквозной проект · шаг 10</span>
+    <p><b>Что получится:</b> в журнале проекта — лист «Карта этапов» с решением, где работает модель на каждом этапе, и расчёт времени и денег на сто статей.</p>
+    <h3>Сегодня — карта этапов</h3>
+    <ol class="steps">
+      <li>Заведите в журнале проекта лист <b>«Карта этапов»</b> — таблицу, в строках которой семь этапов из шага 1: проектирование → сбор → извлечение → очистка → проверка → анализ → публикация и отчёт.</li>
+      <li>Заполните столбец <b>«где модель»</b>: «локально», «облако» или «локально → облако» — и рядом одной фразой почему. Подсказка: открытые статьи про ПЭТ-гидролазы приватности не требуют — решают качество и время.</li>
+    </ol>
+    <p>К этому листу вернёмся в шаге 12: там добавится столбец «какой продукт».</p>
+    <h3>Можно в другой день — расчёт ста статей (≈ 15 минут)</h3>
+    <ol class="steps">
+      <li>Посчитайте в калькуляторе «Время и деньги» чтение ста статей: облако — модель, цена (обычная и пакетная), время; локально — ваше устройство из шага 9, время.</li>
+      <li>Сверьте цены на <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">официальной странице Claude</a> в день расчёта: на 11.11.2026 Haiku 5.5 — $0,10 за миллион входных токенов и $0,50 за миллион выходных, Sonnet 5.5 — $2 и $10, Opus 5.5 — $4 и $20.</li>
+      <li>Запишите итог записью типа <b>решение</b>.</li>
+    </ol></div>
+
+  <div class="panel tint milestone"><span class="eyebrow">Модуль 2 пройден</span>
+    <p>Теперь вы можете ответить на четыре вопроса о любой модели:</p>
+    <ul class="plain">
+      <li><b>где она работает</b> и кто видит ваш текст (урок 7);</li>
+      <li><b>сколько памяти</b> ей нужно — по числу параметров и длине окна (урок 8);</li>
+      <li><b>с какой скоростью</b> она будет читать и писать на вашем компьютере (урок 9);</li>
+      <li><b>что оставить дома, а что отдать облаку</b> — и во что это обойдётся (урок 10).</li>
+    </ul>
+    <p>Дальше — модуль 3: модель получит инструменты и станет агентом.</p></div>
 
   <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
     <li data-fn="1">Artificial Analysis Intelligence Index v5.0.1, данные сайта на 11.11.2026, режимы рассуждения по умолчанию. Девять наборов задач в четырёх равных группах (работа со знаниями, программирование, наука, общее); итог — взвешенное среднее; состав и веса — <a href="https://artificialanalysis.ai/methodology/intelligence-benchmarking" target="_blank" rel="noopener">Intelligence Benchmarking Methodology</a>. В режиме максимального рассуждения баллы выше: Fable 5.2 — 65, Opus 5.5 — 59. Kimi K3.1 Pro с открытыми весами — 46, DeepSeek V4.1 Flash — 33; Qwen3.8 27B — 20; из моделей до 8 млрд, например, Granite 4.2 8B — 5. Небольшие модели сайт сравнивает отдельно: <a href="https://artificialanalysis.ai/models/open-source/small" target="_blank" rel="noopener">Small Open Source Models</a>. Индекс меняется с каждой новой моделью — смотрите свежую таблицу.</li>
@@ -134,7 +255,7 @@
     <li data-fn="8">Исследователи Стэнфорда проверили смешанную схему на длинных финансовых, медицинских и научных документах: облачная модель разбивает задачу на куски, локальная читает документ и отвечает на них. Итог — около 98 % качества облачной модели за долю цены, а документ целиком в облако не уходит. Модели меньше 3 млрд не справились. <a href="https://hazyresearch.stanford.edu/blog/2025-02-24-minions" target="_blank" rel="noopener">Hazy Research: Minions</a> (блог, англ., 15 мин, февраль 2025).</li>
   </ol></div>
 
-  <div class="panel"><span class="eyebrow">Словарик урока</span>
+  <div class="panel glossary"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
       <tr><td><b>Локальная модель</b></td><td>скачанная модель, которая работает на вашем компьютере</td></tr>
       <tr><td><b>Открытые веса</b></td><td>файл модели можно скачать; данные и код обучения при этом могут быть закрыты</td></tr>
@@ -144,21 +265,6 @@
       <tr><td><b>Ollama, LM Studio</b></td><td>программы, которые запускают скачанные модели</td></tr>
       <tr><td><b>Смешанная схема</b></td><td>закрытое и массовое — локально, сложное и обезличенное — в облако</td></tr>
     </table></div></div>
-
-  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
-    <li>Домашние модели — те, что влезают в свой компьютер, — отстают от лидеров на годы: хороши в узкой работе по образцу, слабы в сложном рассуждении.</li>
-    <li>Довод за локальную модель — приватность и независимость; по деньгам и времени на открытых данных облако выигрывает, в пакетном режиме — ещё вдвое дешевле.</li>
-    <li>Смешанная схема: закрытое и массовое — локально, сложное и обезличенное — в облако.</li>
-    <li>Запускают домашние модели LM Studio и Ollama; модели <span class="mono">:cloud</span> внутри Ollama — не локальные.</li></ul></div>
-
-  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Откройте сравнение моделей на <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a> (сайт на английском). Найдите в общем рейтинге модель, которой пользуетесь сами, и лучшую модель с открытыми весами (переключатель Open Weights). Затем откройте раздел небольших моделей с открытыми весами (Small Open Source Models) и найдите лучшую, которая влезет в память вашего компьютера (шаг 8). Запишите три балла.</p>
-    <p>Выпишите три свои регулярные задачи с AI и для каждой ответьте: можно ли отдавать эти данные на чужой сервер; нужно ли здесь сложное рассуждение. По ответам решите, где её выполнять.</p></div>
-
-  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 10</span>
-    <p><b>Время: ≈ 20 минут.</b> Заведите в журнале проекта лист <b>«Карта этапов»</b> — таблицу, в строках которой семь этапов из шага 1: проектирование → сбор → извлечение → очистка → проверка → анализ → публикация и отчёт. Заполните столбец <b>«где модель»</b>: «локально», «облако» или «локально → облако» — и рядом одной фразой почему. Подсказка: открытые статьи про ПЭТ-гидролазы приватности не требуют — решают качество и время. К этому листу вернёмся в шаге 12: там добавится столбец «какой продукт».</p>
-    <p>Затем посчитайте в калькуляторе урока чтение ста статей: облако — модель, цена (обычная и пакетная), время; локально — ваше устройство из шага 9, время. Цены сверьте на <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">официальной странице Claude</a> в день расчёта: на 11.11.2026 Haiku 5.5 — $0,10 за миллион входных токенов и $0,50 за миллион выходных, Sonnet 5.5 — $2 и $10, Opus 5.5 — $4 и $20. Запишите итог записью типа <b>решение</b>.</p>
-    <p>Модуль 2 на этом закончен: вы знаете, где работает модель, сколько ей нужно памяти и времени и во что обходится ответ. В модуле 3 модель получит инструменты — и станет агентом.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
     <p>По желанию; одного материала достаточно. Этот путь научит самостоятельно решать, где запускать модель, и следить, как меняется расстановка сил между облаком и домашним компьютером.</p>
@@ -181,11 +287,7 @@
 <script>
 (function(){
 var $=AI.$, el=AI.el;
-/* вкладки */
-var TABS=[['Куда отправить задачу','l10where'],['Время и деньги','l10calc']], ti=0;
-TABS.forEach(function(t,i){var b=el('button',null,t[0]); b.type='button'; b.addEventListener('click',function(){ti=i; tabs();}); $('l10tabs').appendChild(b);});
-function tabs(){TABS.forEach(function(t,i){$(t[1]).hidden=(i!==ti); $('l10tabs').children[i].classList.toggle('primary',i===ti);});}
-/* куда отправить */
+/* куда отправить: по одной задаче, разбор сразу под кнопками */
 var L=['Локально','В облаке','Локально → облако'];
 var T=[
  ['Сверить оптимум температуры фермента с таблицей в статье',[1],'Статья открытая, приватность не нужна, а нужна аккуратность с цифрами и условиями опыта — работа для облачной модели; какой именно, покажет замер (урок 22).'],
@@ -196,31 +298,40 @@ var T=[
  ['Ночью распознать рукописные страницы дневника',[0],'Дневник личный, спешки нет: пусть медленно, но дома. Так работает распознавание дневников на ftm.'],
  ['Найти статьи о ферментах, вышедшие за последний месяц',[1],'Нужен поиск в интернете и свежие источники — у облачных сервисов он встроен; у локальной модели его надо настраивать.']
 ];
-var done=0, right=0;
-function build(){
-  $('l10tasks').textContent=''; done=0; right=0; $('l10out').textContent='Распределено 0 из '+T.length+'.';
-  T.forEach(function(t){
-    var d=el('div','l10-task'); d.appendChild(el('span',null,t[0]));
-    var row=el('div','row'), why=el('p','why'); why.hidden=true;
-    L.forEach(function(lb,j){
-      var b=el('button',null,lb); b.type='button';
-      b.addEventListener('click',function(){
-        Array.prototype.forEach.call(row.children,function(x){x.disabled=true;});
-        t[1].forEach(function(k){row.children[k].classList.add('primary');});
-        var ok=t[1].indexOf(j)>=0; if(ok) right++;
-        why.textContent=(ok?'Совпало. ':'Не то: мы бы выбрали «'+L[t[1][0]].toLowerCase()+'». ')+t[2]; why.hidden=false;
-        done++;
-        $('l10out').textContent= done<T.length ? 'Распределено '+done+' из '+T.length+'.' : 'Совпало с разбором: '+right+' из '+T.length+'.';
-      });
-      row.appendChild(b);
+var qi=0;
+function pips(k){ var b=$('l10pips'); b.textContent=''; T.forEach(function(_,i){ b.appendChild(el('i', i<k?'done':(i===k?'cur':null))); }); }
+function show(){
+  var t=T[qi], q=$('l10q'), box=$('l10opts'), ver=$('l10ver'), nx=$('l10next');
+  q.textContent=''; q.appendChild(el('span','k','задача '+(qi+1)+' из '+T.length)); q.appendChild(document.createTextNode(t[0]));
+  box.textContent='';
+  pips(qi); $('l10reset').classList.remove('primary');
+  ver.className='verdict'; ver.textContent='';
+  nx.hidden=false; nx.disabled=true; nx.textContent= qi<T.length-1 ? 'Дальше' : 'Готово';
+  L.forEach(function(lb,j){
+    var b=el('button',null,lb); b.type='button';
+    b.addEventListener('click',function(){
+      var ok=t[1].indexOf(j)>=0;
+      Array.prototype.forEach.call(box.children,function(x,k){ x.disabled=true; if(t[1].indexOf(k)>=0) x.classList.add('right'); });
+      if(!ok) b.classList.add('wrong');
+      b.classList.add('l10-pick');
+      ver.className='verdict '+(ok?'ok':'no');
+      ver.textContent=(ok?'Совпало с разбором. ':'Мы бы выбрали «'+L[t[1][0]].toLowerCase()+'». ')+t[2];
+      nx.disabled=false;
     });
-    d.appendChild(row); d.appendChild(why); $('l10tasks').appendChild(d);
+    box.appendChild(b);
   });
 }
-$('l10reset').addEventListener('click',build);
+$('l10next').addEventListener('click',function(){
+  if(qi<T.length-1){ qi++; show(); return; }
+  $('l10q').textContent='Все семь задач разобраны.'; $('l10opts').textContent='';
+  $('l10ver').className='verdict l10-fin'; $('l10ver').textContent='Общее правило — то же, что на схеме: закрытое и массовое — локально; сложное — в облако, и только то, что можно показать.';
+  $('l10next').disabled=true; $('l10next').hidden=true;
+  pips(T.length); $('l10reset').classList.add('primary');
+});
+$('l10reset').addEventListener('click',function(){ qi=0; show(); });
 /* время и деньги */
 var NS=[10,20,50,100,200,500,1000];
-var MODE=['обычный','пакетный: −50 %, ответ в течение суток'], bi=0;
+var MODE=['обычный','пакетный, −50 %'], bi=0;
 MODE.forEach(function(t,i){var b=el('button',null,t); b.type='button'; b.addEventListener('click',function(){bi=i; draw();}); $('l10mode').appendChild(b);});
 var DEV=[['ftm, 8B',10,2.5],['ftm, 1,7B',45,8.5],['Mac M4, 7B',221,24],['Mac M5 Max, 7B',3220,120]], di=0;
 var CL=[['Haiku 5.5',0.10,0.50],['Sonnet 5.5',2,10],['Opus 5.5',4,20]];
@@ -234,24 +345,26 @@ function dur(s){
 function money(x){return x<1 ? (x*100).toFixed(x<0.1?1:0).replace('.',',')+' ¢' : '$'+x.toFixed(x<10?2:0).replace('.',',');}
 DEV.forEach(function(d,i){var b=el('button',null,d[0]); b.type='button'; b.addEventListener('click',function(){di=i; draw();}); $('l10dev').appendChild(b);});
 function raz(n){var a=n%10,b=n%100; return n+(a>=2&&a<=4&&(b<12||b>14)?' раза':' раз');}
-function line(k,v,c){ $('l10res').appendChild(el('span',c||null,k)); $('l10res').appendChild(el('span','num',v)); }
+function tile(cls,head){ var t=el('div','l10-tile '+cls); t.appendChild(el('span','h',head)); $('l10res').appendChild(t); return t; }
+function big(t,k,v){ var r=el('div','big'); r.appendChild(el('span','v',v)); r.appendChild(el('span','k',k)); t.appendChild(r); }
+function sub(t,k,v){ var r=el('div','sub'); r.appendChild(el('span',null,k)); r.appendChild(el('span','num',v)); t.appendChild(r); }
 function times(r){ if(r<1.5) return 'примерно столько же, сколько облако'; if(r<10) return 'в '+raz(Math.round(r))+' дольше облака'; if(r<100) return 'в десятки раз дольше облака'; if(r<1000) return 'в сотни раз дольше облака'; return 'в тысячи раз дольше облака'; }
 function draw(){
   var n=NS[+$('l10n').value], m=+$('l10m').value, o=+$('l10o').value, d=DEV[di], k=bi?0.5:1;
   $('l10nv').textContent=num(n); $('l10mv').textContent=num(m); $('l10ov').textContent=num(o);
-  Array.prototype.forEach.call($('l10dev').children,function(x,i){x.classList.toggle('primary',i===di);});
-  Array.prototype.forEach.call($('l10mode').children,function(x,i){x.classList.toggle('primary',i===bi);});
+  Array.prototype.forEach.call($('l10dev').querySelectorAll('button'),function(x,i){x.classList.toggle('primary',i===di);});
+  Array.prototype.forEach.call($('l10mode').querySelectorAll('button'),function(x,i){x.classList.toggle('primary',i===bi);});
   var tr=n*m/d[1], tw=n*o/d[2], tl=tr+tw;
   $('l10res').textContent='';
-  line('локально ('+d[0]+'): чтение', dur(tr));
-  line('письмо', dur(tw));
-  line('итого локально', dur(tl));
-  CL.forEach(function(c){ var v=k*n*(m*c[1]+o*c[2])/1e6; line('облако, '+c[0], money(v)); });
   var tc=n*(m/5000+o/150)/10;
-  line(k<1?'время в облаке (пакет): обычно до часа':'время в облаке (условно)', k<1?'≤ 24 ч':dur(tc));
+  var a=tile('loc','локально · '+d[0]);
+  big(a,'итого локально',dur(tl)); sub(a,'чтение',dur(tr)); sub(a,'письмо',dur(tw));
+  var b=tile('cl', k<1?'облако · пакет':'облако');
+  big(b, k<1?'время: обычно до часа':'время (условно)', k<1?'≤ 24 ч':dur(tc));
+  CL.forEach(function(c,i){ var v=k*n*(m*c[1]+o*c[2])/1e6; if(i) sub(b,c[0],money(v)); else big(b,c[0],money(v)); });
   $('l10cout').textContent= k<1 ? 'В пакетном режиме вдвое дешевле; ответ — в течение суток, обычно быстрее часа. Локально: '+dur(tl)+'.' : 'Локально '+times(tl/tc)+'.';
 }
 ['l10n','l10m','l10o'].forEach(function(id){$(id).addEventListener('input',draw);});
-build(); tabs(); draw();
+show(); draw();
 })();
 </script>

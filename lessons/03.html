@@ -1,10 +1,30 @@
-<style>.l03-steps{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:8px}</style>
+<style>
+.l03-pts{list-style:none;margin:0;padding:0;counter-reset:l03p;display:flex;flex-direction:column}
+.l03-pts>li{counter-increment:l03p;position:relative;padding:10px 0 10px 2.7rem;border-top:1px solid var(--line)}
+.l03-pts>li:first-child{border-top:0;padding-top:2px}
+.l03-pts>li::before{content:counter(l03p);position:absolute;left:0;top:9px;width:1.9rem;height:1.9rem;display:grid;place-items:center;border-radius:50%;
+  background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:.88rem;font-weight:500}
+.l03-pts>li:first-child::before{top:1px}
+.l03-data{width:auto;margin-inline:auto;font-family:var(--f-mono);font-size:.9rem}
+.l03-data th,.l03-data td{padding:6px 12px;text-align:center}
+.l03-data th{text-align:left;text-transform:none;letter-spacing:0;font-size:.86rem}
+.l03-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.l03-stats>span{display:flex;flex-direction:column;gap:1px;background:var(--bg);border-radius:6px;padding:6px 8px;min-width:0}
+.l03-stats i{font-style:normal;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.l03-stats b{font-family:var(--f-mono);font-size:.9rem;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.l03-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.l03-btns button{padding-inline:6px}
+.l03-btns .primary{grid-column:1/-1}
+@media (min-width:600px){.l03-btns{grid-template-columns:1.6fr 1fr 1fr 1fr}.l03-btns .primary{grid-column:auto}}
+.l03-out{font-size:.97rem;line-height:1.5;padding:10px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0;min-height:5.6em}
+.l03-out.l03-bad{border-left-color:var(--signal);background:var(--signal-soft)}
+</style>
   <div class="stack"><span class="eyebrow">Модуль 1 · Урок 3 из 31 · 25 минут</span>
     <h1>Обучение: как подбираются веса</h1>
-    <p class="lead">Что такое веса, как обучение подбирает их шаг за шагом, почему на это уходят месяцы, а ответ занимает секунды, — и почему модель ничего не запоминает из разговора с вами.</p></div>
+    <p class="lead">После урока вы сможете объяснить, что такое веса, как обучение подбирает их шаг за шагом — и почему модель ничего не запоминает из разговора с вами.</p></div>
 
   <div class="stack"><h2>Где записано прочитанное</h2>
-    <p>Модель за два месяца обучения прочитала больше, чем человек успел бы за тысячи жизней, — а ваше вчерашнее исправление не запомнила. Почему — в этом уроке.</p>
+    <p>Модель за два месяца обучения прочитала больше, чем человек успел бы за тысячи жизней, — а ваше вчерашнее исправление не запомнила. Почему? Разгадка — в четвёртом разделе.</p>
     <p>В уроке 2 на каждом шаге работали числа, которые хранятся внутри модели:</p>
     <ul class="plain">
       <li>векторы токенов словаря;</li>
@@ -16,86 +36,128 @@
     <p>Внутри модели нет базы текстов и нет правил, написанных программистом. <span class="hl">Всё, что модель «знает», записано в значениях весов.</span> До обучения веса — случайные числа, и модель выдаёт бессмыслицу. <b>Обучение</b> — это подбор значений весов, при которых модель хорошо угадывает следующий токен.</p></div>
 
   <div class="stack"><h2>Один шаг обучения на одном весе</h2>
-    <p>Миллиард весов не представить, поэтому возьмём задачу с одним весом. Калибровка спектрофотометра: оптическая плотность растёт пропорционально концентрации, A&nbsp;=&nbsp;k·c. Есть пять измерений (c;&nbsp;A): (1;&nbsp;0,11), (2;&nbsp;0,19), (3;&nbsp;0,32), (4;&nbsp;0,41), (5;&nbsp;0,49). Нужно найти k. Начнём с плохой догадки k&nbsp;=&nbsp;0,03 и сделаем один шаг обучения.</p>
-    <ol class="l03-steps">
+    <p>Миллиард весов не представить, поэтому возьмём задачу с одним весом. Калибровка спектрофотометра: оптическая плотность растёт пропорционально концентрации, A&nbsp;=&nbsp;k·c. Есть пять измерений:</p>
+    <div class="scroll"><table class="l03-data">
+      <tr><th>c, мг/л</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+      <tr><th>A</th><td>0,11</td><td>0,19</td><td>0,32</td><td>0,41</td><td>0,49</td></tr>
+    </table></div>
+    <p>Нужно найти k — наклон прямой. Начнём с плохой догадки k&nbsp;=&nbsp;0,03 и сделаем один шаг обучения.</p>
+    <figure class="fig">
+    <div class="scroll"><svg class="fit-w" viewBox="0 -6 340 244" width="340" height="244" role="img" aria-label="Пять точек измерений; нижняя прямая — догадка k = 0,03, пунктиры — промахи; верхняя пунктирная прямая — после одного шага, k = 0,061">
+      <path class="ax" d="M40 14V200H336"/>
+      <g text-anchor="middle"><text class="sm" x="88" y="215">1</text><text class="sm" x="136" y="215">2</text><text class="sm" x="184" y="215">3</text><text class="sm" x="232" y="215">4</text><text class="sm" x="280" y="215">5</text></g>
+      <g text-anchor="end"><text class="sm" x="35" y="148">0,2</text><text class="sm" x="35" y="92">0,4</text><text class="sm" x="35" y="36">0,6</text></g>
+      <path class="ax" stroke-dasharray="2 4" d="M40 144H336M40 88H336M40 32H336"/>
+      <text class="sm" x="336" y="232" text-anchor="end">концентрация c, мг/л</text>
+      <text class="sm" x="44" y="8">оптическая плотность A</text>
+      <path style="stroke:var(--signal);stroke-width:1.5;stroke-dasharray:3 3;fill:none" d="M88 169.2V191.6M136 146.8V183.2M184 110.4V174.8M232 85.2V166.4M280 62.8V158"/>
+      <path class="fit" d="M40 200L336 148.2"/>
+      <path class="fit" style="stroke-dasharray:6 4;opacity:.75" d="M40 200L336 94.7"/>
+      <circle class="pt" cx="88" cy="169.2" r="5"/><circle class="pt" cx="136" cy="146.8" r="5"/><circle class="pt" cx="184" cy="110.4" r="5"/><circle class="pt" cx="232" cy="85.2" r="5"/><circle class="pt" cx="280" cy="62.8" r="5"/>
+      <text class="sm" x="288" y="84" style="fill:var(--signal)">промах</text>
+      <path class="fit" d="M48 46H70"/><text class="sm" x="76" y="50">до шага: k = 0,03</text>
+      <path class="fit" style="stroke-dasharray:6 4;opacity:.75" d="M48 64H70"/><text class="sm" x="76" y="68">после шага: k = 0,061</text>
+    </svg></div>
+    <figcaption><b>Как читать.</b> Точки — измерения, оранжевые пунктиры — промахи. Нижняя прямая — догадка k&nbsp;=&nbsp;0,03; верхняя, пунктирная, — после одного шага обучения.</figcaption>
+    </figure>
+    <ol class="l03-pts">
       <li><b>Предсказать.</b> При k&nbsp;=&nbsp;0,03 и c&nbsp;=&nbsp;5 прямая даёт A&nbsp;=&nbsp;0,15. Измерено 0,49 — промах большой.</li>
       <li><b>Посчитать ошибку</b> — одно число, показывающее, насколько плохо всё вместе. Здесь это средний квадрат промахов по пяти точкам: 0,055.</li>
-      <li><b>Узнать направление.</b> <b>Градиент</b> — это производная ошибки по весу: как изменится ошибка, если чуть увеличить k. Здесь он равен −1,56. Минус значит: k надо увеличивать.</li>
-      <li><b>Сдвинуть вес</b> на небольшую долю градиента против его знака: k&nbsp;=&nbsp;0,03&nbsp;+&nbsp;0,02·1,56&nbsp;≈&nbsp;0,061. Здесь 0,03 — прежнее k, а доля 0,02 называется <b>скоростью обучения</b>.</li>
+      <li><b>Узнать направление.</b> <b>Градиент</b> — это производная ошибки по весу: как изменится ошибка, если чуть увеличить k. Здесь он равен −1,56. Минус значит: если k увеличить, ошибка уменьшится.</li>
+      <li><b>Сдвинуть вес</b> на небольшую долю градиента против его знака: k&nbsp;=&nbsp;0,03&nbsp;−&nbsp;0,02·(−1,56)&nbsp;≈&nbsp;0,061. Здесь 0,03 — прежнее k, а доля 0,02 называется <b>скоростью обучения</b>.</li>
     </ol>
     <p>Ошибка упала с 0,055 до 0,017 — в три раза. Повторяем те же четыре действия, пока ошибка не перестанет уменьшаться. Весь метод называется <b>градиентным спуском</b>.</p>
-    <div class="callout story"><span class="lbl">Образ</span><p>Вы спускаетесь с горы в густом тумане. Видно только, куда наклонена земля под ногами. Шаг вниз по склону, снова смотрите на наклон, снова шаг. Высота — это ошибка, ваше положение — значения весов, наклон — градиент.</p></div>
+    <details class="ask">
+      <summary>Скорость обучения 0,02 даёт хороший шаг. Что будет, если сделать шаг в пять раз больше — скорость 0,1? Дойдём в пять раз быстрее?</summary>
+      <p>Нет: обучение сломается. Вес перепрыгнет лучшее значение, и ошибка вырастет. Проверьте ниже: поставьте 0,1 и нажмите «Один шаг» несколько раз.</p>
+    </details>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
-      <div class="scroll"><svg id="l3svg" class="fit-w" viewBox="0 0 340 236" width="340" height="236" role="img" aria-label="Калибровочная прямая A = k·c, пять точек измерений и пунктирные промахи"></svg></div>
-      <div class="row"><span>k = <span class="mono" id="l3k"></span></span><span>ошибка = <span class="mono" id="l3e"></span></span><span>градиент = <span class="mono" id="l3g"></span></span><span>шагов: <span class="mono" id="l3n">0</span></span></div>
+      <div class="scroll"><svg id="l3svg" class="fit-w" viewBox="0 -6 340 244" width="340" height="244" role="img" aria-label="Калибровочная прямая A = k·c, пять точек измерений и пунктирные промахи"></svg></div>
+      <div class="l03-stats"><span><i>k</i><b id="l3k"></b></span><span><i>ошибка</i><b id="l3e"></b></span><span><i>градиент</i><b id="l3g"></b></span><span><i>шагов</i><b id="l3n">0</b></span></div>
+      <div class="scroll"><svg id="l3err" class="fit-w" viewBox="0 0 340 84" width="340" height="84" role="img" aria-label="Как меняется ошибка от шага к шагу"></svg></div>
       <label for="l3lr">Скорость обучения: <span id="l3lrv" class="mono">0,020</span></label>
       <input type="range" id="l3lr" min="0.002" max="0.1" step="0.002" value="0.02">
-      <div class="row"><button id="l3step" class="primary">Один шаг обучения</button><button id="l3step10">Ещё 10 шагов</button><button id="l3step50">Ещё 50 шагов</button><button id="l3reset">Сначала</button></div>
-      <p class="out" id="l3out"></p>
-      <p class="why">Точки — условные измерения, те же пять пар. Ошибка — средний квадрат промахов (пунктир); градиент — её производная по k: среднее от −2·c·(A − k·c). Шаг — настоящий градиентный спуск. Попробуйте скорость 0,002 (ползёт: около сотни шагов), 0,02 (около 10 шагов) и 0,1 (перескакивает и разбегается).</p>
+      <div class="l03-btns"><button id="l3step" type="button" class="primary">Один шаг обучения</button><button id="l3step10" type="button">+10 шагов</button><button id="l3step50" type="button">+50 шагов</button><button id="l3reset" type="button">Сначала</button></div>
+      <p class="l03-out" id="l3out" aria-live="polite"></p>
+      <p class="try-note">Точки условные, шаг — настоящий градиентный спуск. Попробуйте скорость 0,002, затем 0,02 и 0,1.</p>
     </div>
-    <p>Примерно за 10 шагов прямая ложится на точки, k&nbsp;≈&nbsp;0,10. Слишком большая скорость обучения ломает процесс: вес перепрыгивает минимум, и ошибка растёт. Подбор этой настройки — часть ремесла разработчиков моделей<sup class="fn" data-fn="2">2</sup>.</p></div>
+    <p><b>Что вы увидели.</b> При скорости 0,02 прямая ложится на точки примерно за 10 шагов, k&nbsp;≈&nbsp;0,10. При 0,002 — ползёт около сотни шагов. При 0,1 вес перепрыгивает минимум, и ошибка растёт. Подбор этой настройки — часть ремесла разработчиков моделей<sup class="fn" data-fn="2">2</sup>.</p>
+    <div class="callout story"><span class="lbl">Образ</span><p>Вы спускаетесь с горы в густом тумане. Видно только, куда наклонена земля под ногами. Шаг вниз по склону, снова смотрите на наклон, снова шаг. Высота — это ошибка, ваше положение — значения весов, наклон — градиент.</p></div>
+    <details class="more">
+      <summary>Для любопытных: формулы ошибки и градиента для этой прямой · 1 мин</summary>
+      <p>Ошибка — средний квадрат промахов (пунктиры на графике): среднее от (A&nbsp;−&nbsp;k·c)² по пяти точкам. Градиент — её производная по k: среднее от −2·c·(A&nbsp;−&nbsp;k·c).</p>
+    </details></div>
 
   <div class="stack"><h2>Тот же шаг в большой модели</h2>
     <p>Большую модель обучают теми же четырьмя действиями. Отличаются масштабы: вместо пяти точек — фрагменты текста, вместо одного веса — миллиарды.</p>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 500" width="340" height="500" role="img" aria-label="Один шаг обучения языковой модели в пяти блоках, рядом тот же шаг для калибровочной прямой; стрелка возвращает к началу">
+    <p>Ошибку считают по вероятности, которую модель дала верному токену. Уверенно и верно — ошибка около нуля. Верный токен «не ожидала» — ошибка большая.</p>
+    <figure class="fig wide">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 484" width="340" height="484" role="img" aria-label="Один шаг обучения языковой модели в пяти блоках, рядом тот же шаг для калибровочной прямой; стрелка возвращает к началу">
       <g>
-        <rect class="box" x="6" y="6" width="300" height="70" rx="6"/>
+        <rect class="box" x="6" y="6" width="286" height="70" rx="6"/>
         <text x="18" y="28" font-size="14" font-weight="600">1. Пример из обучающих текстов</text>
         <text class="sm" x="18" y="48">…снижает энергию → верно: «активации»</text>
         <text class="sm" x="18" y="64" style="fill:var(--signal)">калибровка: точка c = 5, A = 0,49</text>
-        <rect class="box" x="6" y="102" width="300" height="70" rx="6"/>
+        <rect class="box" x="6" y="102" width="286" height="70" rx="6"/>
         <text x="18" y="124" font-size="14" font-weight="600">2. Предсказание</text>
         <text class="sm" x="18" y="144">в начале обучения «активации» — лишь 2 %</text>
         <text class="sm" x="18" y="160" style="fill:var(--signal)">калибровка: k·c = 0,15 вместо 0,49</text>
-        <rect class="box" x="6" y="198" width="300" height="70" rx="6"/>
+        <rect class="box" x="6" y="198" width="286" height="70" rx="6"/>
         <text x="18" y="220" font-size="14" font-weight="600">3. Ошибка: насколько промахнулись</text>
         <text class="sm" x="18" y="240">−ln 0,02 ≈ 3,9: верное было неожиданным</text>
         <text class="sm" x="18" y="256" style="fill:var(--signal)">калибровка: средний квадрат 0,055</text>
-        <rect class="box" x="6" y="294" width="300" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="294" width="286" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="316" font-size="14" font-weight="600">4. Градиент для каждого веса</text>
         <text class="sm" x="18" y="336">миллиарды направлений сразу</text>
         <text class="sm" x="18" y="352" style="fill:var(--signal)">калибровка: одно число −1,56 → k вверх</text>
-        <rect class="box" x="6" y="390" width="300" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
+        <rect class="box" x="6" y="390" width="286" height="70" rx="6" style="stroke:var(--accent);stroke-width:2"/>
         <text x="18" y="412" font-size="14" font-weight="600">5. Сдвиг: все веса чуть-чуть</text>
         <text class="sm" x="18" y="432">в следующий раз 2,1 %, к концу — 88 %</text>
         <text class="sm" x="18" y="448" style="fill:var(--signal)">калибровка: k = 0,030 → 0,061</text>
       </g>
       <g>
-        <path class="arr" d="M156 76V94"/><path class="head" d="M156 102l-5-9h10z"/>
-        <path class="arr" d="M156 172V190"/><path class="head" d="M156 198l-5-9h10z"/>
-        <path class="arr" d="M156 268V286"/><path class="head" d="M156 294l-5-9h10z"/>
-        <path class="arr" d="M156 364V382"/><path class="head" d="M156 390l-5-9h10z"/>
-        <path class="arr" d="M306 425H326V41H316"/><path class="head" d="M306 41l9-5v10z"/>
+        <path class="arr" d="M149 76V94"/><path class="head" d="M149 102l-5-9h10z"/>
+        <path class="arr" d="M149 172V190"/><path class="head" d="M149 198l-5-9h10z"/>
+        <path class="arr" d="M149 268V286"/><path class="head" d="M149 294l-5-9h10z"/>
+        <path class="arr" d="M149 364V382"/><path class="head" d="M149 390l-5-9h10z"/>
+        <path class="arr" d="M292 425H313V41H302"/><path class="head" d="M292 41l10-5v10z"/>
+        <text class="sm" x="331" y="233" text-anchor="middle" transform="rotate(-90 331 233)">следующий фрагмент — и так триллионы раз</text>
       </g>
-      <text class="sm" x="6" y="480">следующий фрагмент — и так триллионы раз</text>
-      <text class="sm" x="6" y="496">проценты условные · оранжевым — калибровка выше</text>
+      <text class="sm" x="6" y="478">проценты условные · оранжевым — калибровка выше</text>
     </svg></div>
-    <p>Ошибка в языковой модели считается по вероятности, которую модель дала верному токену: <b>ошибка&nbsp;=&nbsp;−ln(p)</b>. Уверенно и верно — ошибка около нуля, верный токен «не ожидала» — ошибка большая:</p>
-    <div class="scroll"><table>
-      <tr><th>p верного токена</th><th>0,02</th><th>0,5</th><th>0,88</th><th>1</th></tr>
-      <tr><td>ошибка −ln(p)</td><td>3,9</td><td>0,69</td><td>0,13</td><td>0</td></tr>
-    </table></div>
-    <p>Среднее этой величины по всем токенам текста и уменьшают при обучении. Угадывать приходится сразу на каждой позиции: один текст в тысячу токенов — это тысяча упражнений. Градиент для всех весов сразу считают методом <b>обратного распространения</b><sup class="fn" data-fn="3">3</sup> — это цепное правило дифференцирования сложной функции: производные считают от выхода к входу.</p>
-    <div class="callout"><span class="lbl">Почему 88 %, а не 100 %</span><p>Один шаг сдвигает веса чуть-чуть; фраза должна встретиться много раз. Но и тогда обучение не доведёт «активации» до 100 %: в текстах после «снижает энергию» бывает и «связи», и «Гиббса». Ошибка минимальна, когда модель отдаёт каждому продолжению его долю. <b>Вероятности модели — это примерно частоты продолжений в текстах, а не уверенность в истине</b> (пригодится в уроке 6).</p></div></div>
+    <figcaption><b>Как читать.</b> Сверху вниз — один шаг. Серая строка — языковая модель, оранжевая — тот же шаг в калибровке. В блоке 3 число 3,9 — ошибка: верному токену дали всего 2&nbsp;%.</figcaption>
+    </figure>
+    <p>Угадывать приходится сразу на каждой позиции: один текст в тысячу токенов — это тысяча упражнений. Среднюю ошибку по ним и уменьшают.</p>
+    <details class="more">
+      <summary>Для любопытных: формула ошибки −ln(p) и обратное распространение · 2 мин</summary>
+      <p>Если модель дала верному токену вероятность p, то <b>ошибка&nbsp;=&nbsp;−ln(p)</b>:</p>
+      <div class="scroll"><table>
+        <tr><th>p верного токена</th><th>0,02</th><th>0,5</th><th>0,88</th><th>1</th></tr>
+        <tr><td>ошибка −ln(p)</td><td>3,9</td><td>0,69</td><td>0,13</td><td>0</td></tr>
+      </table></div>
+      <p>Градиент для всех весов сразу считают методом <b>обратного распространения</b><sup class="fn" data-fn="3">3</sup> — это цепное правило дифференцирования сложной функции: производные считают от выхода к входу.</p>
+    </details>
+    <div class="callout fact"><span class="lbl">Запомните</span><p><b>Почему к концу обучения 88 %, а не 100 %?</b> Один шаг сдвигает веса чуть-чуть; фраза должна встретиться много раз. Но и тогда обучение не доведёт «активации» до 100 %: в текстах после «снижает энергию» бывает и «связи», и «Гиббса». Ошибка минимальна, когда модель отдаёт каждому продолжению его долю. <b>Вероятности модели — это примерно частоты продолжений в текстах, а не уверенность в истине</b> (пригодится в уроке 6).</p></div></div>
 
   <div class="stack"><h2>Две фазы: обучение и работа</h2>
+    <p class="recap"><b>Привал.</b> Обучение — четыре действия: предсказать, посчитать ошибку, узнать направление, сдвинуть веса. Дальше — цена и следствия.</p>
     <p>Шагов нужны триллионы, поэтому обучение — отдельная дорогая стройка. <b>Обучающие тексты</b> — это страницы интернета, книги, научные статьи, программный код, открытые и купленные наборы.</p>
     <p>Например, открытую модель DeepSeek-V3 обучали на 14,8 триллиона токенов около двух месяцев на двух тысячах <b>ускорителей</b><sup class="fn" data-fn="4">4</sup> — видеокарт или специальных чипов для быстрого умножения больших таблиц чисел (урок 7). Это <b>предобучение</b>: модель учится угадывать текст. Помощником её делает следующий этап, дообучение (урок 4).</p>
     <p>Работу готовой модели — ответ на ваш вопрос — называют <b>инференсом</b> (от англ. inference, «вывод»). <span class="hl">При инференсе веса заморожены</span>: ваш текст только прогоняется через них.</p>
     <div class="two">
       <div class="panel"><span class="eyebrow">Обучение</span><h3>Веса меняются</h3><ul class="plain"><li>Делает разработчик модели</li><li>Недели и месяцы</li><li>Тысячи ускорителей</li><li>Заканчивается в определённую дату</li></ul></div>
       <div class="panel"><span class="eyebrow">Работа (инференс)</span><h3>Веса заморожены</h3><ul class="plain"><li>Происходит при каждом вашем вопросе</li><li>Секунды</li><li>Один или несколько ускорителей</li><li>Модель ничего не запоминает</li></ul></div>
-    </div></div>
+    </div>
+    <div class="callout fact"><span class="lbl">Разгадка</span><p>Два месяца чтения меняли веса — прочитанное осталось в модели. Ваше вчерашнее исправление было текстом в разговоре: веса оно не тронуло и исчезло вместе с чатом.</p></div></div>
 
-  <div class="stack"><h2>Что из этого следует</h2>
-    <ul class="plain">
+  <div class="stack"><h2>Четыре следствия для вас</h2>
+    <ol class="l03-pts">
       <li><b>Дата среза знаний.</b> Тексты для обучения собирают до определённого дня — это <b>дата среза</b>. О том, что случилось позже, модель знает, только если ей это показали: через поиск или в вашем сообщении<sup class="fn" data-fn="5">5</sup>.</li>
       <li><b>Модель не учится на вашем разговоре.</b> Веса не меняются. Если вы поправили её сегодня, завтра в новом чате ошибка повторится<sup class="fn" data-fn="6">6</sup>.</li>
       <li><b>«Память» — это заметки.</b> Когда продукт «помнит» вас между разговорами, как Claude с включённой памятью<sup class="fn" data-fn="5">5</sup>, он подкладывает сохранённый текст в новый разговор. Модель читает его заново каждый раз.</li>
       <li><b>Один набор весов на всех.</b> Всем, кто выбрал одну и ту же модель, отвечает один и тот же набор весов: разница в результатах — в том, что модели дали, а не в том, что у кого-то она «умнее». Имя модели написано в меню у поля ввода или над чатом; на бесплатном тарифе выбора почти нет, и отвечает обычно модель помладше.</li>
-    </ul>
+    </ol>
     <p class="pull">Обучение меняет модель. Разговор меняет только текст перед ней.</p>
     <div class="two">
       <div class="panel"><span class="eyebrow">Биотехнология</span><p>Модель знает классические работы о ферменте PETase из <i>Ideonella sakaiensis</i>, но может не знать статью о новом варианте фермента LCC (справка — урок 1), вышедшую в прошлом месяце. Для свежей литературы нужен режим с поиском или загруженный PDF.</p></div>
@@ -110,7 +172,7 @@
       <li data-fn="6">Научить модель на ходу, не испортив старые знания, — одна из главных нерешённых задач: новые сдвиги весов стирают прежние («катастрофическое забывание»). Почему это важно и какие есть подходы, понятно изложено в эссе <a href="https://a16z.com/why-we-need-continual-learning/" target="_blank" rel="noopener">Andreessen Horowitz: Why We Need Continual Learning</a> (статья, англ., 2026, 20 мин). Это взгляд инвестора, а не научный обзор.</li>
     </ol></div></div>
 
-  <div class="panel"><span class="eyebrow">Словарик урока</span>
+  <div class="panel glossary"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
       <tr><td><b>Веса (параметры)</b></td><td>все числа, хранящиеся внутри модели: векторы токенов, числа слоёв; в них записаны её «знания»</td></tr>
       <tr><td><b>Обучение</b></td><td>подбор значений весов, при которых модель хорошо угадывает следующий токен</td></tr>
@@ -132,12 +194,26 @@
 
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Где включается поиск и чат без памяти — в плашке «Ваш чат в этом курсе» (урок 1, задание).</p>
-    <p>В чате с выключенным поиском спросите о событии прошлой недели в вашей области. Посмотрите, как модель отвечает: признаёт незнание, угадывает или выдумывает. Затем включите поиск и задайте тот же вопрос. Если поиск в вашем чате не выключается, допишите в вопрос «не пользуйся поиском» и проверьте по ответу, что он не искал: при поиске чат показывает ссылки на страницы.</p>
-    <p>Второй опыт: расскажите в одном чате выдуманный факт о себе («я держу трёх хорьков»). Откройте чат без памяти (Incognito chat в Claude, Temporary в ChatGPT) и спросите: «Каких животных я держу?» Объясните результат своими словами.</p></div>
-  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 3</span>
-    <p class="why">Время: ≈ 10 минут.</p>
-    <p>Без поиска спросите модель, какие ферменты она знает для вашего процесса (для ПЭТ: IsPETase, LCC и их варианты — кто это, см. «Справку о теме проекта» в уроке 1) и за какой год самые свежие данные, которые она помнит. Запишите в журнал, где её знания обрываются. Это список того, что придётся добирать из свежих источников.</p></div>
+    <p><b>Что получится:</b> вы увидите дату среза и «память» в деле. Где включаются поиск и чат без памяти — справка «Ваш чат в этом курсе» (урок 1, задание).</p>
+    <h3>Опыт 1 — дата среза</h3>
+    <ol class="steps">
+      <li>Выключите в чате поиск и спросите о событии прошлой недели в вашей области. Если поиск не выключается, допишите в вопрос «не пользуйся поиском» и проверьте по ответу, что он не искал: при поиске чат показывает ссылки на страницы.</li>
+      <li>Посмотрите, как модель отвечает: признаёт незнание, угадывает или выдумывает.</li>
+      <li>Включите поиск и задайте тот же вопрос.</li>
+    </ol>
+    <h3>Опыт 2 — память</h3>
+    <ol class="steps">
+      <li>Расскажите в одном чате выдуманный факт о себе («я держу трёх хорьков»).</li>
+      <li>Откройте чат без памяти (Incognito chat в Claude, Temporary в ChatGPT) и спросите: «Каких животных я держу?»</li>
+      <li>Объясните результат своими словами и запишите.</li>
+    </ol></div>
+  <div class="panel" data-note="step" data-time="≈ 10 минут"><span class="eyebrow">Сквозной проект · шаг 3</span>
+    <p><b>Что получится:</b> запись в журнале, где обрываются знания модели, — список того, что придётся добирать из свежих источников.</p>
+    <ol class="steps">
+      <li>Без поиска спросите модель, какие ферменты она знает для вашего процесса. Для ПЭТ: IsPETase, LCC и их варианты — кто это, см. «Справку о теме проекта» в уроке 1.</li>
+      <li>Спросите, за какой год самые свежие данные, которые она помнит.</li>
+      <li>Запишите в журнал, где её знания обрываются.</li>
+    </ol></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
     <p>По желанию; одного материала достаточно. Путь от одного веса на калибровочной прямой к тому, как учат настоящие модели и почему их до сих пор не умеют доучивать на ходу.</p>
@@ -167,35 +243,60 @@ function mse(k){var s=0; for(var i=0;i<C.length;i++){var e=A[i]-k*C[i]; s+=e*e;}
 function grad(k){var g=0; for(var i=0;i<C.length;i++) g+=-2*C[i]*(A[i]-k*C[i]); return g/C.length;}
 function X(c){return 40+c*48;} function Y(a){return 200-a*280;}
 function fmt(x,d){return ((x<0?'−':'')+Math.abs(x).toFixed(d)).replace('.',',');}
+var NS='http://www.w3.org/2000/svg', hist=[];
+function mk(svg,t,at,txt){var e=document.createElementNS(NS,t); for(var a in at) e.setAttribute(a,at[a]); if(txt!=null)e.textContent=txt; svg.appendChild(e); return e;}
+function l3err(){
+  // малый график: ошибка по шагам, шкала 0…0,06; всё, что выше, прижато к верхнему краю и помечено
+  var svg=$('l3err'); svg.textContent='';
+  var x0=40, x1=332, y0=64, y1=14, top=0.06, n=Math.max(10,hist.length-1);
+  function ex(i){return x0+(x1-x0)*i/n;} function ey(e){return y0-(y0-y1)*Math.min(e,top)/top;}
+  mk(svg,'path',{'class':'ax',d:'M'+x0+' '+y1+'V'+y0+'H'+x1});
+  mk(svg,'text',{'class':'sm',x:x0-5,y:y0+4,'text-anchor':'end'},'0');
+  mk(svg,'text',{'class':'sm',x:x0-5,y:y1+4,'text-anchor':'end'},'0,06');
+  mk(svg,'text',{'class':'sm',x:x0,y:y0+16},'шаг 0');
+  mk(svg,'text',{'class':'sm',x:x1,y:y0+16,'text-anchor':'end'},'шаг '+n);
+  var over=hist.some(function(e){return e>top;});
+  mk(svg,'text',{'class':'sm',x:x1,y:9,'text-anchor':'end',style:over?'fill:var(--signal)':''},over?'ошибка ушла вверх за график ↑':'ошибка по шагам');
+  if(hist.length>1) mk(svg,'path',{'class':'fit',style:'stroke-width:2'+(over?';stroke:var(--signal)':''),d:hist.map(function(e,i){return (i?'L':'M')+ex(i).toFixed(1)+' '+ey(e).toFixed(1);}).join('')});
+  mk(svg,'circle',{'class':'pt',cx:ex(hist.length-1),cy:ey(hist[hist.length-1]),r:4.5});
+}
 function l3draw(){
-  var NS='http://www.w3.org/2000/svg', svg=$('l3svg'); svg.textContent='';
-  function mk(t,at,txt,par){var e=document.createElementNS(NS,t); for(var a in at) e.setAttribute(a,at[a]); if(txt!=null)e.textContent=txt; (par||svg).appendChild(e); return e;}
-  var defs=mk('defs',{}), cp=mk('clipPath',{id:'l3clip'},null,defs); mk('rect',{x:40,y:14,width:296,height:186},null,cp);
-  mk('path',{'class':'ax',d:'M40 14V200H336'});
-  for(var c=1;c<=6;c++) mk('text',{'class':'sm',x:X(c),y:215,'text-anchor':'middle'},String(c));
-  [0.2,0.4,0.6].forEach(function(a){mk('text',{'class':'sm',x:35,y:Y(a)+4,'text-anchor':'end'},a.toFixed(1)); mk('path',{'class':'ax',d:'M40 '+Y(a)+'H336','stroke-dasharray':'2 4'});});
-  mk('text',{'class':'sm',x:336,y:232,'text-anchor':'end'},'концентрация c, мг/л');
-  mk('text',{'class':'sm',x:44,y:10},'оптическая плотность A');
-  var g=mk('g',{'clip-path':'url(#l3clip)'});
-  for(var i=0;i<C.length;i++) mk('path',{d:'M'+X(C[i])+' '+Y(A[i])+'V'+Y(kk*C[i]),style:'stroke:var(--signal);stroke-dasharray:3 3;fill:none'},null,g);
-  mk('path',{'class':'fit',d:'M'+X(0)+' '+Y(0)+'L'+X(6.2)+' '+Y(kk*6.2)},null,g);
-  for(i=0;i<C.length;i++) mk('circle',{'class':'pt',cx:X(C[i]),cy:Y(A[i]),r:5});
+  var svg=$('l3svg'); svg.textContent='';
+  var defs=mk(svg,'defs',{}), cp=mk(defs,'clipPath',{id:'l3clip'}); mk(cp,'rect',{x:40,y:14,width:296,height:186});
+  mk(svg,'path',{'class':'ax',d:'M40 14V200H336'});
+  for(var c=1;c<=6;c++) mk(svg,'text',{'class':'sm',x:X(c),y:215,'text-anchor':'middle'},String(c));
+  [0.2,0.4,0.6].forEach(function(a){mk(svg,'text',{'class':'sm',x:35,y:Y(a)+4,'text-anchor':'end'},a.toFixed(1).replace('.',',')); mk(svg,'path',{'class':'ax',d:'M40 '+Y(a)+'H336','stroke-dasharray':'2 4'});});
+  mk(svg,'text',{'class':'sm',x:336,y:232,'text-anchor':'end'},'концентрация c, мг/л');
+  mk(svg,'text',{'class':'sm',x:44,y:8},'оптическая плотность A');
+  var g=mk(svg,'g',{'clip-path':'url(#l3clip)'});
+  for(var i=0;i<C.length;i++) mk(g,'path',{d:'M'+X(C[i])+' '+Y(A[i])+'V'+Y(Math.max(-1,Math.min(2,kk*C[i]))),style:'stroke:var(--signal);stroke-width:1.5;stroke-dasharray:3 3;fill:none'});
+  // прямая, ушедшая за график, не исчезает: остаётся у края и подписана
+  var away = kk<0 ? 'down' : kk>0.6 ? 'up' : '';
+  if(away==='down'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M40 198H336'}); mk(svg,'text',{x:188,y:188,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal)'},'прямая ушла вниз за график ↓'); }
+  else if(away==='up'){ mk(g,'path',{'class':'fit',style:'stroke:var(--signal);stroke-dasharray:6 4',d:'M42 200V14'}); mk(svg,'text',{x:188,y:30,'text-anchor':'middle','font-size':13,'font-weight':600,style:'fill:var(--signal)'},'прямая ушла вверх за график ↑'); }
+  else mk(g,'path',{'class':'fit',d:'M'+X(0)+' '+Y(0)+'L'+X(6.2)+' '+Y(kk*6.2)});
+  for(i=0;i<C.length;i++) mk(svg,'circle',{'class':'pt',cx:X(C[i]),cy:Y(A[i]),r:5});
   var e=mse(kk), gr=grad(kk);
-  $('l3k').textContent=fmt(kk,4); $('l3e').textContent=(e<10?e.toFixed(5):e.toExponential(1)).replace('.',','); $('l3g').textContent=fmt(gr,3); $('l3n').textContent=String(steps);
-  var msg;
+  $('l3k').textContent=Math.abs(kk)<100?fmt(kk,4):(kk<0?'−':'')+Math.abs(kk).toExponential(0).replace('e+','·10^');
+  $('l3e').textContent=e<10?e.toFixed(5).replace('.',','):e.toExponential(0).replace('e+','·10^');
+  $('l3g').textContent=Math.abs(gr)<1000?fmt(gr,3):(gr<0?'−':'')+Math.abs(gr).toExponential(0).replace('e+','·10^');
+  $('l3n').textContent=String(steps);
+  var msg, bad=false;
   if(steps===0) msg='Начало: k = 0,03, прямая лежит намного ниже точек. Градиент отрицательный — значит, k надо увеличивать.';
-  else if(prevE!==null && e>prevE*1.0001) msg='Ошибка выросла: шаг слишком большой, k перескакивает минимум. Уменьшите скорость и нажмите «Сначала».';
+  else if(prevE!==null && e>prevE*1.0001){ bad=true; msg='Ошибка выросла: шаг слишком большой, k перескакивает минимум. Уменьшите скорость и нажмите «Сначала».'; }
   else if(e<0.00016) msg='Ошибка почти не меняется: k ≈ '+kk.toFixed(3).replace('.',',')+', прямая легла на точки. Обучение сошлось.';
   else msg='Ошибка уменьшилась'+(prevE!==null?' (было '+prevE.toFixed(5).replace('.',',')+')':'')+'. Градиент '+(gr<0?'отрицательный — k растёт.':'положительный — k уменьшается.');
-  $('l3out').textContent=msg;
+  $('l3out').textContent=msg; $('l3out').classList.toggle('l03-bad',bad);
+  l3err();
 }
-function step(){prevE=mse(kk); kk-=parseFloat($('l3lr').value)*grad(kk); steps++; if(!isFinite(kk)||Math.abs(kk)>1e6){kk=Math.sign(kk||1)*1e6;}}
+function step(){prevE=mse(kk); kk-=parseFloat($('l3lr').value)*grad(kk); steps++; if(!isFinite(kk)||Math.abs(kk)>1e6){kk=Math.sign(kk||1)*1e6;} hist.push(mse(kk));}
 $('l3step').addEventListener('click',function(){step(); l3draw();});
 function many(n){var e0=mse(kk); for(var j=0;j<n;j++) step(); prevE=e0; l3draw();}
 $('l3step10').addEventListener('click',function(){many(10);});
 $('l3step50').addEventListener('click',function(){many(50);});
-$('l3reset').addEventListener('click',function(){kk=k0; steps=0; prevE=null; l3draw();});
+$('l3reset').addEventListener('click',function(){kk=k0; steps=0; prevE=null; hist=[mse(k0)]; l3draw();});
 $('l3lr').addEventListener('input',function(){$('l3lrv').textContent=parseFloat(this.value).toFixed(3).replace('.',',');});
+hist=[mse(k0)];
 l3draw();
 })();
 </script>

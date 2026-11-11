@@ -1,33 +1,48 @@
   <style>
-    .l15-row{display:flex;flex-direction:column;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
-    .l15-row:first-child{border-top:0}
-    .l15-row .l15-v{font-family:var(--f-mono);font-size:.86rem}
-    .l15-row .l15-q{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
-    .l15-row .l15-sec{font-family:var(--f-mono);font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+    .l15-row{display:flex;flex-direction:column;gap:8px}
+    .l15-pair{display:grid;grid-template-columns:5.4rem 1fr;gap:6px 10px;align-items:baseline}
+    .l15-pair .k{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+    .l15-v{font-family:var(--f-mono);font-size:.86rem;overflow-wrap:anywhere}
+    .l15-q{font-family:var(--f-mono);font-size:.82rem;overflow-wrap:anywhere}
+    .l15-sec{font-family:var(--f-mono);font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+    .l15-links{font-size:.84rem;gap:6px 12px}
     .l15-row .row{gap:8px}
-    .l15-row button{padding:4px 10px;font-size:.85rem}
-    .l15-row.l15-on{background:var(--signal-soft);border-radius:6px;padding-left:8px;padding-right:8px}
-    .l15-res{font-size:.9rem}
-    .l15-ok{color:var(--good)} .l15-bad{color:var(--bad)}
-    .l15-st{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:10px}
+    .l15-st{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+    .l15-sum{margin:0;padding-left:1.4rem;font-size:.9rem;display:flex;flex-direction:column;gap:4px}
+    .l15-bad{color:var(--bad)}
+    .l15-check{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:8px}
   </style>
   <div class="stack"><span class="eyebrow">Модуль 3 · Урок 15 из 31 · 30 минут</span>
     <h1>Первый агент: десять записей из открытых баз</h1>
-    <p class="lead">Первое настоящее задание агенту в папке проекта: как его сформулировать, что потребовать на выходе и как за полчаса проверить результат руками.</p></div>
+    <p class="lead">После урока вы сможете дать агенту задание, результат которого можно проверить, и за полчаса проверить десять строк руками.</p></div>
 
   <div class="stack"><h2>Задание, которое можно проверить</h2>
-    <p>Просьба «найди ферменты, разлагающие ПЭТ» даст красивый список, который нечем проверить. Хорошее задание агенту отвечает на пять вопросов: <b>откуда</b> брать, <b>сколько</b>, <b>какие поля</b>, <b>что делать при пробелах</b> и <b>в каком виде вернуть</b>.</p>
-    <p>Два слова из примера ниже. <b>Swiss-Prot</b> — часть UniProt (урок 11), где записи проверены людьми-кураторами<sup class="fn" data-fn="1">1</sup>. <b>Номер EC</b> — номер типа реакции в международной классификации ферментов; 3.1.1.101 — ПЭТ-гидролазы, ферменты, которые расщепляют ПЭТ. По этому номеру агент и найдёт записи.</p>
-    <div class="callout"><span class="lbl">Пример задания</span><p>Найди в UniProt, в разделе Swiss-Prot, белки с номером EC 3.1.1.101 и собери 10 записей. Обращайся к UniProt через его открытый API. Для каждой записи: название, организм, идентификатор UniProt, оптимум температуры, оптимум pH, субстрат и условия измерения, номер PubMed первоисточника и дословная фраза из записи. Если значения нет — пиши «нет данных», не подбирай. Если значений несколько — дай каждое отдельной строкой, с условиями. Сохрани таблицу в <span class="mono">data/pilot.csv</span>, у каждой строки статус «не проверено».</p></div>
-    <p>Два требования здесь главные. <span class="hl">Дословная фраза</span> позволяет проверить строку за минуту. <span class="hl">«Нет данных» вместо догадки</span> защищает от самой частой ошибки модели — правдоподобной выдумки (урок 6)<sup class="fn" data-fn="2">2</sup>. Пустая клетка значит «не искали», а «нет данных» — «искали, в источнике нет». Это правило держится до конца курса.</p>
-    <div class="callout story"><span class="lbl">Почему десять, а не сто</span><p>Это пилотный прогон, как пробная партия в лаборатории перед большой серией. Десять строк дёшевы, их реально проверить все, и на них видны слабые места самого задания: какое поле агент понимает не так, где он путает записи. Сначала исправляют задание, потом увеличивают объём — в модуле 5 сбор пойдёт на сотни строк. База растёт не числом ферментов, а числом измерений: у одного фермента десятки чисел в разных статьях, плюс варианты с заменами.</p></div></div>
-
-  <div class="stack"><h2>Как это выглядит у вас</h2>
+    <p>Просьба «найди ферменты, разлагающие ПЭТ» даст красивый список, который нечем проверить. Хорошее задание агенту отвечает на пять вопросов. Вот оно, разобранное по этим вопросам:</p>
+    <div class="callout"><span class="lbl">Пример задания</span>
+      <ul class="plain">
+        <li><b>Откуда брать.</b> Найди в UniProt, в разделе Swiss-Prot, белки с номером EC 3.1.1.101. Обращайся к UniProt через его открытый API.</li>
+        <li><b>Сколько.</b> Собери 10 записей.</li>
+        <li><b>Какие поля.</b> Для каждой записи: название, организм, идентификатор UniProt, оптимум температуры, оптимум pH, субстрат и условия измерения, номер PubMed первоисточника и дословная фраза из записи.</li>
+        <li><b>Что делать при пробелах.</b> Если значения нет — пиши «нет данных», не подбирай. Если значений несколько — дай каждое отдельной строкой, с условиями.</li>
+        <li><b>В каком виде вернуть.</b> Сохрани таблицу в <span class="mono">data/pilot.csv</span>, у каждой строки статус «не проверено».</li>
+      </ul></div>
+    <details class="more">
+      <summary>Образец: то же задание одним текстом — для копирования</summary>
+      <blockquote class="prompt">Найди в UniProt, в разделе Swiss-Prot, белки с номером EC 3.1.1.101 и собери 10 записей. Обращайся к UniProt через его открытый API.
+Для каждой записи: название, организм, идентификатор UniProt, оптимум температуры, оптимум pH, субстрат и условия измерения, номер PubMed первоисточника и дословная фраза из записи.
+Если значения нет — пиши «нет данных», не подбирай. Если значений несколько — дай каждое отдельной строкой, с условиями.
+Сохрани таблицу в data/pilot.csv, у каждой строки статус «не проверено».</blockquote>
+    </details>
+    <p>Два слова из примера. <b>Swiss-Prot</b> — часть UniProt (урок 11), где записи проверены людьми-кураторами<sup class="fn" data-fn="1">1</sup>. <b>Номер EC</b> — номер типа реакции в международной классификации ферментов; 3.1.1.101 — ПЭТ-гидролазы, ферменты, которые расщепляют ПЭТ. По этому номеру агент и найдёт записи.</p>
+    <p>Два требования здесь главные. <b>Дословная фраза</b> позволяет проверить строку за минуту. <span class="hl">«Нет данных» вместо догадки</span> защищает от самой частой ошибки модели — правдоподобной выдумки (урок 6)<sup class="fn" data-fn="2">2</sup>. Пустая клетка значит «не искали», а «нет данных» — «искали, в источнике нет». Это правило держится до конца курса.</p>
+    <div class="callout story"><span class="lbl">Почему десять</span><p>Это пилотный прогон, как пробная партия в лаборатории перед большой серией. Десять строк дёшевы, их реально проверить все, и на них видны слабые места самого задания: какое поле агент понимает не так, где он путает записи. Сначала исправляют задание, потом увеличивают объём — в модуле 5 сбор пойдёт на сотни строк. База растёт не числом ферментов, а числом измерений: у одного фермента десятки чисел в разных статьях, плюс его изменённые варианты.</p></div>
+    <h3>Как это выглядит у вас</h3>
     <p>Откройте Claude Code в папке проекта (урок 14, режим Manual) и вставьте задание. Вы увидите просьбы открыть адрес <span class="mono">rest.uniprot.org/…</span> — это API UniProt, отвечайте «да» — и просьбу создать файл <span class="mono">data/pilot.csv</span>. Цена по прикидке урока 11: десять записей — порядка доллара у Opus и нескольких центов у Haiku по API; на подписке — из лимита.</p>
     <p>Чат с поиском тоже справится, но страницы он открывает целиком (урок 12) — это в разы дороже. Годится для пробы на два-три фермента.</p></div>
 
   <div class="stack"><h2>Путь одной записи</h2>
     <p>Проследим, откуда берётся одна строка, на знакомом ферменте LCC: его улучшенный вариант разлагает больше 90&nbsp;% ПЭТ за 10 часов<sup class="fn" data-fn="3">3</sup>.</p>
+    <figure class="fig">
     <div class="scroll"><svg class="fit-w" viewBox="0 0 340 542" width="340" height="542" role="img" aria-label="Путь записи: база UniProt, запись G9BY57; раздел свойств; дословная фраза об оптимуме на ПЭТ выше 70 градусов; первоисточник PubMed 22194294; строка таблицы со статусом «не проверено». Человек сверяет обратным ходом: открывает ссылку, находит фразу и сравнивает с числом в строке, затем ставит статус.">
       <g>
         <rect class="box" x="6" y="6" width="290" height="62" rx="6"/>
@@ -60,31 +75,37 @@
         <text class="sm" x="331" y="362" transform="rotate(90 331 362)" text-anchor="middle" style="fill:var(--signal)">обратный ход: найти фразу</text>
       </g>
     </svg></div>
-    <p>Шаги 1–5 делает агент, шаг 6 — вы: по ссылке из строки открываете запись, находите там дословную фразу и сравниваете её с числом и условиями в строке. В той же записи LCC стоит и «50&nbsp;°C», но <b>на модельном субстрате</b>, а не на ПЭТ. Без поля «условия» эти два числа легко перепутать.</p></div>
+      <figcaption><b>Как читать.</b> Шаги 1–5 делает агент, шаг 6 — вы. Пунктирная стрелка — обратный ход проверки: от строки таблицы назад к дословной фразе.</figcaption>
+    </figure>
+    <p>Проверка — тот же путь в обратную сторону: по ссылке из строки вы открываете запись, находите там дословную фразу и сравниваете её с числом и условиями в строке. В той же записи LCC стоит и «50&nbsp;°C», но <b>на модельном субстрате</b>, а не на ПЭТ. Без поля «условия» эти два числа легко перепутать.</p></div>
 
   <div class="stack"><h2>Как проверить десять строк руками</h2>
-    <ul class="plain">
+    <ol class="l15-check">
       <li><b>Откройте ссылку</b> на запись UniProt. Не открылась или ведёт на другой белок — ошибка сразу.</li>
       <li><b>Найдите дословную фразу</b> поиском по странице (Ctrl+F). Агент может выдумать и фразу — поэтому её ищут в источнике, а не верят. Нет фразы — строка под подозрением.</li>
       <li><b>Сверьте число, единицу и условия</b> с фразой. Самые коварные ошибки — верное число при чужих условиях<sup class="fn" data-fn="4">4</sup>.</li>
       <li><b>Посмотрите рядом</b>: нет ли в том же разделе записи других значений этого параметра. Задание требовало все. <span class="hl">Пропуск значения — тоже дефект</span>, хотя фраза найдена и число верно.</li>
       <li><b>Поставьте статус</b>: «подтверждено человеком» или «расхождение». На пилоте статусов три, вместе с «не проверено»; полный список появится в уроке 18.</li>
-    </ul>
+    </ol>
     <p>Почему не поручить проверку второму агенту? Так и сделаем в уроке 22. Но сначала нужно самим понять, как выглядит хорошая проверка, — иначе не сможете проверить проверяющего.</p>
-    <div class="callout warn"><span class="lbl">Вы проверили агента, а не базу</span><p>Найдя фразу в записи, вы убедились, что агент верно списал с базы. Саму базу проверьте по статье для двух-трёх строк: в записи рядом с фразой стоит номер PubMed. Число ищите в аннотации; если его там нет, а полный текст закрыт, запишите «не удалось проверить по статье».</p></div>
+    <details class="ask">
+      <summary>Фраза нашлась в записи, число совпало с ней. Какие ошибки всё ещё могут прятаться в такой строке?</summary>
+      <p>Две. Условия, которых во фразе нет: агент мог подобрать их сам. И соседние значения того же параметра, которые он пропустил. Обе есть в таблице ниже — шаги 3 и 4 списка как раз про них.</p>
+    </details>
     <div class="panel">
       <span class="eyebrow">Попробуйте сами</span>
-      <p>Агент вернул десять строк. В двух — ошибки, ещё в двух он нарушил задание иначе. Сравните в каждой строке число и условия с дословной фразой, загляните в раздел записи — и отметьте строки с дефектом.</p>
-      <div id="l15rows"></div>
-      <div class="row"><button id="l15check" class="primary" type="button">Проверить</button><button id="l15hint" type="button">Подсказка</button><button id="l15reset" type="button">Сначала</button></div>
-      <p class="why" id="l15hinttext" hidden>Три вопроса к каждой строке. Есть ли во фразе слово «optimum»? Всё ли, что стоит в строке, есть во фразе — и число, и субстрат? Нет ли в разделе записи других значений оптимума?</p>
+      <p>Агент вернул десять строк. В двух — ошибки, ещё в двух он нарушил задание иначе. Разбирайте по одной: сравните то, что записал агент, с дословной фразой, загляните в раздел записи — и решите, есть ли дефект.</p>
+      <div id="l15card" class="l15-row"></div>
       <p class="out" id="l15out"></p>
-      <div class="l15-st" id="l15status" hidden></div>
-      <p class="why">Данные настоящие: значения, фразы и разделы — из записей UniProt (сверено 11.11.2026), кроме двух намеренно испорченных строк и двух, где значения намеренно пропущены. «Нет данных в записи» — честный ответ агента: условий опыта запись не даёт.</p>
+      <div class="row"><button id="l15hint" type="button">Подсказка</button><button id="l15reset" type="button">Сначала</button></div>
+      <p class="why" id="l15hinttext" hidden>Три вопроса к каждой строке. Есть ли во фразе слово «optimum»? Всё ли, что стоит в строке, есть во фразе — и число, и субстрат? Нет ли в разделе записи других значений оптимума?</p>
+      <p class="try-note">Данные настоящие: значения, фразы и разделы — из записей UniProt (сверено 11.11.2026), кроме двух намеренно испорченных строк и двух, где значения намеренно пропущены. «Нет данных в записи» — честный ответ агента: условий опыта запись не даёт.</p>
     </div></div>
 
   <div class="stack"><h2>Что показал пилот</h2>
-    <p>В шести строках из десяти в поле условий стоит «нет данных в записи». Это не лень агента, а свойство источника: <span class="hl">запись базы часто не даёт условий опыта</span>. Значит, на вопрос «какие ферменты активны при 60–70&nbsp;°C» база по одним записям UniProt не ответит: за условиями надо идти в статьи. Это и есть результат пилота. Он пойдёт в ТЗ (урок 18), а в статьи пойдёт сборщик (урок 21). Статус такой строки — «подтверждено человеком», с пометкой «по записи базы; условия: нет данных в записи».</p></div>
+    <p>В шести строках из десяти в поле условий стоит «нет данных в записи». Это не лень агента, а свойство источника: <span class="hl">запись базы часто не даёт условий опыта</span>.</p>
+    <p>Значит, на вопрос «какие ферменты активны при 60–70&nbsp;°C» база по одним записям UniProt не ответит: за условиями надо идти в статьи. Это и есть результат пилота. Он пойдёт в ТЗ (урок 18), а в статьи пойдёт сборщик (урок 21).</p>
+    <p>Статус такой строки — «подтверждено человеком»: вы убедились, что агент верно списал с записи. А пометка «по записи базы; условия: нет данных в записи» честно говорит, чего в строке нет.</p></div>
 
   <div class="stack"><h2>Что делать при расхождении</h2>
     <p>Расхождение — не всегда ошибка агента. Различайте три случая:</p>
@@ -94,14 +115,18 @@
       <li><b>База расходится со статьёй.</b> Правда — в первоисточнике; база только указывает на него. Запишите оба значения.</li>
     </ul>
     <p class="pull">Главное правило: ничего не исправлять молча.</p>
-    <div class="callout warn"><span class="lbl">До массового сбора</span><p>Проверьте условия использования каждой базы и запишите их в журнал: данные UniProt и BRENDA (ещё одна база ферментов) открыты по лицензии CC BY 4.0 — использовать можно, указав источник<sup class="fn" data-fn="5">5</sup>. Массовый сбор ведут через API и готовые файлы, которые база сама выкладывает<sup class="fn" data-fn="6">6</sup>, а не тысячей открытий страниц.</p></div></div>
+    <div class="callout warn"><span class="lbl">Осторожно</span><p><b>Вы проверили агента, а не базу.</b> Найдя фразу в записи, вы убедились, что агент верно списал с базы. Саму базу проверьте по статье для двух-трёх строк: в записи рядом с фразой стоит номер PubMed. Число ищите в аннотации; если его там нет, а полный текст закрыт, запишите «не удалось проверить по статье».</p></div>
+    <details class="more">
+      <summary>Справка: условия использования баз — что проверить до массового сбора</summary>
+      <p>Проверьте условия использования каждой базы и запишите их в журнал: данные UniProt и BRENDA (ещё одна база ферментов) открыты по лицензии CC BY 4.0 — использовать можно, указав источник<sup class="fn" data-fn="5">5</sup>. Массовый сбор ведут через API и готовые файлы, которые база сама выкладывает<sup class="fn" data-fn="6">6</sup>, а не тысячей открытий страниц.</p>
+    </details></div>
 
   <div class="stack"><h2>Примеры</h2>
     <div class="two">
       <div class="panel"><span class="eyebrow">Биотехнология</span><p>Для IsPETase в UniProt три оптимума: 40&nbsp;°C на плёнке ПЭТ, 30&nbsp;°C на ПЭТ из бутылки, 35–45&nbsp;°C на модельных эфирах. Агент, вернувший одно число без условий, формально прав и при этом бесполезен для первого вопроса вашей базы из шага 6 — «какие ферменты сохраняют активность при 60–70&nbsp;°C».</p></div>
       <div class="panel"><span class="eyebrow">Свои проекты</span><p>То же для расследования: агент собирает из KRS — польского государственного реестра организаций — десять фундаций с датой регистрации, номером и ссылкой на запись. Вы открываете все десять ссылок и сверяете дату и номер. Ссылка не открылась или номер другой — строка не принимается.</p></div>
     </div>
-    <div class="panel"><span class="eyebrow">Частые вопросы</span>
+    <div class="panel faq"><span class="eyebrow">Частые вопросы</span>
       <p><b>Две ошибки из десяти — много или мало?</b> На пилоте процент не считают. Ошибка, которая повторится (агент путает «ещё работает» и «оптимум»), — править задание и прогнать заново; случайная — исправить и идти дальше.</p>
       <p><b>«Нет данных»: честно не нашёл или не открывал?</b> Попросите показать, какие адреса он открывал; подробно — урок 19.</p>
       <p><b>Два фермента одного организма с одинаковыми числами из одной статьи?</b> Запишите как вопрос к себе: решает статья, а не догадка.</p>
@@ -115,7 +140,7 @@
       <li data-fn="6">Справка UniProt с примерами запросов к API, которые можно просто вставить в адресную строку браузера и увидеть таблицу вместо страницы: <a href="https://www.uniprot.org/help/programmatic_access" target="_blank" rel="noopener">UniProt: Programmatic access</a> (документация, англ., 15 мин). Пригодится для массового сбора в модуле 5.</li>
     </ol></div></div>
 
-  <div class="panel"><span class="eyebrow">Словарик урока</span>
+  <div class="panel glossary"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
       <tr><td><b>Идентификатор UniProt</b></td><td>постоянный код записи о белке, например G9BY57; по нему запись открывается всегда</td></tr>
       <tr><td><b>Swiss-Prot</b></td><td>часть UniProt, где записи проверены кураторами</td></tr>
@@ -132,11 +157,40 @@
     <li>Расхождение записывают и разбирают: ошибка агента, разногласие источников или ошибка базы.</li></ul></div>
 
 
-  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Честное время — около 25 минут. Дайте задание из примера выше, но на <b>три</b> записи: Claude Code в папке проекта (урок 14) или, для пробы, чат с поиском. Проверьте все три строки по пяти шагам урока.</p>
-    <p>Запишите: сколько строк подтвердилось, какие расхождения нашлись и к какому из трёх случаев они относятся. Писал ли агент «нет данных» там, где данных правда нет? Все ли значения из раздела записи он привёл?</p></div>
-  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 15</span>
-    <p><b>Время: ≈ час; можно в два приёма.</b> <b>Сделайте сейчас:</b> получите от агента десять записей в <span class="mono">data/pilot.csv</span> — с источником, дословной фразой, условиями и статусом «не проверено» у каждой строки. <b>Можно в другой день:</b> проверьте все строки вручную, поставьте статусы, две-три строки сверьте со статьёй. В журнал (тип <b>проверка</b>) запишите: сколько подтверждено, какие расхождения и <b>вывод пилота одной фразой</b> — чего записи базы не дают. Туда же — условия использования UniProt и BRENDA и сверка со списком из шага 11: какими инструментами агент пользовался на деле. Если тема своя — замените базы на открытые реестры своей области.</p></div>
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 25 минут</span>
+    <ol class="steps">
+      <li>Дайте агенту задание из примера урока, но на <b>три</b> записи вместо десяти: Claude Code в папке проекта (урок 14) или, для пробы, чат с поиском.</li>
+      <li>Проверьте все три строки по пяти шагам урока.</li>
+      <li>Запишите: сколько строк подтвердилось, какие расхождения нашлись и к какому из трёх случаев они относятся.</li>
+      <li>Запишите ещё два ответа: писал ли агент «нет данных» там, где данных правда нет, и все ли значения из раздела записи он привёл.</li>
+    </ol></div>
+  <div class="panel" data-note="step" data-time="≈ час, можно в два приёма"><span class="eyebrow">Сквозной проект · шаг 15</span>
+    <p><b>Что получится:</b> таблица <span class="mono">data/pilot.csv</span> из десяти проверенных строк и вывод пилота одной фразой в журнале. Если тема своя — замените базы на открытые реестры своей области.</p>
+    <h3>Сегодня — десять записей</h3>
+    <ol class="steps">
+      <li>Откройте Claude Code в папке проекта (режим Manual) и вставьте задание из урока — образец для копирования стоит в первом разделе.</li>
+      <li>Отвечайте «да» на просьбы открыть адрес <span class="mono">rest.uniprot.org/…</span> и создать файл <span class="mono">data/pilot.csv</span>.</li>
+      <li>Откройте <span class="mono">data/pilot.csv</span> и убедитесь: у каждой строки есть источник, дословная фраза, условия и статус «не проверено».</li>
+    </ol>
+    <h3>Можно в другой день — проверка</h3>
+    <ol class="steps">
+      <li>Проверьте все строки вручную и поставьте статусы.</li>
+      <li>Сверьте две-три строки со статьёй.</li>
+      <li>Запишите в журнал (тип <b>проверка</b>): сколько подтверждено, какие расхождения и <b>вывод пилота одной фразой</b> — чего записи базы не дают.</li>
+      <li>Запишите туда же условия использования баз: данные UniProt и BRENDA открыты по лицензии CC BY 4.0 — использовать можно, указав источник.</li>
+      <li>Сверьте со списком из шага 11: какими инструментами агент пользовался на деле.</li>
+    </ol></div>
+
+  <div class="panel tint milestone"><span class="eyebrow">Модуль 3 пройден</span>
+    <p>Теперь вы можете:</p>
+    <ul class="plain">
+      <li><b>объяснить, что такое агент</b>: модель, инструменты и цикл — и почему каждый круг ложится в окно и в счёт (урок 11);</li>
+      <li><b>выбрать продукт</b> по тому, что должно получиться в конце (урок 12);</li>
+      <li><b>держать проект в папке</b> с правилами и журналом (урок 13);</li>
+      <li><b>прочитать просьбу агента</b> о разрешении до того, как ответить «да» (урок 14);</li>
+      <li><b>дать задание, которое можно проверить</b>, — и проверить результат руками (урок 15).</li>
+    </ul>
+    <p>Дальше — модуль 4: как ставить агенту задачи — от одного запроса до ТЗ на базу и приёмки работы.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
     <p>По желанию; одного материала достаточно. Этот путь — от умения читать одну запись в базе к пониманию, как устроены научные данные и как агенты учатся работать с ними.</p>
@@ -201,75 +255,83 @@ var SQ=[
  [1,0,'«Подтверждено человеком»: эта строка верна. Статус описывает строку, а не задание; недостающие значения добавляются новыми строками со статусом «не проверено», а нарушение записывается в журнал.'],
  [0,0,'«Подтверждено человеком» — с пометкой «по записи базы; условия: нет данных в записи».']
 ];
-var mark=[], open=[], checked=false, armed=false, stAns=[];
+var SQM={}; SQ.forEach(function(q){SQM[q[0]]=q;});
+// ans[i]: true — «вижу дефект», false — «дефекта нет»; разбор появляется сразу в карточке
+var cur=0, ans=[], stAns=[], open=[], finished=false;
 function link(txt,href){ var a=el('a',null,txt); a.href=href; a.target='_blank'; a.rel='noopener'; return a; }
+function cap(s){ s=s.replace(/^Верно[.:]\s*/,''); return /^pH/.test(s) ? s : s.charAt(0).toUpperCase()+s.slice(1); }
+function counts(){ var o={err:0,miss:0,fa:0,done:0}; R.forEach(function(r,i){ if(ans[i]===undefined) return; o.done++; if(ans[i]){ if(r.k==='err') o.err++; else if(r.k==='miss') o.miss++; else o.fa++; } }); return o; }
+function drawSum(box){
+  box.appendChild(el('b',null,'Вся таблица после проверки'));
+  var ol=el('ol','l15-sum');
+  R.forEach(function(r){
+    var li=el('li',null,r.n+' — '+r.t+' · условия: '+r.c);
+    if(r.k!=='ok'){ li.appendChild(document.createTextNode(' — ')); li.appendChild(el('span','l15-bad',r.k==='err'?'ошибка агента':'пропущены значения')); }
+    ol.appendChild(li);
+  });
+  box.appendChild(ol);
+  box.appendChild(el('p','why','Посчитайте, в скольких строках в поле условий стоит «нет данных в записи», — об этом следующий раздел.'));
+}
 function draw(){
-  var box=$('l15rows'); box.textContent='';
-  R.forEach(function(r,i){
-    var d=el('div','l15-row'+(mark[i]?' l15-on':''));
-    var h=el('div'); h.appendChild(el('b',null,(i+1)+'. '+r.n)); h.appendChild(document.createTextNode(' · '));
-    h.appendChild(el('i',null,r.o)); d.appendChild(h);
-    d.appendChild(el('div','l15-v','T опт '+r.t+' · pH '+r.ph+' · '+r.c+' · не проверено'));
-    if(r.note) d.appendChild(el('div','why',r.note));
-    d.appendChild(el('div','l15-q',r.q));
-    var row=el('div','row');
-    row.appendChild(link('UniProt '+r.u,'https://www.uniprot.org/uniprotkb/'+r.u+'/entry'));
-    if(r.pm) row.appendChild(link('PubMed '+r.pm,'https://pubmed.ncbi.nlm.nih.gov/'+r.pm+'/'));
-    row.appendChild(el('span','why',r.src));
-    d.appendChild(row);
-    var br=el('div','row');
-    var bs=el('button',null,open[i]?'Скрыть раздел':'Раздел записи'); bs.type='button';
-    bs.addEventListener('click',function(){open[i]=!open[i]; draw();});
-    var bt=el('button',mark[i]?'primary':null,mark[i]?'Отмечен дефект':'Вижу дефект'); bt.type='button';
-    bt.disabled=checked;
-    bt.addEventListener('click',function(){mark[i]=!mark[i]; armed=false; draw();});
-    br.appendChild(bs); br.appendChild(bt); d.appendChild(br);
-    if(open[i]) d.appendChild(el('div','l15-sec','Temperature dependence: '+r.sec));
-    if(checked){
-      var res=el('p','l15-res');
-      if(r.k==='err'){ res.className+=mark[i]?' l15-ok':' l15-bad'; res.textContent=(mark[i]?'Нашли ошибку. ':'Пропущена ошибка. ')+r.why; }
-      else if(r.k==='miss'){ res.className+=mark[i]?' l15-ok':' l15-bad'; res.textContent=(mark[i]?'Нашли пропуск. ':'Пропуск не замечен. ')+r.why; }
-      else if(mark[i]){ res.className+=' l15-bad'; res.textContent='Здесь дефекта нет. '+r.why; }
-      if(res.textContent) d.appendChild(res);
-    }
-    box.appendChild(d);
+  var box=$('l15card'), i=cur, r=R[i], c=counts(); box.textContent='';
+  if(finished){
+    drawSum(box);
+    $('l15out').textContent='Найдено ошибок: '+c.err+' из 2 · пропусков значений: '+c.miss+' из 2 · лишних отметок: '+c.fa+'.';
+    return;
+  }
+  box.appendChild(el('span','mono','строка '+(i+1)+' из '+R.length));
+  var h=el('div'); h.appendChild(el('b',null,(i+1)+'. '+r.n)); h.appendChild(document.createTextNode(' · ')); h.appendChild(el('i',null,r.o)); box.appendChild(h);
+  var pr=el('div','l15-pair');
+  pr.appendChild(el('span','k','у агента')); pr.appendChild(el('span','l15-v','T опт '+r.t+' · pH '+r.ph+' · условия: '+r.c+' · статус: не проверено'));
+  pr.appendChild(el('span','k','в источнике')); pr.appendChild(el('span','l15-q',r.q));
+  box.appendChild(pr);
+  if(r.note) box.appendChild(el('div','why','К сведению: '+r.note+'.'));
+  var lr=el('div','row l15-links');
+  lr.appendChild(link('UniProt '+r.u,'https://www.uniprot.org/uniprotkb/'+r.u+'/entry'));
+  if(r.pm) lr.appendChild(link('PubMed '+r.pm,'https://pubmed.ncbi.nlm.nih.gov/'+r.pm+'/'));
+  lr.appendChild(el('span','why',r.src));
+  box.appendChild(lr);
+  var sr=el('div','row'), bs=el('button',null,open[i]?'Скрыть раздел':'Раздел записи'); bs.type='button';
+  bs.addEventListener('click',function(){open[i]=!open[i]; draw();});
+  sr.appendChild(bs); box.appendChild(sr);
+  if(open[i]) box.appendChild(el('div','l15-sec','Temperature dependence: '+r.sec));
+  var br=el('div','row');
+  [['Вижу дефект',true],['Дефекта нет',false]].forEach(function(o){
+    var b=el('button',ans[i]===o[1]?'primary':null,o[0]); b.type='button'; b.disabled=(ans[i]!==undefined&&ans[i]!==o[1]);
+    b.addEventListener('click',function(){ if(ans[i]===undefined){ans[i]=o[1]; draw();} });
+    br.appendChild(b);
   });
-  var n=mark.filter(Boolean).length;
-  if(!checked&&!armed) $('l15out').textContent='Отмечено строк: '+n+'. Дефектов в таблице — четыре.';
-  drawStatus();
-}
-function drawStatus(){
-  var box=$('l15status'); box.hidden=!checked; box.textContent=''; if(!checked) return;
-  box.appendChild(el('b',null,'Второй шаг: поставьте статус трём строкам'));
-  SQ.forEach(function(q,k){
-    var r=R[q[0]], d=el('div');
-    d.appendChild(el('div',null,(q[0]+1)+'. '+r.n+' — T опт '+r.t+', '+r.c));
-    var row=el('div','row');
-    ST.forEach(function(t,j){
-      var b=el('button',stAns[k]===j?'primary':null,t); b.type='button'; b.disabled=(stAns[k]!==undefined);
-      b.addEventListener('click',function(){stAns[k]=j; drawStatus();});
-      row.appendChild(b);
-    });
-    d.appendChild(row);
-    if(stAns[k]!==undefined){
-      var ok=(stAns[k]===q[1]), p=el('p','l15-res '+(ok?'l15-ok':'l15-bad'));
-      p.textContent=(ok?'':(stAns[k]===2?'Вы строку уже проверили — оставить «не проверено» нельзя. ':'Не тот статус. '))+q[2];
-      d.appendChild(p);
+  box.appendChild(br);
+  if(ans[i]!==undefined){
+    var hit=(ans[i]===(r.k!=='ok')), lead;
+    if(r.k==='err') lead= ans[i]?'Нашли ошибку. ':'Пропущена ошибка. ';
+    else if(r.k==='miss') lead= ans[i]?'Нашли пропуск. ':'Пропуск не замечен. ';
+    else lead= ans[i]?'Здесь дефекта нет. ':'';
+    box.appendChild(el('div','verdict '+(hit?'ok':'no'),lead+cap(r.why)));
+    var q=SQM[i];
+    if(q){
+      var sb=el('div','l15-st'); sb.appendChild(el('b',null,'Какой статус поставить этой строке?'));
+      var srow=el('div','row');
+      ST.forEach(function(t,j){
+        var b=el('button',stAns[i]===j?'primary':null,t); b.type='button'; b.disabled=(stAns[i]!==undefined&&stAns[i]!==j);
+        b.addEventListener('click',function(){ if(stAns[i]===undefined){stAns[i]=j; draw();} });
+        srow.appendChild(b);
+      });
+      sb.appendChild(srow);
+      if(stAns[i]!==undefined){
+        var ok=(stAns[i]===q[1]);
+        sb.appendChild(el('div','verdict '+(ok?'ok':'no'),(ok?'':(stAns[i]===2?'Вы строку уже проверили — оставить «не проверено» нельзя. ':'Не тот статус. '))+q[2]));
+      }
+      box.appendChild(sb);
     }
-    box.appendChild(d);
-  });
+    var nr=el('div','row'), nx=el('button','primary',i<R.length-1?'Следующая строка':'Итог по таблице'); nx.type='button';
+    nx.addEventListener('click',function(){ if(i<R.length-1) cur++; else finished=true; draw(); });
+    nr.appendChild(nx); box.appendChild(nr);
+  }
+  $('l15out').textContent='Разобрано строк: '+c.done+' из '+R.length+'. Дефектов в таблице — четыре.';
 }
-$('l15check').addEventListener('click',function(){
-  var n=mark.filter(Boolean).length;
-  if(!n&&!armed){ armed=true; $('l15out').textContent='Вы не отметили ни одной строки. Уверены? Нажмите «Проверить» ещё раз — или сначала отметьте.'; return; }
-  checked=true; var err=0, miss=0, fa=0;
-  R.forEach(function(r,i){ if(mark[i]){ if(r.k==='err') err++; else if(r.k==='miss') miss++; else fa++; } });
-  draw();
-  $('l15out').textContent='Найдено ошибок: '+err+' из 2 · пропусков значений: '+miss+' из 2 · лишних отметок: '+fa+'.';
-  $('l15check').disabled=true;
-});
 $('l15hint').addEventListener('click',function(){ $('l15hinttext').hidden=false; });
-$('l15reset').addEventListener('click',function(){mark=[]; open=[]; stAns=[]; checked=false; armed=false; $('l15check').disabled=false; $('l15hinttext').hidden=true; draw();});
+$('l15reset').addEventListener('click',function(){cur=0; ans=[]; stAns=[]; open=[]; finished=false; $('l15hinttext').hidden=true; draw();});
 draw();
 })();
 </script>

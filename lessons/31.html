@@ -3,10 +3,12 @@
     .l31-form label{display:flex;flex-direction:column;gap:4px;font-size:.9rem;color:var(--muted)}
     .l31-form input,.l31-form textarea,.l31-form select{font:inherit;font-size:.95rem;width:100%;border:1px solid var(--line);border-radius:8px;
       padding:7px 10px;background:var(--surface);color:var(--ink)}
-    .l31-form textarea{min-height:3.6rem;resize:vertical}
+    .l31-form textarea{min-height:3.6rem;resize:vertical;overflow:hidden}
     .l31-group{border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;margin:0;display:flex;flex-direction:column;gap:10px;min-width:0}
     .l31-group legend{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:0 6px}
-    .l31-group summary{cursor:pointer;font-size:.95rem;color:var(--ink)}
+    .l31-chk{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:.9rem;color:var(--muted)}
+    .l31-form .l31-chk label{flex-direction:row;align-items:center;gap:8px;min-height:36px;cursor:pointer}
+    .l31-form .l31-chk input{width:22px;height:22px;flex:none;padding:0}
     .l31-q{display:grid;grid-template-columns:1fr;gap:6px;border-top:1px solid var(--line);padding-top:10px}
     .l31-nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .l31-sheet{border:1px solid var(--line);border-radius:4px 18px 4px 4px;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;
@@ -26,9 +28,9 @@
     .l31-plan li{font-size:.95rem}
   </style>
 
-  <div class="stack"><span class="eyebrow">Модуль 7 · Урок 31 из 31 · 30 минут</span>
+  <div class="stack"><span class="eyebrow">Модуль 7 · Урок 31 из 31 · 25 минут</span>
     <h1>Защита проекта: что показала база</h1>
-    <p class="lead">Как превратить ответы базы в вывод, которому можно верить, честно показать его границы, уложить всё на одну страницу — и защитить перед живым человеком.</p></div>
+    <p class="lead">После урока вы сможете превратить ответы базы в вывод с основанием, условиями и границей, уложить его на одну страницу — и защитить перед живым человеком.</p></div>
 
   <div class="stack"><h2>Таблица — ещё не результат</h2>
     <p>Руководитель лаборатории не откроет таблицу на 410 строк. Он спросит одно: «Так какой фермент брать?»</p>
@@ -38,12 +40,17 @@
       <div class="callout"><span class="lbl">Так — да</span><p>«<span class="l31-o">В одном сравнении четырёх улучшенных ферментов</span> — <span class="l31-u">на одном и том же ПЭТ, с одной загрузкой фермента, каждый при своей лучшей температуре</span> — больше всего ПЭТ разложил LCC-ICCG<sup class="fn" data-fn="1">1</sup>. <span class="l31-g">Для остальных ферментов базы условия опытов разные, и прямо сравнивать их нельзя</span>».</p></div>
     </div>
     <p class="l31-leg"><span><span class="l31-o">основание</span> — на чём держится вывод</span> <span><span class="l31-u">условия</span> — при каких он получен</span> <span><span class="l31-g">граница</span> — где он кончается</span></p>
-    <p>Во второй фразе есть все три части<sup class="fn" data-fn="2">2</sup>.</p>
+    <p><b>Разгадка</b> — вторая фраза: в ней есть все три части<sup class="fn" data-fn="2">2</sup>.</p>
+    <details class="ask">
+      <summary>Из данных урока 30 кто-то сделал вывод: «PHL7 полностью разлагает ПЭТ за сутки». Каких частей в нём не хватает?</summary>
+      <p>Условий: аморфная плёнка и упаковка, 70&nbsp;°C. Границы: о другом ПЭТ и другой температуре вывод ничего не обещает. И основание стоит назвать — одна работа.</p>
+    </details>
     <p class="pull">Оговорка — не слабость вывода, а его область применимости.</p></div>
 
   <div class="stack"><h2>Отчёт на одну страницу</h2>
     <p>Семь блоков в два слоя. Сверху — что нужно <b>читателю</b>: тому, кто будет решать по вашему выводу (руководитель лаборатории; вы сами через полгода). Ниже черты — что нужно <b>проверяющему</b>: тому, кто захочет убедиться. От читателя зависит первая строка: ему нужен вывод, а не история сбора.</p>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 556" width="340" height="556" role="img" aria-label="Макет отчёта на одну страницу, семь блоков. Для читателя: 1 — главный вывод, 2 — ответы на пять вопросов с оценкой, 3 — до трёх кандидатов для лаборатории. Для проверяющего: 4 — расхождения, 5 — пробелы, 6 — качество данных, 7 — что сделать иначе">
+    <figure class="fig">
+      <div class="scroll"><svg class="fit-w" viewBox="0 0 340 556" width="340" height="556" role="img" aria-label="Макет отчёта на одну страницу, семь блоков. Для читателя: 1 — главный вывод, 2 — ответы на пять вопросов с оценкой, 3 — до трёх кандидатов для лаборатории. Для проверяющего: 4 — расхождения, 5 — пробелы, 6 — качество данных, 7 — что сделать иначе">
       <path d="M4 4H312L336 28V548H4Z" style="fill:var(--surface);stroke:var(--line)"/>
       <path d="M312 4V28H336" style="fill:none;stroke:var(--line)"/>
       <text x="16" y="28" font-size="14" font-weight="600">Отчёт: база ферментов для ПЭТ</text>
@@ -79,23 +86,73 @@
       <text x="26" y="512" font-size="13" font-weight="600">7. Что сделать иначе</text>
       <text class="sm" x="26" y="528">2–3 пункта для следующего сбора</text>
     </svg></div>
-    <p><b>Ответы</b> на пять вопросов (шаг 6) — из <span class="mono">analysis.md</span>, с оценкой по двум шкалам урока 30. Ответ-список фактов — распределением: «23 фермента: у 9 уверенность средняя или высокая, у 14 — низкая». Список расхождений или пробелов — полнотой: «найдено 6; список неполон».</p>
-    <p><b>Лаборатория</b> — <b>до трёх кандидатов, прошедших отбор</b> (урок 30), у каждого — своё «почему этот». Основание для опыта — проверить их в условиях вашего процесса.</p>
-    <p><b>Не помещается на страницу?</b> В приложение уходят блоки для проверяющего (4–7), от каждого остаётся строка. Вывод, ответы и кандидаты остаются на странице.</p></div>
+      <figcaption><b>Как читать.</b> Сверху вниз. Над пунктирной чертой — три блока для читателя, под ней — четыре для проверяющего. Числа в блоках — условный пример.</figcaption>
+    </figure>
+    <p><b>Не помещается на страницу?</b> В приложение уходят блоки для проверяющего (4–7), от каждого остаётся строка. Вывод, ответы и кандидаты остаются на странице.</p>
+    <details class="more">
+      <summary>Справка: откуда брать ответы и кандидатов для блоков 2 и 3</summary>
+      <p><b>Ответы</b> на пять вопросов (шаг 6) — из <span class="mono">analysis.md</span>, с оценкой по двум шкалам урока 30. Ответ-список фактов — распределением: «23 фермента: у 9 уверенность средняя или высокая, у 14 — низкая». Список расхождений или пробелов — полнотой: «найдено 6; список неполон».</p>
+      <p><b>Лаборатория</b> — <b>до трёх кандидатов, прошедших отбор</b> (урок 30), у каждого — своё «почему этот». Основание для опыта — проверить их в условиях вашего процесса.</p>
+    </details></div>
 
   <div class="stack"><h2>Расхождения, пробелы, ошибки — тоже результат</h2>
     <p>Три вещи хочется спрятать. Не надо: у каждой в отчёте свой блок.</p>
-    <div class="scroll"><table class="l31-res">
-      <tr><th>Что это</th><th>Пример</th><th>Куда в отчёте</th></tr>
-      <tr><td><b>Расхождение</b> — два источника различаются больше допуска</td><td>оптимум LCC-ICCG: 65 и 72&nbsp;°C</td><td>блок 4: оба значения с условиями опыта. Часто разницу объясняют условия, а не чья-то неправота</td></tr>
-      <tr><td><b>Пробел</b> — данных нет</td><td>стабильность при 65&nbsp;°C дольше суток: нет для 31 фермента из 64</td><td>блок 5: «не найдено в таких-то источниках». Пустая клетка читается как «забыли»</td></tr>
-      <tr><td><b>Ошибки</b> — доля неверных строк после критика (урок 22)</td><td>2 из 60 строк ручной выборки</td><td>блок 6: с диапазоном и строкой «кто что делал»</td></tr>
+    <div class="scroll"><table class="cards l31-res">
+      <tr><th>Что</th><th>Что это</th><th>Пример</th><th>Куда в отчёте</th></tr>
+      <tr><td>Расхождение</td><td>два источника различаются больше допуска</td><td>оптимум LCC-ICCG: 65 и 72&nbsp;°C</td><td>блок 4: оба значения с условиями опыта. Часто разницу объясняют условия, а не чья-то неправота</td></tr>
+      <tr><td>Пробел</td><td>данных нет</td><td>стабильность при 65&nbsp;°C дольше суток: нет для 31 фермента из 64</td><td>блок 5: «не найдено в таких-то источниках». Пустая клетка читается как «забыли»</td></tr>
+      <tr><td>Ошибки</td><td>доля неверных строк после критика (урок 22)</td><td>2 из 60 строк ручной выборки</td><td>блок 6: с диапазоном и строкой «кто что делал»</td></tr>
     </table></div>
-    <p>Две ошибки на 60 строк — около 3 %, но <span class="hl">доверительный интервал (честный диапазон) — примерно от 1 до 11 %</span><sup class="fn" data-fn="3">3</sup>. «2 из 60» читается только рядом с размером базы, поэтому в шапке отчёта стоит число измерений. Кто что делал — одной строкой: «извлёк сборщик, сверил критик; 60 случайных строк проверены человеком». Большинство строк — «подтверждено критиком»; так и пишите, а не «проверено».</p></div>
+    <p>Две ошибки на 60 строк — около 3&nbsp;%. Но выборка маленькая, и настоящая доля может быть заметно больше: <span class="hl">доверительный интервал (честный диапазон) — примерно 1–11&nbsp;%</span><sup class="fn" data-fn="3">3</sup>.</p>
+    <p>«2 из 60» читается только рядом с размером базы, поэтому в шапке отчёта стоит число измерений. Кто что делал — одной строкой: «извлёк сборщик, сверил критик; 60 случайных строк проверены человеком». Большинство строк — «подтверждено критиком»; так и пишите, а не «проверено».</p>
+    <details class="ask">
+      <summary>Две ошибки из 60 дают интервал примерно 1–11&nbsp;%. А если ошибок не найдено совсем, 0 из 60, — интервал станет «0–0&nbsp;%»?</summary>
+      <p>Нет: примерно 0–6&nbsp;%. «Ошибок не найдено» не значит «ошибок нет». Проверьте в шаблоне ниже: поставьте 0 в поле «с ошибкой после критика».</p>
+    </details>
+    <div class="panel"><span class="eyebrow">Попробуйте сами</span>
+      <p>Шаблон отчёта. Поля заполнены условным примером — замените своими данными: страница под формой собирается сама. Текст никуда не отправляется: он хранится только в этом браузере и переживает перезагрузку.</p>
+      <div class="row"><button type="button" class="primary" id="l31show">Показать страницу ↓</button></div>
+      <div class="l31-form" id="l31form">
+        <label>Тема базы<input id="l31topic"></label>
+        <div class="l31-nums">
+          <label>Объектов в базе<input id="l31n" type="number" min="0"></label>
+          <label>Источников<input id="l31src" type="number" min="0"></label>
+          <label>Измерений (строк)<input id="l31m" type="number" min="0"></label>
+        </div>
+        <fieldset class="l31-group"><legend>Для читателя</legend>
+          <label>1. Главный вывод (2–3 фразы)<textarea id="l31main"></textarea></label>
+          <div class="l31-chk" id="l31parts"><span>Проверьте себя — в выводе есть:</span>
+            <label><input type="checkbox" id="l31p0">основание</label>
+            <label><input type="checkbox" id="l31p1">условия</label>
+            <label><input type="checkbox" id="l31p2">граница</label></div>
+          <p class="why" id="l31pout"></p>
+          <span>2. Ответы на пять вопросов — в примере заполнены два</span>
+          <div id="l31qs" class="stack" style="gap:10px"></div>
+          <div class="row"><button type="button" class="small" id="l31add">Добавить вопрос</button></div>
+          <label>3. Проверить в лаборатории: до трёх кандидатов, у каждого «почему этот»<textarea id="l31lab"></textarea></label>
+        </fieldset>
+        <fieldset class="l31-group"><legend>Для проверяющего</legend>
+          <label>4. Расхождения между источниками<textarea id="l31diff"></textarea></label>
+          <label>5. Пробелы в данных<textarea id="l31gap"></textarea></label>
+          <div class="l31-nums">
+            <label>6. Строк в ручной выборке<input id="l31chk" type="number" min="0"></label>
+            <label>Из них с ошибкой после критика<input id="l31err" type="number" min="0"></label>
+          </div>
+          <p class="why" id="l31ci"></p>
+          <label>7. Что сделать иначе<textarea id="l31next"></textarea></label>
+        </fieldset>
+      </div>
+      <span class="eyebrow">Собранная страница</span>
+      <div class="l31-sheet" id="l31sheet"></div>
+      <p class="why" id="l31warn"></p>
+      <div class="row"><button type="button" id="l31up">К форме ↑</button><button type="button" class="primary" id="l31copy">Скопировать текст</button><button type="button" id="l31clear">Очистить поля</button><button type="button" id="l31reset">Сначала</button><span class="out" id="l31out"></span></div>
+      <p class="try-note">Пример условный. Доверительный интервал считается настоящей формулой (интервал Уилсона, 95&nbsp;%, урок 22).</p></div>
+    <p><b>Что вы увидели.</b> Пустой блок на странице заметен сразу, а диапазон ошибок зависит от размера выборки не меньше, чем от числа ошибок.</p>
+    <p class="recap"><b>Привал.</b> Вывод сформулирован, страница размечена, у слабых мест свои блоки. Осталось понять, почему подпись под выводом ваша, — и показать работу человеку.</p></div>
 
   <div class="stack"><h2>Почему вывод подписываете вы</h2>
     <p>База подсказывает, что проверять, но не как ферменты поведут себя с вашей плёнкой в вашем реакторе: последнее слово — за опытом. А в чужих текстах может оказаться и подложная строка (урок 24).</p>
-    <div class="callout fact"><span class="lbl">Эксперимент 2025 года</span><p>Агент-учёный Kosmos за один запуск читает около 1500 статей. Учёные признали точными <span class="big">79 %</span> утверждений его отчётов, но среди толкований — только около 58 %<sup class="fn" data-fn="4">4</sup>. Факт: «фермент работает при 70&nbsp;°C». Толкование: «значит, он годится для завода». Факты агенты извлекают всё лучше, толковать их — пока ваша работа.</p></div></div>
+    <div class="callout fact"><span class="lbl">Эксперимент 2025 года</span><p>Агент-учёный Kosmos за один запуск читает около 1500 статей. Учёные признали точными 79&nbsp;% утверждений его отчётов, но среди толкований — только около <span class="big">58&nbsp;%</span><sup class="fn" data-fn="4">4</sup>. Факт: «фермент работает при 70&nbsp;°C». Толкование: «значит, он годится для завода». Факты агенты извлекают всё лучше, толковать их — пока ваша работа.</p></div></div>
 
   <div class="stack"><h2>Защита: десять минут и вопросы</h2>
     <p>Покажите страницу живому человеку. <b>Кого звать:</b> человек по теме ловит ошибки по сути, посторонний — неясности. Лучше обоих, по очереди. План рассказа:</p>
@@ -115,43 +172,12 @@
       <li data-fn="4">Препринт <a href="https://arxiv.org/abs/2511.02824" target="_blank" rel="noopener">Kosmos: An AI Scientist for Autonomous Discovery</a> (ноябрь 2025): 79,4 % точных утверждений в целом, 85,5 % — в анализе данных, 82,1 % — в пересказе статей, 57,9 % — в толкованиях. Независимая проверка в радиобиологии, <a href="https://arxiv.org/abs/2511.13825" target="_blank" rel="noopener">When AI Does Science</a>: одна находка подтвердилась, одна сомнительна, одна ложна. Эксперимент, а не инструмент (препринты, англ., 20 мин на аннотации).</li>
     </ol></div></div>
 
-  <div class="panel"><span class="eyebrow">Попробуйте сами</span>
-    <p>Шаблон отчёта. Поля заполнены условным примером — замените своими данными и посмотрите, как меняется страница. Текст никуда не отправляется, он остаётся в вашем браузере.</p>
-    <div class="row"><button type="button" class="primary" id="l31show">Показать страницу ↓</button></div>
-    <div class="l31-form" id="l31form">
-      <label>Тема базы<input id="l31topic"></label>
-      <div class="l31-nums">
-        <label>Объектов в базе<input id="l31n" type="number" min="0"></label>
-        <label>Источников<input id="l31src" type="number" min="0"></label>
-        <label>Измерений (строк)<input id="l31m" type="number" min="0"></label>
-      </div>
-      <fieldset class="l31-group"><legend>Для читателя</legend>
-        <label>1. Главный вывод (2–3 фразы)<textarea id="l31main"></textarea></label>
-        <details id="l31qbox" open><summary>2. Ответы на пять вопросов (можно свернуть)</summary><div id="l31qs" class="stack" style="gap:10px;margin-top:8px"></div></details>
-        <label>3. Проверить в лаборатории: до трёх кандидатов, у каждого «почему этот»<textarea id="l31lab" style="min-height:6rem"></textarea></label>
-      </fieldset>
-      <fieldset class="l31-group"><legend>Для проверяющего</legend>
-        <label>4. Расхождения между источниками<textarea id="l31diff"></textarea></label>
-        <label>5. Пробелы в данных<textarea id="l31gap"></textarea></label>
-        <div class="l31-nums">
-          <label>6. Строк в ручной выборке<input id="l31chk" type="number" min="0"></label>
-          <label>Из них с ошибкой после критика<input id="l31err" type="number" min="0"></label>
-        </div>
-        <label>7. Что сделать иначе<textarea id="l31next"></textarea></label>
-      </fieldset>
-    </div>
-    <span class="eyebrow">Собранная страница</span>
-    <div class="l31-sheet" id="l31sheet"></div>
-    <p class="why" id="l31warn"></p>
-    <div class="row"><button type="button" id="l31up">К форме ↑</button><button type="button" class="primary" id="l31copy">Скопировать текст</button><button type="button" id="l31clear">Очистить поля</button><button type="button" id="l31reset">Сначала</button><span class="out" id="l31out"></span></div>
-    <p class="why">Пример условный. Доверительный интервал считается настоящей формулой (интервал Уилсона, 95 %, урок 22).</p></div>
-
   <div class="two">
     <div class="panel"><span class="eyebrow">Биотехнология</span><p>Честный вывод по базе ПЭТ может звучать так: «прямых сравнений в одинаковых условиях мало, поэтому большинство ферментов ранжировать нельзя; отбор по критериям оставил двух кандидатов». Это не провал проекта, а его находка: она объясняет, зачем нужен единый порядок опыта (одни и те же субстрат, температура, время), и даёт лаборатории короткий список с основаниями.</p></div>
     <div class="panel"><span class="eyebrow">Свои проекты</span><p>В расследовании о фундациях «у 12 из 40 фундаций отчётов в реестре не найдено» (числа условные) — это пробел, а не обвинение. Формулировка «не найдено в реестре на такую-то дату» и ручная проверка до публикации отделяют аккуратный вывод от ошибки, за которую придётся извиняться.</p></div>
   </div>
 
-  <div class="panel"><span class="eyebrow">Словарик урока</span><div class="scroll"><table>
+  <div class="panel glossary"><span class="eyebrow">Словарик урока</span><div class="scroll"><table>
     <tr><td><b>Основание</b></td><td>данные, на которых держится вывод: какой опыт, сколько источников</td></tr>
     <tr><td><b>Область применимости</b></td><td>условия, при которых вывод верен; за их пределами он ничего не обещает</td></tr>
     <tr><td><b>Граница вывода</b></td><td>прямо названное место, где вывод кончается: «для остальных сравнивать нельзя»</td></tr>
@@ -165,17 +191,35 @@
     <li>База подсказывает, что проверять; последнее слово — за опытом, а подпись под выводом — ваша.</li></ul></div>
 
   <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Заполните шаблон выше своими данными (или оставьте условный пример) и нажмите «Скопировать текст». Откройте новый чат и вставьте текст с просьбой: «Ты строгий рецензент. Найди утверждения, которые сильнее, чем позволяют данные, и предложи оговорки».</p>
-    <p>Чат новый, чтобы у рецензента было чистое окно (урок 22): он не видел, как делалась работа. И он видит страницу, а не базу — ловит слишком сильные формулировки, но не неверные числа.</p>
-    <p>Запишите, что нашёл рецензент, что вы поправили, а с чем не согласны и почему. Спор решает первоисточник — как и на живой защите.</p></div>
-  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 31</span>
-    <p><b>Время: вечер и одна встреча.</b></p>
-    <p>Соберите отчёт по своей базе на одну страницу из семи блоков; сырьё — <span class="mono">analysis.md</span> (уроки 29 и 30). Сохраните его в папке проекта как <span class="mono">report.md</span>. Покажите человеку, который проекта не видел: десять минут рассказа по плану урока, потом вопросы. Вопросы без ответа впишите в «Пробелы» — они станут планом следующего сбора. Последняя запись в <span class="mono">journal.md</span> — «сделано: отчёт, кому показан, что спросили».</p>
+    <p><b>Что получится:</b> список мест, где отчёт утверждает больше, чем позволяют данные.</p>
+    <ol class="steps">
+      <li>Заполните шаблон отчёта выше своими данными (или оставьте условный пример) и нажмите «Скопировать текст».</li>
+      <li>Откройте новый чат с моделью — обычный чат, не агента в папке проекта, — вставьте текст и добавьте просьбу:
+        <blockquote class="prompt">Ты строгий рецензент. Найди утверждения, которые сильнее, чем позволяют данные, и предложи оговорки.</blockquote></li>
+      <li>Запишите, что нашёл рецензент, что вы поправили, а с чем не согласны и почему.</li>
+    </ol>
+    <details class="more">
+      <summary>Справка: почему чат новый и чего рецензент не увидит</summary>
+      <p>Чат новый, чтобы у рецензента было чистое окно (урок 22): он не видел, как делалась работа. И он видит страницу, а не базу — ловит слишком сильные формулировки, но не неверные числа. Спор с ним решает первоисточник — как и на живой защите.</p>
+    </details></div>
+  <div class="panel" data-note="step" data-time="вечер и одна встреча"><span class="eyebrow">Сквозной проект · шаг 31</span>
+    <p><b>Что получится:</b> <span class="mono">report.md</span> — отчёт на одну страницу, который вы защитили перед живым человеком.</p>
+    <h3>Вечер — отчёт</h3>
+    <ol class="steps">
+      <li>Соберите отчёт по своей базе на одну страницу из семи блоков; сырьё — <span class="mono">analysis.md</span> (уроки 29 и 30).</li>
+      <li>Сохраните его в папке проекта как <span class="mono">report.md</span>.</li>
+    </ol>
+    <h3>Встреча — защита</h3>
+    <ol class="steps">
+      <li>Покажите отчёт человеку, который проекта не видел: десять минут рассказа по плану урока, потом вопросы.</li>
+      <li>Впишите вопросы без ответа в «Пробелы» — они станут планом следующего сбора.</li>
+      <li>Сделайте последнюю запись в <span class="mono">journal.md</span> — «сделано: отчёт, кому показан, что спросили».</li>
+    </ol>
     <p><b>Дальше — держите базу живой.</b> Раз в квартал — новый сбор по тем же правилам: только новые статьи, старые строки не трогаются, дубли ловит чистильщик (урок 23), ручная выборка — по новым строкам. Каркас переносится на любую тему.</p></div>
 
-  <div class="panel"><span class="eyebrow">Курс закончен</span>
-    <p>Путь пройден. Теперь вы:</p>
-    <ol class="l31-path">
+  <div class="panel tint milestone"><span class="eyebrow">Курс закончен</span>
+    <p>Путь пройден: семь модулей, 31 урок. Теперь вы:</p>
+    <ul class="plain">
       <li><b>отличаете</b>, где модель вспоминает, а где достраивает, и знаете, почему она ошибается;</li>
       <li><b>считаете</b> память, скорость и цену — и выбираете, локально или в облаке;</li>
       <li><b>запускаете</b> агента в папке проекта и читаете его просьбы о разрешении;</li>
@@ -183,7 +227,7 @@
       <li><b>собираете</b> команду агентов и измеряете долю её ошибок;</li>
       <li><b>храните</b> историю, базу, ключи и копии — и публикуете страницу;</li>
       <li><b>переводите</b> вопрос в запрос, проверяете ответ и защищаете вывод с его границами.</li>
-    </ol>
+    </ul>
     <p><b>Что теперь лежит у вас в папке:</b> <span class="mono">CLAUDE.md</span>, <span class="mono">TZ.md</span>, <span class="mono">journal.md</span>, три таблицы базы, <span class="mono">analysis.md</span>, <span class="mono">report.md</span> — и страница поиска в интернете.</p>
     <p>Инструменты сменятся, останется привычка: ставить задачу так, чтобы результат можно было проверить, и проверять.</p></div>
 
@@ -214,36 +258,52 @@ var CONF=[['●●● высокая','факт: высокая — 4+ неза�
  ['по строкам','список фактов: уверенность по строкам — распределение в ответе'],['список неполон','расхождения, пробелы: полнота — список неполон'],['список полон','расхождения, пробелы: полнота — проверены все источники']];
 var EX={topic:'База ферментов для разложения ПЭТ при 60–70 °C', n:64, src:112, m:410,
  main:'В одном сравнении четырёх улучшенных ферментов — на одном и том же ПЭТ, с одной загрузкой фермента, каждый при своей лучшей температуре — больше всего ПЭТ разложил LCC-ICCG. Для остальных ферментов базы условия опытов разные, и прямо сравнивать их нельзя.',
- qs:[['Какие ферменты сохраняют активность при 60–70 °C?','Активность при 60–70 °C измерена у 23 из 64. У 9 уверенность средняя или высокая (два и больше независимых источника), у 14 — низкая (один источник).',3],
-     ['Для каких ферментов данные разных статей расходятся больше допуска?','Найдено 6 расхождений; в 4 разницу объясняет разная форма ПЭТ. Сборщик пропускает часть чисел (прикидка полноты по трём статьям, шаг 30), поэтому часть расхождений не найдена.',4],
-     ['','',1],['','',1],['','',1]],
+ parts:[true,true,true],
+ qs:[['Какие ферменты сохраняют активность при 60–70 °C?','Активность при 60–70 °C измерена у 23 из 64. У 9 уверенность средняя или высокая (два и больше независимых источника), у 14 — низкая (один источник).','3'],
+     ['Для каких ферментов данные разных статей расходятся больше допуска?','Найдено 6 расхождений; в 4 разницу объясняет разная форма ПЭТ. Сборщик пропускает часть чисел (прикидка полноты по трём статьям, шаг 30), поэтому часть расхождений не найдена.','4']],
  lab:'Отбор (урок 30) прошли двое. LCC-ICCG — почему: два независимых источника при 65–68 °C на настоящем ПЭТ; известное расхождение — оптимум 65 и 72 °C. PHL7 — почему: два независимых источника при 68–70 °C на плёнке; расхождений не найдено. Опубликованное сравнение шло на одном субстрате; проверить в условиях нашего процесса: наша плёнка ПЭТ, 65 °C, одна загрузка фермента, 24 ч.',
  diff:'Оптимум температуры LCC-ICCG в двух работах — 65 и 72 °C: разница 7 °C при допуске 5 °C; опыты шли на разной форме ПЭТ. Записаны оба значения.',
  gap:'Для 31 фермента из 64 нет данных о стабильности при 65 °C дольше суток. У TfCut2 оптимум 70 °C, но подтверждённых измерений активности при 60–70 °C нет.',
  chk:60, err:2,
  next:'С первого дня записывать условия опыта отдельными полями, а не текстом в примечании.'};
-var qrows=[];
-function buildQs(){
-  var box=$('l31qs');
-  for(var i=0;i<5;i++){
-    var d=el('div','l31-q');
-    var lq=el('label',null,'Вопрос '+(i+1)+' (шаг 6)'), iq=el('input'); iq.id='l31q'+i; lq.appendChild(iq);
-    var la=el('label',null,'Ответ и на чём основан'), ia=el('textarea'); ia.id='l31a'+i; ia.style.minHeight='2.6rem'; la.appendChild(ia);
-    var lc=el('label',null,'Оценка — одна из двух шкал урока 30'), sc=el('select'); sc.id='l31c'+i;
-    CONF.forEach(function(c,j){var o=el('option',null,c[1]); o.value=j; sc.appendChild(o);});
-    lc.appendChild(sc);
-    d.appendChild(lq); d.appendChild(la); d.appendChild(lc); box.appendChild(d);
-    qrows.push([iq,ia,sc]);
-  }
+var EMPTY={topic:'',n:'',src:'',m:'',main:'',parts:[false,false,false],qs:[],diff:'',gap:'',chk:'',err:'',lab:'',next:''};
+var KEY='aicourse-l31-report', PARTS=['основание','условия','граница'], FIELDS=['topic','n','src','m','main','lab','diff','gap','chk','err','next'];
+var qrows=[], MAXQ=5;
+function addRow(vals){
+  if(qrows.length>=MAXQ) return;
+  var i=qrows.length, d=el('div','l31-q');
+  var lq=el('label',null,'Вопрос '+(i+1)+' (шаг 6)'), iq=el('input'); lq.appendChild(iq);
+  var la=el('label',null,'Ответ и на чём основан'), ia=el('textarea'); la.appendChild(ia);
+  var lc=el('label',null,'Оценка — одна из двух шкал урока 30'), sc=el('select');
+  var o0=el('option',null,'— оценка не выбрана —'); o0.value=''; sc.appendChild(o0);
+  CONF.forEach(function(c,j){var o=el('option',null,c[1]); o.value=String(j); sc.appendChild(o);});
+  lc.appendChild(sc);
+  d.appendChild(lq); d.appendChild(la); d.appendChild(lc); $('l31qs').appendChild(d);
+  if(vals){ iq.value=vals[0]; ia.value=vals[1]; sc.value=vals[2]; }
+  AI.autogrow(ia);
+  qrows.push([iq,ia,sc]);
+  syncAdd();
 }
+function syncAdd(){ var b=$('l31add'); b.hidden=qrows.length>=MAXQ; b.textContent='Добавить вопрос '+(qrows.length+1)+' из '+MAXQ; }
+function grow(){ Array.prototype.forEach.call($('l31form').querySelectorAll('textarea'),function(t){ t.dispatchEvent(new Event('input')); }); }
 function fill(x){
-  $('l31topic').value=x.topic; $('l31n').value=x.n; $('l31src').value=x.src; $('l31m').value=x.m; $('l31main').value=x.main;
-  qrows.forEach(function(r,i){r[0].value=x.qs[i][0]; r[1].value=x.qs[i][1]; r[2].value=x.qs[i][2];});
-  $('l31diff').value=x.diff; $('l31gap').value=x.gap; $('l31chk').value=x.chk; $('l31err').value=x.err; $('l31lab').value=x.lab; $('l31next').value=x.next;
+  FIELDS.forEach(function(f){ $('l31'+f).value=x[f]; });
+  PARTS.forEach(function(_,i){ $('l31p'+i).checked=!!(x.parts&&x.parts[i]); });
+  $('l31qs').textContent=''; qrows=[];
+  (x.qs&&x.qs.length?x.qs:[['','','']]).forEach(function(q){ addRow(q); });
+  grow();
 }
+function state(){
+  var x={parts:PARTS.map(function(_,i){return $('l31p'+i).checked;}), qs:qrows.map(function(r){return [r[0].value,r[1].value,r[2].value];})};
+  FIELDS.forEach(function(f){ x[f]=$('l31'+f).value; });
+  return x;
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state())); }catch(e){} }
+function load(){ try{ var x=JSON.parse(localStorage.getItem(KEY)||'null'); return x&&typeof x==='object'&&x.qs?x:null; }catch(e){ return null; } }
+function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} }
 function wilson(k,n){var z=1.96,p=k/n,d=1+z*z/n,c=(p+z*z/(2*n))/d,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;return [Math.max(0,c-h)*100,Math.min(1,c+h)*100];}
 function v(id){return ($(id).value||'').trim();}
-function pct(x){return (x>0&&x<1?x.toFixed(1):x.toFixed(0)).replace('.',',');}
+function pct(x){return (x>0&&x<0.5?x.toFixed(1):x.toFixed(0)).replace('.',',');}
 var plain='';
 function render(){
   var S=$('l31sheet'), T=[], warn=[]; S.textContent='';
@@ -258,12 +318,19 @@ function render(){
     else {S.appendChild(el('p','l31-empty',miss)); T.push(miss,''); warn.push('пусто: «'+title+'»');}
   }
   sec('1. Главный вывод',v('l31main'),'Вывод не сформулирован.');
+  // самопроверка главного вывода: основание, условия, граница
+  var miss=PARTS.filter(function(_,i){return !$('l31p'+i).checked;});
+  if(!v('l31main')) $('l31pout').textContent='';
+  else if(miss.length){ $('l31pout').textContent='Не отмечено: '+miss.join(', ')+'. Сверьтесь с образцом «Так — да» в начале урока.'; warn.push('в главном выводе не отмечено: '+miss.join(', ')); }
+  else $('l31pout').textContent='Все три части на месте.';
   S.appendChild(el('span','l31-h','2. Ответы на вопросы')); T.push('2. ОТВЕТЫ НА ВОПРОСЫ');
   var ol=el('ol'), cnt=0, low=0;
   qrows.forEach(function(r){
-    var q=r[0].value.trim(), a=r[1].value.trim(), c=+r[2].value; if(!q) return;
+    var q=r[0].value.trim(), a=r[1].value.trim(), c=r[2].value===''?-1:+r[2].value; if(!q) return;
     var li=el('li'); li.appendChild(el('b',null,q+' '));
-    if(a){cnt++; if(c===2) low++; li.appendChild(document.createTextNode(a+' ')); li.appendChild(el('span','l31-conf','['+CONF[c][0]+']')); T.push('— '+q+' '+a+' [оценка: '+CONF[c][0]+']');}
+    if(a){cnt++; if(c===2) low++; li.appendChild(document.createTextNode(a+' '));
+      if(c>=0){ li.appendChild(el('span','l31-conf','['+CONF[c][0]+']')); T.push('— '+q+' '+a+' [оценка: '+CONF[c][0]+']'); }
+      else { li.appendChild(el('span','l31-empty','[оценка не выбрана]')); T.push('— '+q+' '+a+' [оценка не выбрана]'); warn.push('у ответа нет оценки'); } }
     else {li.appendChild(el('span','l31-empty','ответа пока нет')); T.push('— '+q+' [ответа пока нет]');}
     ol.appendChild(li);
   });
@@ -274,13 +341,15 @@ function render(){
   S.appendChild(el('span','l31-cut','для проверяющего')); T.push('— ДЛЯ ПРОВЕРЯЮЩЕГО —','');
   sec('4. Расхождения',v('l31diff'),'Не заполнено. Если расхождений нет, так и напишите — и укажите, как искали.');
   sec('5. Пробелы',v('l31gap'),'Не заполнено. Пробелы есть почти всегда.');
-  var k=parseInt(v('l31err'),10), m=parseInt(v('l31chk'),10), q4='';
+  var k=parseInt(v('l31err'),10), m=parseInt(v('l31chk'),10), q4='', ci='';
   if(m>0 && k>=0 && k<=m){
     var w=wilson(k,m);
+    ci='Ошибок '+k+' из '+m+' — около '+pct(k/m*100)+' %; доверительный интервал: '+pct(w[0])+'–'+pct(w[1])+' %.';
     q4='Ручная выборка после критика: строк с ошибкой — '+k+' из '+m+(ms?' (всего измерений в базе — '+ms+')':'')+', около '+pct(k/m*100)+' %; доверительный интервал '+pct(w[0])+'–'+pct(w[1])+' %. Извлёк сборщик, сверил критик, выборку проверил человек.';
     if(m<30) warn.push('выборка меньше 30 строк — интервал очень широкий');
     else if(k>0 && m<60) warn.push('ошибки найдены, а строк меньше 60 — по лестнице выборки (урок 22) доберите ещё 30');
-  } else if(m>0 && k>m) { warn.push('ошибок больше, чем строк в выборке'); }
+  } else if(m>0 && k>m) { warn.push('ошибок больше, чем строк в выборке'); ci='Ошибок больше, чем строк в выборке, — проверьте числа.'; }
+  $('l31ci').textContent=ci;
   sec('6. Качество данных',q4,'Нет ручной выборки — доля ошибок базы неизвестна.');
   sec('7. Что сделать иначе',v('l31next'),'Не заполнено.');
   if(low && cnt && low===cnt) warn.push('у всех ответов низкая уверенность — тогда это и есть главный вывод');
@@ -299,17 +368,15 @@ function copy(){
     done(ok);
   }
 }
-buildQs();
-$('l31form').addEventListener('input',function(){ $('l31out').textContent=''; render(); });
-$('l31form').addEventListener('change',render);
+Array.prototype.forEach.call($('l31form').querySelectorAll('textarea'),function(t){ AI.autogrow(t); });
+$('l31form').addEventListener('input',function(e){ if(!e.isTrusted && e.target && e.target.tagName==='TEXTAREA' && !e.bubbles) return; $('l31out').textContent=''; render(); save(); });
+$('l31form').addEventListener('change',function(){ render(); save(); });
+$('l31add').addEventListener('click',function(){ addRow(null); render(); save(); });
 $('l31copy').addEventListener('click',copy);
 $('l31show').addEventListener('click',function(){ $('l31sheet').scrollIntoView({behavior:'smooth',block:'start'}); });
 $('l31up').addEventListener('click',function(){ $('l31form').scrollIntoView({behavior:'smooth',block:'start'}); });
-$('l31clear').addEventListener('click',function(){
-  fill({topic:'',n:'',src:'',m:'',main:'',qs:[['','',1],['','',1],['','',1],['','',1],['','',1]],diff:'',gap:'',chk:'',err:'',lab:'',next:''});
-  $('l31out').textContent=''; render();
-});
-$('l31reset').addEventListener('click',function(){ fill(EX); $('l31out').textContent=''; render(); });
-fill(EX); render();
+$('l31clear').addEventListener('click',function(){ fill(EMPTY); $('l31out').textContent=''; render(); save(); });
+$('l31reset').addEventListener('click',function(){ fill(EX); $('l31out').textContent=''; render(); forget(); });
+fill(load()||EX); render();
 })();
 </script>

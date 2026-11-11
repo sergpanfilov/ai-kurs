@@ -1,27 +1,57 @@
   <style>
+    /* путь вопроса: шаги-кружки на одной линии */
+    .l07-path{list-style:none;margin:0;padding:0;counter-reset:l07s;display:flex;flex-direction:column;gap:10px}
+    .l07-path>li{counter-increment:l07s;position:relative;padding-left:2.5rem;min-height:1.8rem}
+    .l07-path>li::before{content:counter(l07s);position:absolute;left:0;top:.05em;width:1.7rem;height:1.7rem;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);background:var(--bg);font:600 .82rem/1 var(--f-mono);display:grid;place-items:center;z-index:1}
+    .l07-path>li:not(:last-child)::after{content:"";position:absolute;left:calc(.85rem - 1px);top:1.7rem;bottom:-12px;width:2px;background:var(--line)}
+    /* второй интерактив: тот же вид «это можно трогать», что у «Попробуйте сами» */
+    .l07-calc{border-top:3px solid var(--accent);border-radius:4px 4px 10px 10px}
+    .l07-calc>.eyebrow:first-child{font-family:var(--f-display);font-size:1.16rem;font-weight:600;letter-spacing:0;text-transform:none;line-height:1.25;color:var(--ink)}
+    .l07-calc>.eyebrow:first-child::before{content:"";display:inline-block;width:.62em;height:.62em;margin-right:.5em;border-radius:50%;border:.18em solid var(--accent)}
+    /* выбор способа */
+    .l07-ways{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .l07-ways button{padding-inline:8px}
+    @media (min-width:600px){.l07-ways{grid-template-columns:repeat(4,1fr)}}
+    .l07-box{background:var(--bg);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:12px}
     .l07-route{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.88rem}
-    .l07-route .chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--bg)}
-    .l07-route .chip.on{border-color:var(--accent);background:var(--accent-soft)}
-    .l07-route .to{color:var(--muted);font-family:var(--f-mono)}
-    .l07-res{display:grid;grid-template-columns:7.2rem 1fr;gap:6px 12px;font-size:.92rem}
-    .l07-res .k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);padding-top:2px}
-    .l07-cost{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-family:var(--f-mono);font-size:.88rem}
-    .l07-cost .num{font-weight:600}
+    .l07-route .chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface)}
+    .l07-route .chip.on{border-color:var(--accent);background:var(--accent-soft);font-weight:500}
+    .l07-route .to{color:var(--accent);font-family:var(--f-mono)}
+    .l07-res{display:grid;grid-template-columns:7.6rem 1fr;gap:8px 12px;font-size:.93rem;line-height:1.5}
+    .l07-res .k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);padding-top:3px}
+    @media (max-width:520px){.l07-res{grid-template-columns:1fr;gap:0}.l07-res .k{padding-top:8px}.l07-res .k:first-child{padding-top:0}}
+    /* калькулятор */
+    .l07-ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:0 10px}
+    .l07-ctl input{grid-column:1/-1}
+    .l07-ctl .val{font-family:var(--f-mono);font-weight:600}
+    .l07-seg{display:flex;flex-wrap:wrap;gap:8px}
+    .l07-seg button{flex:1 1 0;padding-inline:6px}
+    .l07-k{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);flex-basis:100%;margin-bottom:-2px}
+    .l07-cost{display:grid;grid-template-columns:1fr auto;gap:2px 12px;font-family:var(--f-mono);font-size:.82rem;color:var(--muted);padding-top:10px;border-top:1px solid var(--line)}
+    .l07-vs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .l07-tile{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:2px 6px;align-items:end;align-content:space-between;min-width:0}
+    .l07-tile .k{grid-column:1/-1;font-family:var(--f-mono);font-size:.76rem;color:var(--muted);line-height:1.35}
+    .l07-tile .v{font-family:var(--f-display);font-size:1.7rem;font-weight:600;line-height:1.2}
+    .l07-tile .tag{font-family:var(--f-mono);font-size:.76rem;color:var(--accent);padding-bottom:.45em}
+    .l07-tile.low{border:2px solid var(--accent);padding:9px 11px;background:var(--accent-soft)}
   </style>
 
   <div class="stack"><span class="eyebrow">Модуль 2 · Урок 7 из 31 · 25 минут</span>
     <h1>Где работает модель: облако, сервер, API</h1>
-    <p class="lead">Где физически лежит модель, какой путь проходит ваш вопрос, что такое API и ключ, за что вы платите и кто видит ваш текст.</p></div>
+    <p class="lead">После урока вы сможете сказать, где физически лежит модель, каким путём идёт ваш вопрос, что такое API и ключ, за что вы платите и кто видит ваш текст.</p></div>
 
   <div class="stack"><h2>Где лежит модель</h2>
-    <div class="callout story"><span class="lbl">Вопрос на разминку</span><p>Вы пишете Claude в приложении на телефоне. Где в эту секунду находится модель? Не в телефоне. Она за сотни километров, а ответ проделывает этот путь по кусочку — потому он и «печатается» на экране.</p></div>
+    <details class="ask">
+      <summary>Вы пишете Claude в приложении на телефоне. Где в эту секунду находится модель — и почему ответ «печатается» на экране по кусочку?</summary>
+      <p><b>Разгадка.</b> Не в телефоне. Модель за сотни километров, а ответ проделывает этот путь по кусочку, токен за токеном, — потому он и «печатается». Как устроен этот путь — в следующих двух разделах.</p>
+    </details>
     <p>Модуль 1 разобрал, что у модели внутри. Этот — где она стоит, сколько ей нужно памяти и во что обходится ответ. Начнём с адреса. Модель — это веса (урок 3), то есть файл с числами. У больших моделей он огромный: у самых крупных — триллионы параметров, это терабайты. В телефон такое не поместится. Поэтому модель лежит на <b>серверах</b>.</p>
     <p><b>Сервер</b> — компьютер без экрана и клавиатуры, который работает круглосуточно и отвечает на запросы по сети. Тысячи серверов стоят в <b>дата-центрах</b>. Внутри сервера — <b>ускорители</b>: видеокарты и специализированные чипы для быстрого умножения больших таблиц чисел (урок 3). На них модель и считает ответ.</p>
     <p><span class="hl">«Облако» — это чужие серверы, которыми вы пользуетесь через интернет.</span> Их хозяина — компанию, которая держит модель у себя и отвечает на запросы, — называют <b>провайдером</b>: Anthropic, OpenAI, Google.</p>
-    <div class="callout"><span class="lbl">Знакомьтесь: ftm</span><p>Сервер бывает и свой. <span class="mono">ftm</span> — домашний компьютер Сергея, одного из учащихся: старый процессор i3-6100T, 16 ГБ памяти, без видеокарты. Он включён круглосуточно — значит, это тоже сервер, только маленький и свой. На нём живут бот «Жемчужины», который записывает голосовые заметки, распознавание рукописных дневников и этот курс. Дальше ftm — наш пример домашнего железа: небольшую модель можно скачать и запустить прямо на нём (нижняя строка схемы).</p></div></div>
+    <div class="callout story"><span class="lbl">Знакомьтесь: ftm</span><p>Сервер бывает и свой. <span class="mono">ftm</span> — домашний компьютер Сергея, одного из учащихся: старый процессор i3-6100T, 16 ГБ памяти, без видеокарты. Он включён круглосуточно — значит, это тоже сервер, только маленький и свой. На нём живут бот «Жемчужины», который записывает голосовые заметки, распознавание рукописных дневников и этот курс. Дальше ftm — наш пример домашнего железа: небольшую модель можно скачать и запустить прямо на нём.</p></div></div>
 
   <div class="stack"><h2>Путь вашего вопроса</h2>
-    <ol>
+    <ol class="l07-path">
       <li>Вы набираете вопрос в приложении или на сайте.</li>
       <li>Приложение отправляет текст через интернет зашифрованным: по дороге его не прочтут<sup class="fn" data-fn="1">1</sup>.</li>
       <li>Сервер провайдера кладёт текст в окно модели (урок 5).</li>
@@ -29,8 +59,10 @@
       <li>Токены сразу летят обратно, по одному.</li>
     </ol>
     <p>Приложение — <span class="hl">только окно</span>; сайт и приложение одного провайдера ведут к одной и той же модели.</p>
-    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 470" width="340" height="470" role="img" aria-label="Схема: чат в браузере или приложении и ваша программа через API с ключом идут по интернету к серверу провайдера, где модель работает на ускорителях; ответ возвращается токен за токеном. Ниже отдельно: модель на своём компьютере, интернет не нужен">
-      <text class="sm" x="4" y="14">кто видит текст · кто и как платит</text>
+    <figure class="fig" style="align-items:start">
+    <div class="scroll"><svg class="fit-w" viewBox="0 0 340 482" width="340" height="482" role="img" aria-label="Схема: чат в браузере или приложении и ваша программа через API с ключом идут по интернету к серверу провайдера, где модель работает на ускорителях; ответ возвращается токен за токеном. Ниже отдельно: модель на своём компьютере, интернет не нужен">
+      <rect x="4" y="5" width="10" height="10" rx="2" style="fill:var(--signal)"/>
+      <text class="sm" x="20" y="14" style="fill:var(--signal)">кто видит текст и как вы платите</text>
       <rect class="box" x="4" y="24" width="160" height="82" rx="6"/>
       <text x="14" y="46" font-size="14" font-weight="600">Чат</text>
       <text class="sm" x="14" y="64">браузер или</text>
@@ -46,35 +78,51 @@
       <rect x="4" y="148" width="332" height="40" rx="6" style="fill:var(--accent-soft);stroke:var(--line)"/>
       <text x="14" y="173" font-size="14" font-weight="600">Интернет</text>
       <text class="sm" x="112" y="172">текст зашифрован в пути</text>
-      <path class="arr" d="M110 188V214"/><path class="head" d="M110 222l-5-9h10z"/>
-      <path class="arr" d="M230 222V196"/><path class="head" d="M230 188l-5 9h10z"/>
-      <text class="sm" x="120" y="210">вопрос</text>
-      <text class="sm" x="240" y="210">ответ по токену</text>
+      <path class="arr" d="M84 188V214"/><path class="head" d="M84 222l-5-9h10z"/>
+      <path class="arr" style="stroke-dasharray:1 6;stroke-linecap:round;stroke-width:3" d="M200 221V200"/><path class="head" d="M200 188l-5 9h10z"/>
+      <text class="sm" x="94" y="210">вопрос</text>
+      <text class="sm" x="211" y="210">ответ по токену</text>
       <rect class="box" x="4" y="224" width="332" height="118" rx="6" style="stroke:var(--accent);stroke-width:2"/>
       <text x="14" y="246" font-size="14" font-weight="600">Дата-центр провайдера</text>
       <text class="sm" x="14" y="266">серверы с ускорителями;</text>
       <text class="sm" x="14" y="280">модель (веса) лежит здесь</text>
-      <g>
-        <rect x="14" y="290" width="40" height="22" rx="3" style="fill:var(--accent);opacity:.75"/>
-        <rect x="60" y="290" width="40" height="22" rx="3" style="fill:var(--accent);opacity:.75"/>
-        <rect x="106" y="290" width="40" height="22" rx="3" style="fill:var(--accent);opacity:.75"/>
-        <rect x="152" y="290" width="40" height="22" rx="3" style="fill:var(--accent);opacity:.75"/>
+      <g style="fill:var(--accent);opacity:.75">
+        <rect x="14" y="290" width="40" height="22" rx="3"/>
+        <rect x="60" y="290" width="40" height="22" rx="3"/>
+        <rect x="106" y="290" width="40" height="22" rx="3"/>
+        <rect x="152" y="290" width="40" height="22" rx="3"/>
       </g>
       <text class="sm" x="200" y="305">ускорители</text>
       <text class="sm" x="14" y="332" style="fill:var(--signal)">видит: провайдер (по его условиям)</text>
-      <path class="ax" style="stroke-dasharray:5 4" d="M4 364H336"/>
+      <path class="ax" style="stroke-dasharray:5 4" d="M4 362H336"/>
       <text class="sm" x="4" y="382">или без интернета:</text>
-      <rect class="box" x="4" y="390" width="332" height="74" rx="6"/>
+      <rect class="box" x="4" y="390" width="332" height="86" rx="6"/>
       <text x="14" y="412" font-size="14" font-weight="600">Свой компьютер (например, ftm)</text>
       <text class="sm" x="14" y="430">модель скачана и считает у вас</text>
-      <text class="sm" x="14" y="446" style="fill:var(--signal)">видите: только вы</text>
-      <text class="sm" x="14" y="460" style="fill:var(--signal)">платите: железо и электричество</text>
-    </svg></div></div>
+      <text class="sm" x="14" y="449" style="fill:var(--signal)">видите: только вы</text>
+      <text class="sm" x="14" y="465" style="fill:var(--signal)">платите: железо и электричество</text>
+    </svg></div>
+    <figcaption><b>Как читать.</b> Сверху вниз — путь вопроса, обратно — ответ по токену. Цветная строка в каждом блоке отвечает, кто видит текст и как вы платите; пунктирная стрелка — ответ, токен за токеном. Под пунктиром — другой случай: модель на своём компьютере, как на ftm.</figcaption>
+    </figure></div>
 
   <div class="stack"><h2>API — окошко для программ</h2>
-    <p>К модели ходят не только люди через чат. Программа тоже может отправить текст на адрес провайдера и получить ответ. Правила такого разговора — в каком виде слать вопрос, в каком ждать ответ — называются <b>API</b> (от англ. application programming interface, «интерфейс для программ»). </p>
+    <p>К модели ходят не только люди через чат. Программа тоже может отправить текст на адрес провайдера и получить ответ. Правила такого разговора — в каком виде слать вопрос, в каком ждать ответ — называются <b>API</b> (от англ. application programming interface, «интерфейс для программ»).</p>
     <p>Чтобы провайдер знал, кому выставить счёт, программа предъявляет <b>ключ API</b> — длинный секретный пароль вида <span class="mono">sk-ant-…</span>. Кто знает ключ, тот тратит ваши деньги, поэтому его берегут как пароль от банка (урок 27). Через API модель вызывают программы: боты, сайты, чужие приложения.</p>
-    <div class="callout"><span class="lbl">Можно ли без программирования?</span><p>Да. Ключ выдают в личном кабинете разработчика на сайте провайдера, а вставляют в готовые программы «со своим ключом». В курсе это не понадобится: агент для кода работает и по подписке (урок 14).</p></div></div>
+    <details class="more">
+      <summary>Справка: можно ли пользоваться API без программирования</summary>
+      <p>Да. Ключ выдают в личном кабинете разработчика на сайте провайдера, а вставляют в готовые программы «со своим ключом». В курсе это не понадобится: программа-агент, с которой мы начнём работать в уроке 14, работает и по подписке.</p>
+    </details></div>
+
+  <div class="panel">
+    <span class="eyebrow">Попробуйте сами</span>
+    <p>Куда уходит вопрос? Выберите один из четырёх способов — сразу под кнопками появятся маршрут, кто видит текст и как вы платите. Найдите способ, при котором текст не видит никто, кроме вас.</p>
+    <div class="l07-ways" id="l07ways"></div>
+    <div class="l07-box" aria-live="polite">
+      <div class="l07-route" id="l07route"></div>
+      <div class="l07-res" id="l07res"></div>
+    </div>
+    <p class="try-note">Условия настоящие: Claude и ChatGPT, ноябрь 2026.</p>
+  </div>
 
   <div class="stack"><h2>Как платят</h2>
     <ul class="plain">
@@ -88,38 +136,71 @@
       <tr><td>Opus 5.5 — старшая из трёх</td><td>4</td><td>20</td></tr>
     </table></div>
     <p class="why">Цены по API, актуально на ноябрь 2026. В расчётах курса — эти три модели. Самая сильная, Fable 5.2 (урок 1), стоит $8 и $40 — для проекта она избыточна. Подписка Pro — $20 в месяц, Max — $100.</p>
-    <p>Две скидки пригодятся в проекте. <b>Кэш подсказки</b>: повторённое без изменений начало запроса (та же инструкция, та же статья) провайдер читает со скидкой в 10–20 раз; хранит он его 5 минут после последнего обращения, по желанию — час. <b>Пакетный режим</b>: пачка запросов без спешки — за полцены (подробно — урок 10).</p></div>
+    <details class="more">
+      <summary>Справка: две скидки по API, которые пригодятся в проекте, — кэш подсказки и пакетный режим · 1 мин</summary>
+      <p><b>Кэш подсказки</b>: повторённое без изменений начало запроса (та же инструкция, та же статья) провайдер читает со скидкой в 10–20 раз; хранит он его 5 минут после последнего обращения, по желанию — час.</p>
+      <p><b>Пакетный режим</b>: пачка запросов без спешки — за полцены (подробно — урок 10).</p>
+    </details>
+    <details class="ask">
+      <summary>Вы задаёте 30 вопросов в день по длинной статье. Что выйдет дороже за месяц на старшей модели Opus: подписка за $20 или оплата тех же разговоров за токены?</summary>
+      <p>Оплата за токены: около $135 против $20. По API вся история разговора — вместе со статьёй — с каждым сообщением оплачивается заново как входные токены. Проверьте в калькуляторе и найдите случай, когда дешевле выходит API.</p>
+    </details></div>
+
+  <div class="panel l07-calc">
+    <span class="eyebrow">Калькулятор: подписка или токены</span>
+    <p>Сколько стоил бы ваш чат, если платить по API? Помните урок 5: модель учитывает всё окно. По API вся история с каждым сообщением снова оплачивается как входные токены — поэтому их много больше, чем вы набрали.</p>
+    <div class="l07-ctl"><label for="l07q">Вопросов в день</label><span id="l07qv" class="val"></span>
+      <input type="range" id="l07q" min="0" max="7" step="1" value="3"></div>
+    <div class="l07-seg" id="l07len"><span class="l07-k">разговор</span></div>
+    <div class="l07-seg" id="l07mod"><span class="l07-k">модель</span></div>
+    <div class="l07-cost" id="l07cost"></div>
+    <div class="l07-vs" id="l07vs" aria-live="polite"></div>
+    <p class="out" id="l07out"></p>
+    <p class="try-note">Цены Claude по API настоящие, на ноябрь 2026. Размеры разговоров условные, скидки не учтены: это порядок величин, а не счёт. Лимиты подписки в токенах Anthropic не публикует, поэтому сравниваем только с её ценой.</p>
+  </div>
 
   <div class="stack"><h2>Что видит провайдер</h2>
     <p>Облачная модель видит всё, что лежит в окне: вопрос, файлы, историю. Что с этим текстом происходит дальше, решают условия сервиса<sup class="fn" data-fn="4">4</sup>.</p>
-    <ul class="plain">
-      <li><b>Чат на личном тарифе.</b> Переписка может идти на обучение будущих моделей, если включена настройка. У ChatGPT она включена по умолчанию, у Claude называется «Помогать улучшать Claude» — проверьте у себя.</li>
-      <li><b>API и рабочие тарифы (для компаний).</b> На обучение по умолчанию не идут; запросы хранятся ограниченный срок (у Anthropic — 30 дней). «Не хранить вовсе» — отдельный договор для организаций.</li>
-    </ul>
-    <p><b>Читают ли ваш текст люди?</b> На серверах он хранится зашифрованным. У Anthropic сотрудники по умолчанию открыть переписку не могут. Исключений два: вы сами отправили отзыв о разговоре — или автоматическая проверка пометила его как нарушение правил; тогда его смотрит узкая группа проверяющих. У других провайдеров правила свои — <span class="hl">читайте условия своего сервиса</span>.</p>
+    <div class="scroll"><table class="cards">
+      <tr><th>Как вы работаете</th><th>Идёт ли текст на обучение</th><th>Сколько хранится</th></tr>
+      <tr><td>Чат на личном тарифе</td><td>может идти на обучение будущих моделей, если включена настройка. У ChatGPT она включена по умолчанию, у Claude называется «Помогать улучшать Claude»</td><td>у Claude удалённые чаты стираются за 30 дней; при включённом обучении переписка хранится до 5 лет в обезличенном виде</td></tr>
+      <tr><td>API и рабочие тарифы (для компаний)</td><td>по умолчанию не идёт</td><td>ограниченный срок (у Anthropic — 30 дней). «Не хранить вовсе» — отдельный договор для организаций</td></tr>
+    </table></div>
+    <p><span class="hl">Проверьте эту настройку у себя</span> — это первое дело в задании урока.</p>
+    <p><b>Читают ли ваш текст люди?</b> На серверах он хранится зашифрованным. У Anthropic сотрудники по умолчанию открыть переписку не могут. Исключений два: вы сами отправили отзыв о разговоре — или автоматическая проверка пометила его как нарушение правил; тогда его смотрит узкая группа проверяющих. У других провайдеров правила свои — читайте условия своего сервиса.</p>
     <div class="callout warn"><span class="lbl">Неопубликованные данные</span><p>Результаты лаборатории до публикации — не для личного чата. Варианты: договор организации с провайдером или модель на своём компьютере (урок 10).</p></div></div>
-
-  <div class="panel">
-    <span class="eyebrow">Попробуйте сами</span>
-    <p>Куда уходит вопрос? Выберите способ — и посмотрите маршрут, кто видит текст и как вы платите.</p>
-    <div class="row" id="l07ways"></div>
-    <div class="l07-route" id="l07route"></div>
-    <div class="l07-res" id="l07res"></div>
-    <span class="eyebrow">Подписка или оплата за токены</span>
-    <p>Сколько стоил бы ваш чат, если платить по API (токенов на вопрос × вопросов в месяц)? Помните урок 5: модель учитывает всё окно. По API вся история с каждым сообщением снова оплачивается как входные токены (со скидкой, если начало не менялось). Поэтому входных токенов много больше, чем вы набрали.</p>
-    <label for="l07q">Вопросов в день: <span id="l07qv" class="mono"></span></label>
-    <input type="range" id="l07q" min="0" max="7" step="1" value="3">
-    <div class="row" id="l07len"></div>
-    <div class="row" id="l07mod"></div>
-    <div class="l07-cost" id="l07cost"></div>
-    <p class="out" id="l07out"></p>
-    <p class="why">Цены Claude по API — настоящие, на ноябрь 2026. Размеры разговоров условные, без кэша и пакетной скидки: это порядок величин, а не счёт. Лимиты подписки в токенах Anthropic не публикует, поэтому сравниваем только с ценой подписки.</p>
-  </div>
 
   <div class="two">
     <div class="panel"><span class="eyebrow">Биотехнология</span><p>Открытые статьи о ферментах можно отдавать любому облаку: они и так публичные. Неопубликованные кинетические данные своей лаборатории — другое дело. Три честных варианта: обезличить и отправить в чат; работать через API или тариф для организаций, где данные не идут на обучение; разбирать локально (урок 10).</p></div>
     <div class="panel"><span class="eyebrow">Свои проекты</span><p>Бот «Жемчужины» на <span class="mono">ftm</span> разбирает заметки облачной моделью Claude Haiku — через API, со своим ключом. Ключ лежит отдельно от программы, в закрытом файле настроек на самом ftm: программу можно показать кому угодно, а ключ — никому. Расход виден в личном кабинете провайдера, там же стоит месячный лимит.</p></div>
   </div>
+
+  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
+    <li>Облачная модель лежит на серверах провайдера; приложение и сайт — только окно к ней.</li>
+    <li>API — окошко модели для программ; ключ API — их пароль и ваш кошелёк.</li>
+    <li>Подписка — фиксированная плата и лимиты; API — оплата за входные и выходные токены, выходные дороже в 5 раз.</li>
+    <li>Облако видит ваш текст: что с ним дальше, решают условия тарифа. Полная приватность — только модель на своём компьютере.</li></ul></div>
+
+  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
+    <p>Откройте настройки чата, которым пользуетесь, найдите и запишите три вещи.</p>
+    <ol class="steps">
+      <li>Запишите свой тариф.</li>
+      <li>Найдите, где смотреть, сколько лимита осталось. В Claude: Настройки → Использование.</li>
+      <li>Проверьте, включено ли использование переписки для обучения.
+        <ul class="plain">
+          <li>Claude: Настройки → Конфиденциальность → «Помогать улучшать Claude».</li>
+          <li>ChatGPT: Настройки → Управление данными → «Улучшить модель для всех».</li>
+        </ul></li>
+      <li>Решите, оставить ли настройку как есть, и запишите решение.</li>
+    </ol></div>
+
+  <div class="panel" data-note="step" data-time="≈ 10 минут"><span class="eyebrow">Сквозной проект · шаг 7</span>
+    <p><b>Что получится:</b> в журнале проекта — запись типа <b>решение</b> из двух пунктов: на чём вы работаете и какие данные проекта можно отдавать провайдеру.</p>
+    <ol class="steps">
+      <li>Запишите <b>тариф</b>: каким продуктом и на каком тарифе вы работаете сейчас; включено ли обучение на вашей переписке (из задания выше).</li>
+      <li>Запишите решение о <b>данных</b>: что из проекта можно отдавать провайдеру. Открытые статьи о ПЭТ-гидролазах — можно: они и так публичные. Свои неопубликованные измерения — нельзя либо только после обезличивания; запишите, как решили вы.</li>
+    </ol>
+    <p>Где будет работать модель на каждом этапе — в облаке или на своём компьютере, — пока не решаем: это шаг 10, когда посчитаем память, скорость и деньги.</p></div>
 
   <div class="stack" style="gap:6px"><span class="eyebrow">Сноски</span><ol class="footnotes">
     <li data-fn="1">Как устроен путь «компьютер → интернет → сервер» без единой формулы: кабели, адреса, маршрутизаторы — с картинками, на русском. Хорошо ложится на схему урока. <a href="https://developer.mozilla.org/ru/docs/Learn_web_development/Howto/Web_mechanics/How_does_the_Internet_work" target="_blank" rel="noopener">MDN: Как работает Интернет</a> (статья, рус., 10 мин).</li>
@@ -128,7 +209,7 @@
     <li data-fn="4">Короткие справки, которые стоит прочитать про сервис, которым пользуетесь именно вы (по 5 минут, англ.): где переключатель обучения в Claude — <a href="https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings" target="_blank" rel="noopener">How do I change my model improvement privacy settings?</a>; сколько хранится переписка (до 5 лет в обезличенном виде при включённом обучении, удалённые чаты стираются за 30 дней, помеченные как нарушение — до 2 лет) — <a href="https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data" target="_blank" rel="noopener">How long do you store my data?</a>; шифрование и доступ сотрудников — <a href="https://privacy.claude.com/en/articles/10458704-how-does-anthropic-protect-the-personal-data-of-claude-users" target="_blank" rel="noopener">How does Anthropic protect the personal data of Claude users?</a>; что происходит с запросами по API — <a href="https://platform.claude.com/docs/en/build-with-claude/api-and-data-retention" target="_blank" rel="noopener">API and data retention</a>.</li>
   </ol></div>
 
-  <div class="panel"><span class="eyebrow">Словарик урока</span>
+  <div class="panel glossary"><span class="eyebrow">Словарик урока</span>
     <div class="scroll"><table>
       <tr><td><b>Сервер</b></td><td>компьютер без экрана, работает круглосуточно и отвечает на запросы по сети</td></tr>
       <tr><td><b>Дата-центр</b></td><td>здание с тысячами серверов, охлаждением и своим электропитанием</td></tr>
@@ -141,23 +222,6 @@
       <tr><td><b>Кэш подсказки</b></td><td>повторённое без изменений начало запроса; провайдер хранит его несколько минут и считает в 10–20 раз дешевле</td></tr>
       <tr><td><b>Пакетный режим</b></td><td>пачка запросов за полцены, ответ — не сразу (урок 10)</td></tr>
     </table></div></div>
-
-  <div class="panel tint"><span class="eyebrow">Главное</span><ul class="plain">
-    <li>Облачная модель лежит на серверах провайдера; приложение и сайт — только окно к ней.</li>
-    <li>API — окошко модели для программ; ключ API — их пароль и ваш кошелёк.</li>
-    <li>Подписка — фиксированная плата и лимиты; API — оплата за входные и выходные токены, выходные дороже в 5 раз.</li>
-    <li>Облако видит ваш текст: что с ним дальше, решают условия тарифа. Полная приватность — только модель на своём компьютере.</li></ul></div>
-
-  <div class="panel task" data-note="task"><span class="eyebrow">Задание на 10 минут</span>
-    <p>Откройте настройки чата, которым пользуетесь. Найдите и запишите три вещи: ваш тариф; где смотреть, сколько лимита осталось (в Claude: Настройки → Использование); включено ли использование переписки для обучения (в Claude: Настройки → Конфиденциальность → «Помогать улучшать Claude»; в ChatGPT: Настройки → Управление данными → «Улучшить модель для всех»). Решите, оставить ли настройку как есть.</p></div>
-
-  <div class="panel" data-note="step"><span class="eyebrow">Сквозной проект · шаг 7</span>
-    <p><b>Время: ≈ 10 минут.</b> Запишите в журнал проекта запись типа <b>решение</b> из двух пунктов:</p>
-    <ol>
-      <li><b>Тариф.</b> Каким продуктом и на каком тарифе вы работаете сейчас; включено ли обучение на вашей переписке (из задания выше).</li>
-      <li><b>Данные.</b> Что из проекта можно отдавать провайдеру. Открытые статьи о ПЭТ-гидролазах — можно: они и так публичные. Свои неопубликованные измерения — нельзя либо только после обезличивания; запишите, как решили вы.</li>
-    </ol>
-    <p>Где будет работать модель на каждом этапе — в облаке или на своём компьютере, — пока не решаем: это шаг 10, когда посчитаем память, скорость и деньги.</p></div>
 
   <div class="panel deeper"><span class="eyebrow">Куда двигаться дальше</span>
     <p>По желанию; одного материала достаточно. Этот путь даёт уверенность в «инфраструктуре»: где что работает, сколько стоит и что происходит с данными.</p>
@@ -183,11 +247,11 @@ var $=AI.$, el=AI.el;
 var W=[
  ['Чат в браузере',['Браузер','Интернет','Сервер провайдера: модель'],
   'в дата-центре провайдера','провайдер; на обучение — только при включённой настройке (у ChatGPT включена по умолчанию)','подпиской (или бесплатно): лимиты на 5 часов и на неделю'],
- ['Приложение на телефоне',['Приложение','Интернет','Сервер провайдера: модель'],
+ ['Приложение',['Приложение на телефоне','Интернет','Сервер провайдера: модель'],
   'там же, где у чата: телефон — только окно','так же, как у чата: тот же аккаунт и те же настройки','той же подпиской и из тех же лимитов'],
- ['Программа через API',['Программа + ключ','Интернет','Сервер провайдера: модель'],
-  'в дата-центре провайдера','провайдер; на обучение по умолчанию не идёт, хранится ограниченный срок (у Anthropic — 30 дней)','за токены: входные + выходные, счёт по ключу'],
- ['Модель на своём компьютере',['Программа-запускалка','Модель в памяти компьютера'],
+ ['Через API',['Программа + ключ API','Интернет','Сервер провайдера: модель'],
+  'в дата-центре провайдера','провайдер; на обучение по умолчанию не идёт, хранится ограниченный срок (у Anthropic — 30 дней)','за токены, счёт по ключу; как их считают — в следующем разделе'],
+ ['Свой компьютер',['Программа-запускалка','Модель в памяти компьютера'],
   'у вас: файл весов скачан, считает ваш процессор или видеокарта','только вы; текст не покидает компьютер','железом и электричеством; модель слабее облачной (урок 10)']
 ], wi=0;
 W.forEach(function(w,i){var b=el('button',null,w[0]); b.type='button'; b.addEventListener('click',function(){wi=i; drawWay();}); $('l07ways').appendChild(b);});
@@ -195,13 +259,13 @@ function drawWay(){
   var w=W[wi];
   Array.prototype.forEach.call($('l07ways').children,function(x,i){x.classList.toggle('primary',i===wi);});
   $('l07route').textContent='';
-  w[1].forEach(function(s,i){ if(i) $('l07route').appendChild(el('span','to','→')); $('l07route').appendChild(el('span','chip on',s)); });
+  w[1].forEach(function(s,i){ if(i) $('l07route').appendChild(el('span','to','→')); $('l07route').appendChild(el('span', i===w[1].length-1 ? 'chip on' : 'chip', s)); });
   $('l07res').textContent='';
-  [['где модель',w[2]],['кто видит текст',w[3]],['как платите',w[4]]].forEach(function(r){ $('l07res').appendChild(el('span','k',r[0])); $('l07res').appendChild(el('span',null,r[1])); });
+  [['где модель',w[2]],['кто видит текст',w[3]],['как платите',w[4]]].forEach(function(r,i){ $('l07res').appendChild(el('span','k',r[0])); $('l07res').appendChild(el('span', i===1&&wi===3 ? 'verdict ok' : null, r[1])); });
 }
 var QS=[5,10,20,30,50,100,150,200];
-var LEN=[['короткий разговор',2000,400],['с файлом и историей',10000,800],['со статьёй целиком',30000,1500]], li=1;
-var MOD=[['Haiku 5.5',0.10,0.50],['Sonnet 5.5',2,10],['Opus 5.5',4,20]], mi=1;
+var LEN=[['короткий',2000,400],['с файлом',10000,800],['со статьёй',30000,1500]], li=1;
+var MOD=[['Haiku',0.10,0.50],['Sonnet',2,10],['Opus',4,20]], mi=1;
 function btns(box,arr,get,set){arr.forEach(function(a,i){var b=el('button',null,a[0]); b.type='button'; b.addEventListener('click',function(){set(i); drawCost();}); box.appendChild(b);});}
 btns($('l07len'),LEN,null,function(i){li=i;});
 btns($('l07mod'),MOD,null,function(i){mi=i;});
@@ -209,19 +273,22 @@ function num(x){return String(x).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0');}
 function money(x){return '$'+(x<10?x.toFixed(2):Math.round(x).toString()).replace('.',',');}
 function raz(n){var a=n%10,b=n%100; return n+(a>=2&&a<=4&&(b<12||b>14)?' раза':' раз');}
 function line(k,v){$('l07cost').appendChild(el('span',null,k)); $('l07cost').appendChild(el('span','num',v));}
+function tile(k,v,low){var t=el('div','l07-tile'+(low?' low':'')); t.appendChild(el('span','k',k)); t.appendChild(el('span','v',v)); t.appendChild(el('span','tag',low?'дешевле':'')); $('l07vs').appendChild(t);}
 function drawCost(){
   var q=QS[+$('l07q').value], L=LEN[li], M=MOD[mi];
   $('l07qv').textContent=q;
-  Array.prototype.forEach.call($('l07len').children,function(x,i){x.classList.toggle('primary',i===li);});
-  Array.prototype.forEach.call($('l07mod').children,function(x,i){x.classList.toggle('primary',i===mi);});
+  Array.prototype.forEach.call($('l07len').querySelectorAll('button'),function(x,i){x.classList.toggle('primary',i===li);});
+  Array.prototype.forEach.call($('l07mod').querySelectorAll('button'),function(x,i){x.classList.toggle('primary',i===mi);});
   var n=q*30, inT=n*L[1], outT=n*L[2];
   var ci=inT*M[1]/1e6, co=outT*M[2]/1e6, tot=ci+co;
   $('l07cost').textContent='';
-  line('вход '+num(L[1])+' × '+num(n), money(ci));
-  line('выход '+num(L[2])+' × '+num(n), money(co));
-  line('по API за месяц, '+M[0], money(tot));
-  line('подписка Pro за месяц', '$20');
+  line('вопросов в месяц: '+q+' × 30 дней', num(n));
+  line('вход: '+num(n)+' × '+num(L[1])+' токенов', money(ci));
+  line('выход: '+num(n)+' × '+num(L[2])+' токенов', money(co));
   var r=tot/20;
+  $('l07vs').textContent='';
+  tile('по API за месяц, '+M[0]+' 5.5', money(tot), r<0.5);
+  tile('подписка Pro за месяц', '$20', r>2);
   $('l07out').textContent= r<0.5 ? 'По API в '+raz(Math.max(2,Math.round(1/r)))+' дешевле подписки — но без готового приложения и с настройкой своими руками.'
     : (r<=2 ? 'Примерно как подписка. Решают удобство и лимиты.' : 'По API в '+raz(Math.round(r))+' дороже подписки: для живого чата подписка выгоднее.');
 }
